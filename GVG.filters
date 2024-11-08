@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{fac06832-34d8-47b2-826a-56879a4e0f6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Camera">
+      <UniqueIdentifier>{f16003f3-9d9f-4c1a-b999-91c9fcaa9e3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Field">
+      <UniqueIdentifier>{5e37d120-20df-4255-b102-16186750a1db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{68e06d22-41ce-4946-b51d-b5fade369d2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{3095973f-584d-4dc7-ae75-bbe5ba19f8a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer">
+      <UniqueIdentifier>{c81806fb-f6ba-4605-83f8-d01bf9577a61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\2DPolygon">
+      <UniqueIdentifier>{a434ccd7-afbb-4300-abf6-0bf39f29425f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{597c59fd-fd67-4ed4-9c2d-6f1104bb1878}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{76ceb3fb-df1c-4a27-a333-b3cec81a5bd3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="shader\common.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\unlitTexturePS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\unlitTextureVS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GameObject\gameobject.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Field\field.cpp">
+      <Filter>GameObject\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Camera\camera.cpp">
+      <Filter>GameObject\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\2DPolygon\polygon2D.cpp">
+      <Filter>GameObject\2DPolygon</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\modelRenderer.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\manager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\renderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameObject\gameobject.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Field\field.h">
+      <Filter>GameObject\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Camera\camera.h">
+      <Filter>GameObject\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\2DPolygon\polygon2D.h">
+      <Filter>GameObject\2DPolygon</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\modelRenderer.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\manager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\renderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\main.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\sceneManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

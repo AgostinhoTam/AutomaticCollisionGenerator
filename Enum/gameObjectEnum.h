@@ -1,0 +1,10 @@
+#pragma once
+enum class GAMEOBJECT_TYPE
+{
+	NONE,
+	CAMERA,
+	PLAYER,
+	FIELD,
+	POLYGON_2D,
+	MAX_TYPE,
+};

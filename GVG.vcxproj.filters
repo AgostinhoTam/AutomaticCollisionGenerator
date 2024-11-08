@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <FxCompile Include="shader\common.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\unlitTexturePS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\unlitTextureVS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GameObject\Field\field.cpp">
+      <Filter>GameObject\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\gameobject.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\2DPolygon\polygon2D.cpp">
+      <Filter>GameObject\Polygon2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\renderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\modelRendererManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Camera\camera.cpp">
+      <Filter>GameObject\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\gameObjectManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\sceneManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameObject\Field\field.h">
+      <Filter>GameObject\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\gameobject.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\2DPolygon\polygon2D.h">
+      <Filter>GameObject\Polygon2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\sceneManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\renderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\modelRendererManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\main.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Camera\camera.h">
+      <Filter>GameObject\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\gameObjectManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Enum\gameObjectEnum.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Main">
+      <UniqueIdentifier>{22b81342-3baa-49d1-90f6-33ed5666d4c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{370d5d64-a4fe-43e0-af6e-4b3c2bac163f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{4c472781-d353-4b35-926f-08377197340a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{8094c2ae-3ed1-4480-affb-a0cec9e934ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Player">
+      <UniqueIdentifier>{21da2594-8f90-409a-a81c-a65bc3be5715}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Field">
+      <UniqueIdentifier>{1dc1e11a-ff45-47cb-a545-4efc69fa85c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Polygon2D">
+      <UniqueIdentifier>{ce0912fd-6c03-4f3a-913a-fefbb7a18165}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer">
+      <UniqueIdentifier>{90599ce9-a7c4-4661-a3b6-094c2d658ddd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Camera">
+      <UniqueIdentifier>{82b06a96-477c-4c89-be04-ac0fd37aba9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{fb8edb45-c914-49ca-a47f-591342c83809}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enum">
+      <UniqueIdentifier>{bad4e557-6e2a-402d-bfcb-940bd87d82ff}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
