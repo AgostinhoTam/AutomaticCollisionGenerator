@@ -1,4 +1,4 @@
-#include "Main/main.h"
+
 #include "GameObject/gameobject.h"
 
 XMFLOAT3 GameObject::GetForward()const

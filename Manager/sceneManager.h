@@ -5,14 +5,17 @@ class GameObjectManager;
 class SceneManager
 {
 public:
-	SceneManager(){}
+	static SceneManager* GetInstance();
 	~SceneManager(){}
-	void Init();
-	void Update(const float& DeltaTime);
-	void Draw();
-	void Uninit();
-	Scene* GetScene();
+	static void Init();
+	static void Update(const float& DeltaTime);
+	static void Draw();
+	static void Uninit();
+	Scene* GetCurrentScene() { return m_CurrentScene; }
+	GameObjectManager* GetGameObjectManager() { return m_GameObjectManager; }
 private:
-	Scene* m_CurrentScene;
-	GameObjectManager* m_GameObjectManager;
+	SceneManager() {}
+	static SceneManager* m_Instance;
+	static Scene* m_CurrentScene;
+	static GameObjectManager* m_GameObjectManager;
 };

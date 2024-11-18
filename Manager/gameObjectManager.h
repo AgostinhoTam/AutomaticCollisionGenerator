@@ -11,16 +11,16 @@ public:
 	GameObjectManager(){}
 	~GameObjectManager(){}
 	void Init();
-	void Update(const float& deltaTime);
+	void Update(const float& DeltaTime);
 	void Draw();
 	void Uninit();
 	template<typename T>
 	T* AddGameObject(const GAMEOBJECT_TYPE& Type)
 	{
-		T* object = new T(Type);
+		T* object = new T();
 		if (object)
 		{
-			m_GameObjectList[Type]->emplaced_back(object);
+			m_GameObjectList[static_cast<int>(Type)].emplace_back(object);
 			return object;
 		}
 		return nullptr;
@@ -29,7 +29,7 @@ public:
 	template<typename T, typename... Args>
 	T* AddGameObjectArg(const GAMEOBJECT_TYPE& Type, Args&&... args)
 	{
-		T* gameObject = new T(Type,std::forward<Args>(args)...);
+		T* gameObject = new T(std::forward<Args>(args)...);
 		if (gameObject)
 		{
 			m_GameObjectList[static_cast<int>(Type)].emplace_back(gameObject);

@@ -1,8 +1,9 @@
-#include "Renderer/renderer.h"
+
+#include "Manager/shaderManager.h"
 #include "GameObject/2DPolygon/polygon2D.h"
 
 
-Polygon2D::Polygon2D(XMFLOAT2 location, XMFLOAT2 size):GameObject(GAMEOBJECT_TYPE::POLYGON_2D)
+Polygon2D::Polygon2D(XMFLOAT2 location, XMFLOAT2 size)
 {
 	vertex[0].Position = XMFLOAT3(location.x, location.y + 0.0f, 0.0f);
 	vertex[0].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
@@ -52,8 +53,7 @@ void Polygon2D::Init()
 		assert(m_Texture);
 	}
 
-	Renderer::CreateVertexShader(&m_VertexShader, &m_VertexLayout, "shader\\unlitTextureVS.cso");
-	Renderer::CreatePixelShader(&m_PixelShader, "shader\\unlitTexturePS.cso");
+	ShaderManager::LoadShader(SHADER_NAME::UNLIT_TEXTURE);
 
 }
 
@@ -61,13 +61,10 @@ void Polygon2D::Uninit()
 {
 	if(m_VertexBuffer)m_VertexBuffer->Release();
 	if(m_Texture)m_Texture->Release();
-	
-	if(m_VertexLayout)m_VertexLayout->Release();
-	if(m_VertexShader)m_VertexShader->Release();
-	if(m_PixelShader)m_PixelShader->Release();
+
 }
 
-void Polygon2D::Update()
+void Polygon2D::Update(const float& DeltaTime)
 {
 
 	
@@ -76,11 +73,11 @@ void Polygon2D::Update()
 void Polygon2D::Draw()
 {
 	//入力レイアウト設定
-	Renderer::GetDeviceContext()->IASetInputLayout(m_VertexLayout);
+	Renderer::GetDeviceContext()->IASetInputLayout(m_Shader->m_VertexLayout);
 
 	//シェーダー設定
-	Renderer::GetDeviceContext()->VSSetShader(m_VertexShader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(m_PixelShader, NULL, 0);
+	Renderer::GetDeviceContext()->VSSetShader(m_Shader->m_VertexShader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(m_Shader->m_PixelShader, NULL, 0);
 
 	//マトリクス設定		//2D用のマトリクスに設定
 	Renderer::SetWorldViewProjection2D();

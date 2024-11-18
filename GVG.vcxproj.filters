@@ -39,6 +39,21 @@
     <ClCompile Include="Manager\sceneManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\gameScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\modelRenderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Character\Player\player.cpp">
+      <Filter>GameObject\Character\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\animationModel.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\shaderManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject\Field\field.h">
@@ -74,6 +89,33 @@
     <ClInclude Include="Enum\gameObjectEnum.h">
       <Filter>Enum</Filter>
     </ClInclude>
+    <ClInclude Include="Scene\gameScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Enum\modelEnum.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\modelRenderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Character\Player\playerh.h">
+      <Filter>GameObject\Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Character\character.h">
+      <Filter>GameObject\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\animationModel.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\shaderManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Enum\shaderEnum.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Structure\shaderStructure.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Main">
@@ -87,9 +129,6 @@
     </Filter>
     <Filter Include="Scene">
       <UniqueIdentifier>{8094c2ae-3ed1-4480-affb-a0cec9e934ad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject\Player">
-      <UniqueIdentifier>{21da2594-8f90-409a-a81c-a65bc3be5715}</UniqueIdentifier>
     </Filter>
     <Filter Include="GameObject\Field">
       <UniqueIdentifier>{1dc1e11a-ff45-47cb-a545-4efc69fa85c6}</UniqueIdentifier>
@@ -108,6 +147,21 @@
     </Filter>
     <Filter Include="Enum">
       <UniqueIdentifier>{bad4e557-6e2a-402d-bfcb-940bd87d82ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Chatacter">
+      <UniqueIdentifier>{0f07b9ed-0572-4da8-97b8-3d0a0865b4bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Chatacter\Player">
+      <UniqueIdentifier>{21da2594-8f90-409a-a81c-a65bc3be5715}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Structure">
+      <UniqueIdentifier>{070a58e8-ca38-49d2-9d79-49377a7da421}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Character">
+      <UniqueIdentifier>{1cac8e21-6117-46f4-9e2f-4875f0dc2fe1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Character\Player">
+      <UniqueIdentifier>{f3a6387f-75fa-412e-9e6e-fcc7c17636f9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

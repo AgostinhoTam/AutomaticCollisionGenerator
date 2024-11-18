@@ -14,11 +14,12 @@
 
 void Camera::Init()
 {
-	_Position = XMFLOAT3(0.0f, 5.0f, -10.0f);
-	_Target = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	m_Position = XMFLOAT3(0.0f, 5.0f, -10.0f);
+	m_Target = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	m_Up = GetUp();
 }
 
-void Camera::Update()
+void Camera::Update(const float& DeltaTime)
 {
 	
 }
@@ -30,12 +31,12 @@ void Camera::Uninit()
 void Camera::Draw()
 {
 	//ビューマトリクス設定
-	_Up = XMFLOAT3(0.0f, 1.0f, 0.0f);
-	XMMATRIX viewMatrix = XMMatrixLookAtLH(XMLoadFloat3(&_Position), XMLoadFloat3(&_Target), XMLoadFloat3(&_Up));
+
+	XMMATRIX viewMatrix = XMMatrixLookAtLH(XMLoadFloat3(&m_Position), XMLoadFloat3(&m_Target), XMLoadFloat3(&m_Up));
 
 	Renderer::SetViewMatrix(viewMatrix);
 
-	XMStoreFloat4x4(&_mtxView, viewMatrix);
+	XMStoreFloat4x4(&m_MtxView, viewMatrix);
 
 	//プロジェクションマトリクス設定（画角、画面の設定）
 	XMMATRIX projectionMatrix;

@@ -9,18 +9,17 @@
 class Camera:public GameObject 
 {
 private:
-	XMFLOAT3			_Position;			// カメラの視点(位置)
-	XMFLOAT3			_Target;				// カメラの注視点
-	XMFLOAT3			_Up;				// カメラの上方向ベクトル
-	XMFLOAT3			_rot;			// カメラの回転
-	float				_len;			// カメラの視点と注視点の距離
 
-	XMFLOAT4X4			_mtxView;		// ビューマトリックス
-	XMMATRIX			_mtxInvView;		// ビューマトリックス
-	XMMATRIX			_mtxProjection;	// プロジェクションマトリックス
+	XMFLOAT3			m_Target = XMFLOAT3{0.0f,0.0f,0.0f};				// カメラの注視点
+	XMFLOAT3			m_Up = XMFLOAT3{ 0.0f,0.0f,0.0f };;				// カメラの上方向ベクトル
+	float				m_Len = 0.0f;			// カメラの視点と注視点の距離
+
+	XMFLOAT4X4			m_MtxView{};		// ビューマトリックス
+	XMMATRIX			m_MtxInvView{};		// ビューマトリックス
+	XMMATRIX			m_MtxProjection{};	// プロジェクションマトリックス
 public:
 	void Init();
-	void Update();
+	void Update(const float& DeltaTime);
 	void Uninit();
 	void Draw();
 };

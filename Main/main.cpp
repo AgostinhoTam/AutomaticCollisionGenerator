@@ -2,10 +2,12 @@
 
 #include "GameObject/2DPolygon/polygon2D.h"
 #include <thread>
-
+#include "Manager/sceneManager.h"
 const char* CLASS_NAME = "AppClass";
 const char* WINDOW_NAME = "DX11ƒQ[ƒ€";
 
+constexpr float FPS = 60.0f;
+constexpr float FRAME_PER_SEC = 1 / FPS;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -62,9 +64,12 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	dwExecLastTime = timeGetTime();
 	dwCurrentTime = 0;
 
-
-
+	SceneManager* SceneManager = SceneManager::GetInstance();
 	MSG msg;
+
+	if (!SceneManager)return 0;
+	SceneManager->Init();
+
 	while(1)
 	{
         if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -86,12 +91,13 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 			if((dwCurrentTime - dwExecLastTime) >= (1000 / 60))
 			{
 				dwExecLastTime = dwCurrentTime;
-
-
+				if (!SceneManager)return (int)msg.wParam;
+				SceneManager->Update(FRAME_PER_SEC);
+				SceneManager->Draw();
 			}
 		}
 	}
-
+	SceneManager->Uninit();
 	timeEndPeriod(1);
 
 	UnregisterClass(CLASS_NAME, wcex.hInstance);

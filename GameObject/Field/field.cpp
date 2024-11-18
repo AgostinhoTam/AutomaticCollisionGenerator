@@ -1,26 +1,29 @@
 
-#include "field.h"
+#include "Main/main.h"
+#include "Renderer/renderer.h"
+#include "Manager/shaderManager.h"
+#include "Enum/shaderEnum.h"
+#include "GameObject/Field/field.h"
 
-
-Field::Field(XMFLOAT3 location, XMFLOAT2 size):_position(location),GameObject(GAMEOBJECT_TYPE::FIELD)
+Field::Field(const XMFLOAT3& location, const XMFLOAT2& size)
 {
-
-	vertex[0].Position = XMFLOAT3(-50.0f, 0.0f, 50.0f);
+	m_Position = location;
+	vertex[0].Position = XMFLOAT3(-size.x, 0.0f, size.y);
 	vertex[0].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[0].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[0].TexCoord = XMFLOAT2(0.0f, 0.0f);
 
-	vertex[1].Position = XMFLOAT3(50.0f, 0.0f, 50.0f);
+	vertex[1].Position = XMFLOAT3(size.x, 0.0f, size.y);
 	vertex[1].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[1].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[1].TexCoord = XMFLOAT2(1.0f, 0.0f);
 
-	vertex[2].Position = XMFLOAT3(-50.0f, 0.0f, -50.0f);
+	vertex[2].Position = XMFLOAT3(-size.x, 0.0f, -size.y);
 	vertex[2].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[2].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[2].TexCoord = XMFLOAT2(0.0f, 1.0f);
 
-	vertex[3].Position = XMFLOAT3(50.0f, 0.0f, -50.0f);
+	vertex[3].Position = XMFLOAT3(size.x, 0.0f, -size.y);
 	vertex[3].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[3].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[3].TexCoord = XMFLOAT2(1.0f, 1.0f);
@@ -31,8 +34,8 @@ Field::Field(XMFLOAT3 location, XMFLOAT2 size):_position(location),GameObject(GA
 void Field::Init()
 {
 	
-	_scale = XMFLOAT3(1.0f, 1.0f, 1.0f);
-	_rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	m_Scale = XMFLOAT3(1.0f, 1.0f, 1.0f);
+	m_Rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	//頂点バッファ
 	D3D11_BUFFER_DESC bd{};
 	bd.Usage = D3D11_USAGE_DEFAULT;
@@ -54,8 +57,10 @@ void Field::Init()
 		assert(m_Texture);
 	}
 
-	Renderer::CreateVertexShader(&m_VertexShader, &m_VertexLayout, "shader\\unlitTextureVS.cso");
-	Renderer::CreatePixelShader(&m_PixelShader, "shader\\unlitTexturePS.cso");
+	m_Shader = ShaderManager::LoadShader(SHADER_NAME::UNLIT_TEXTURE);
+
+	//Renderer::CreateVertexShader(&m_VertexShader, &m_VertexLayout, "shader\\unlitTextureVS.cso");
+	//Renderer::CreatePixelShader(&m_PixelShader, "shader\\unlitTexturePS.cso");
 
 }
 
@@ -64,12 +69,12 @@ void Field::Uninit()
 	if(m_VertexBuffer)m_VertexBuffer->Release();
 	if(m_Texture)m_Texture->Release();
 	
-	if(m_VertexLayout)m_VertexLayout->Release();
-	if(m_VertexShader)m_VertexShader->Release();
-	if(m_PixelShader)m_PixelShader->Release();
+	//if(m_VertexLayout)m_VertexLayout->Release();
+	//if(m_VertexShader)m_VertexShader->Release();
+	//if(m_PixelShader)m_PixelShader->Release();
 }
 
-void Field::Update()
+void Field::Update(const float& DeltaTime)
 {
 
 	
@@ -78,17 +83,17 @@ void Field::Update()
 void Field::Draw()
 {
 	//入力レイアウト設定
-	Renderer::GetDeviceContext()->IASetInputLayout(m_VertexLayout);
+	Renderer::GetDeviceContext()->IASetInputLayout(m_Shader->m_VertexLayout);
 
 	//シェーダー設定
-	Renderer::GetDeviceContext()->VSSetShader(m_VertexShader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(m_PixelShader, NULL, 0);
+	Renderer::GetDeviceContext()->VSSetShader(m_Shader->m_VertexShader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(m_Shader->m_PixelShader, NULL, 0);
 
 	//マトリクス設定
 	XMMATRIX world, scale, rot, trans;
-	scale = XMMatrixScaling(_scale.x, _scale.y, _scale.z);
-	rot = XMMatrixRotationRollPitchYaw(_rotation.x, _rotation.y, _rotation.z);
-	trans = XMMatrixTranslation(_position.x, _position.y, _position.z);
+	scale = XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z);
+	rot = XMMatrixRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z);
+	trans = XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z);
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(world);
 

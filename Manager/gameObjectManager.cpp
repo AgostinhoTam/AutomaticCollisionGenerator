@@ -1,33 +1,54 @@
-
-#include "Renderer/renderer.h"
-#include "GameObject/2DPolygon/polygon2D.h"
-#include "GameObject/Field/field.h"
-#include "GameObject/Camera/camera.h"
+#include "GameObject/gameobject.h"
 #include "Manager/gameObjectManager.h"
 
 void GameObjectManager::Init()
 {
-	Renderer::Init();
+	for (int type = 0; type < static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE); ++type)
+	{
+		for (GameObject* object : m_GameObjectList[type])
+		{
+			if (!object)continue;
+			object->Init();
+		}
+	}
 
 }
 
 
 void GameObjectManager::Uninit()
 {
-
-	Renderer::Uninit();
+	for (int type = 0; type < static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE); ++type)
+	{
+		for (GameObject* object : m_GameObjectList[type])
+		{
+			delete object;
+			object = nullptr;
+		}
+	}
 }
 
 void GameObjectManager::Update(const float& DeltaTime)
 {
-
+	for (int type = 0; type < static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE); ++type)
+	{
+		for (GameObject* object : m_GameObjectList[type])
+		{
+			if (!object)continue;
+			object->Update(DeltaTime);
+		}
+	}
 }
 
 
 void GameObjectManager::Draw()
 {
-	Renderer::Begin();
-
-	Renderer::End();
+	for (int type = 0; type < static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE); ++type)
+	{
+		for (GameObject* object : m_GameObjectList[type])
+		{
+			if (!object)continue;
+			object->Draw();
+		}
+	}
 }
 

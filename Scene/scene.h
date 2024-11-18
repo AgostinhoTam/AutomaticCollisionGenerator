@@ -1,24 +1,14 @@
 #pragma once
-#include <list>
-#include <vector>
-#include "GameObject/gameobject.h"
-
+class SceneManager;
 class Scene
 {
 public:
-	Scene();
-	~Scene();
-
-
-
+	Scene(){}
+	virtual ~Scene(){}
+	virtual void Init(){}
+	virtual void Update(const float& DeltaTime){}
+	virtual void Draw(){}
+	virtual void Uninit(){}
 protected:
-	std::list<GameObject*> m_GameObject[static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE)];
+	SceneManager* m_SceneManager;
 };
-
-Scene::Scene()
-{
-}
-
-Scene::~Scene()
-{
-}

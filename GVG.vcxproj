@@ -109,6 +109,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -128,6 +129,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -166,26 +168,40 @@
   <ItemGroup>
     <ClCompile Include="GameObject\2DPolygon\polygon2D.cpp" />
     <ClCompile Include="GameObject\Camera\camera.cpp" />
+    <ClCompile Include="GameObject\Character\Player\player.cpp" />
     <ClCompile Include="GameObject\Field\field.cpp" />
     <ClCompile Include="GameObject\gameobject.cpp" />
     <ClCompile Include="Main\main.cpp" />
     <ClCompile Include="Manager\gameObjectManager.cpp" />
     <ClCompile Include="Manager\modelRendererManager.cpp" />
     <ClCompile Include="Manager\sceneManager.cpp" />
+    <ClCompile Include="Manager\shaderManager.cpp" />
+    <ClCompile Include="Renderer\animationModel.cpp" />
+    <ClCompile Include="Renderer\modelRenderer.cpp" />
     <ClCompile Include="Renderer\renderer.cpp" />
+    <ClCompile Include="Scene\gameScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enum\gameObjectEnum.h" />
+    <ClInclude Include="Enum\modelEnum.h" />
+    <ClInclude Include="Enum\shaderEnum.h" />
     <ClInclude Include="GameObject\2DPolygon\polygon2D.h" />
     <ClInclude Include="GameObject\Camera\camera.h" />
+    <ClInclude Include="GameObject\Character\character.h" />
+    <ClInclude Include="GameObject\Character\Player\playerh.h" />
     <ClInclude Include="GameObject\Field\field.h" />
     <ClInclude Include="GameObject\gameobject.h" />
     <ClInclude Include="Main\main.h" />
     <ClInclude Include="Manager\gameObjectManager.h" />
     <ClInclude Include="Manager\modelRendererManager.h" />
     <ClInclude Include="Manager\sceneManager.h" />
+    <ClInclude Include="Manager\shaderManager.h" />
+    <ClInclude Include="Renderer\animationModel.h" />
+    <ClInclude Include="Renderer\modelRenderer.h" />
     <ClInclude Include="Renderer\renderer.h" />
+    <ClInclude Include="Scene\gameScene.h" />
     <ClInclude Include="Scene\scene.h" />
+    <ClInclude Include="Structure\shaderStructure.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

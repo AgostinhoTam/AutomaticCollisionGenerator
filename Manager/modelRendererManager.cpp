@@ -6,57 +6,11 @@
 
 #include "Main/main.h"
 #include "Renderer/renderer.h"
+#include "Enum/modelEnum.h"
 #include "Manager/modelRendererManager.h"
 
 
-
 std::unordered_map<std::string, MODEL*> ModelRendererManager::m_ModelPool;
-
-
-void ModelRendererManager::Draw()
-{
-
-	// 頂点バッファ設定
-	UINT stride = sizeof(VERTEX_3D);
-	UINT offset = 0;
-	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_Model->VertexBuffer, &stride, &offset);
-
-	// インデックスバッファ設定
-	Renderer::GetDeviceContext()->IASetIndexBuffer(m_Model->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
-	// プリミティブトポロジ設定
-	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-
-	for( unsigned int i = 0; i < m_Model->SubsetNum; i++ )
-	{
-		// マテリアル設定
-		Renderer::SetMaterial(m_Model->SubsetArray[i].Material.Material );
-
-		// テクスチャ設定
-		if(m_Model->SubsetArray[i].Material.Texture)
-			Renderer::GetDeviceContext()->PSSetShaderResources( 0, 1, &m_Model->SubsetArray[i].Material.Texture );
-
-		// ポリゴン描画
-		Renderer::GetDeviceContext()->DrawIndexed(m_Model->SubsetArray[i].IndexNum, m_Model->SubsetArray[i].StartIndex, 0 );
-	}
-
-}
-
-void ModelRendererManager::Preload(const char *FileName)
-{
-	if (m_ModelPool.count(FileName) > 0)
-	{
-		return;
-	}
-
-	MODEL* model = new MODEL;
-	LoadModel(FileName, model);
-
-	m_ModelPool[FileName] = model;
-
-}
-
 
 void ModelRendererManager::UnloadAll()
 {
@@ -80,18 +34,28 @@ void ModelRendererManager::UnloadAll()
 }
 
 
-void ModelRendererManager::Load(const char *FileName)
+MODEL* ModelRendererManager::Load(const char *FileName)
 {
-	if (m_ModelPool.count(FileName) > 0)
+	MODEL* model = nullptr;
+	auto it = m_ModelPool.find(FileName);
+	if (it != m_ModelPool.end())
 	{
-		m_Model = m_ModelPool[FileName];
-		return;
+		MODEL* model = it->second;	
+		if (model)
+		{
+			return model;
+		}
+		else
+		{
+			return nullptr;
+		}
 	}
-
-	m_Model = new MODEL;
-	LoadModel(FileName, m_Model);
-
-	m_ModelPool[FileName] = m_Model;
+	model = new MODEL;
+	LoadModel(FileName, model);
+	//	C++17 指定されたキーが存在しない場合のみ要素を直接構築で挿入する
+	m_ModelPool.try_emplace(FileName,model);
+	
+	return m_ModelPool[FileName];
 
 }
 
