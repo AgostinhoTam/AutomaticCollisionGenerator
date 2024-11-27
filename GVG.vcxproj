@@ -130,6 +130,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -173,6 +174,7 @@
     <ClCompile Include="GameObject\gameobject.cpp" />
     <ClCompile Include="Main\main.cpp" />
     <ClCompile Include="Manager\gameObjectManager.cpp" />
+    <ClCompile Include="Manager\inputManager.cpp" />
     <ClCompile Include="Manager\modelRendererManager.cpp" />
     <ClCompile Include="Manager\sceneManager.cpp" />
     <ClCompile Include="Manager\shaderManager.cpp" />
@@ -180,10 +182,14 @@
     <ClCompile Include="Renderer\modelRenderer.cpp" />
     <ClCompile Include="Renderer\renderer.cpp" />
     <ClCompile Include="Scene\gameScene.cpp" />
+    <ClCompile Include="StateMachine\PlayerState\playerStateIdle.cpp" />
+    <ClCompile Include="StateMachine\PlayerState\playerStateWalk.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enum\gameObjectEnum.h" />
     <ClInclude Include="Enum\modelEnum.h" />
+    <ClInclude Include="Enum\moveDirection.h" />
+    <ClInclude Include="Enum\playerStateEnum.h" />
     <ClInclude Include="Enum\shaderEnum.h" />
     <ClInclude Include="GameObject\2DPolygon\polygon2D.h" />
     <ClInclude Include="GameObject\Camera\camera.h" />
@@ -193,6 +199,7 @@
     <ClInclude Include="GameObject\gameobject.h" />
     <ClInclude Include="Main\main.h" />
     <ClInclude Include="Manager\gameObjectManager.h" />
+    <ClInclude Include="Manager\inputManager.h" />
     <ClInclude Include="Manager\modelRendererManager.h" />
     <ClInclude Include="Manager\sceneManager.h" />
     <ClInclude Include="Manager\shaderManager.h" />
@@ -201,6 +208,9 @@
     <ClInclude Include="Renderer\renderer.h" />
     <ClInclude Include="Scene\gameScene.h" />
     <ClInclude Include="Scene\scene.h" />
+    <ClInclude Include="StateMachine\PlayerState\playerState.h" />
+    <ClInclude Include="StateMachine\PlayerState\playerStateIdle.h" />
+    <ClInclude Include="StateMachine\PlayerState\playerStateWalk.h" />
     <ClInclude Include="Structure\shaderStructure.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

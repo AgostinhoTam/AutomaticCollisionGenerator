@@ -5,7 +5,7 @@
 
 ====================================================================================*/
 #include "GameObject/gameobject.h"
-
+class Player;
 class Camera:public GameObject 
 {
 private:
@@ -17,6 +17,8 @@ private:
 	XMFLOAT4X4			m_MtxView{};		// ビューマトリックス
 	XMMATRIX			m_MtxInvView{};		// ビューマトリックス
 	XMMATRIX			m_MtxProjection{};	// プロジェクションマトリックス
+	Player*				m_Player;
+	float				m_Sensitivity = 0.0f;
 public:
 	void Init();
 	void Update(const float& DeltaTime);

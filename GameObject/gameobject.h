@@ -14,12 +14,17 @@ public:
 	XMFLOAT3 GetForward()const;
 	XMFLOAT3 GetRight()const;
 	XMFLOAT3 GetUp()const;
+	const XMFLOAT3& GetPosition() const{ return m_Position;}
+	const XMFLOAT3& GetRotation() const{ return m_Rotation; }
+	const XMFLOAT3& GetScale() const{ return m_Scale; }
+	const XMFLOAT4& GetQuaternion() const{ return m_Quaternion; }
 	const GAMEOBJECT_TYPE& GetGameObjectType() const{ return m_ObjectType; }
+	const Shader* GetShader()const { return m_Shader; }
 protected:
 	XMFLOAT3 m_Position = {0.0f,0.0f,0.0f};
-	XMFLOAT3 m_Scale = { 0.0f,0.0f,0.0f };
+	XMFLOAT3 m_Scale = { 1.0f,1.0f,1.0f };
 	XMFLOAT3 m_Rotation = { 0.0f,0.0f,0.0f };
-	XMFLOAT3 m_Velocity{};
+
 	XMFLOAT4 m_Quaternion{};
 	GAMEOBJECT_TYPE m_ObjectType = GAMEOBJECT_TYPE::NONE;
 	Shader* m_Shader{};

@@ -7,32 +7,30 @@
 #include "gameScene.h"
 void GameScene::Init()
 {
-	GameObjectManager* ObjectManager{};
-	m_SceneManager = SceneManager::GetInstance();
-	if (m_SceneManager)
+	m_GameObjectManager = new GameObjectManager;
+	if (m_GameObjectManager)
 	{
-		ObjectManager = m_SceneManager->GetGameObjectManager();
+		m_GameObjectManager->AddGameObject<Camera>(GAMEOBJECT_TYPE::CAMERA);
+		m_GameObjectManager->AddGameObjectArg<Field>(GAMEOBJECT_TYPE::FIELD, XMFLOAT3(0, 0, 0), XMFLOAT2(50, 50));
+		m_GameObjectManager->AddGameObject<Player>(GAMEOBJECT_TYPE::PLAYER);
+		m_GameObjectManager->Init();
 	}
-	if (ObjectManager)
-	{
-		ObjectManager->AddGameObject<Camera>(GAMEOBJECT_TYPE::CAMERA);
-		ObjectManager->AddGameObjectArg<Field>(GAMEOBJECT_TYPE::FIELD, XMFLOAT3(0, 0, 0), XMFLOAT2(50, 50));
-		ObjectManager->Init();
-	}
+	
+
 
 }
 
 void GameScene::Update(const float& DeltaTime)
 {
-
+	m_GameObjectManager->Update(DeltaTime);
 }
 
 void GameScene::Draw()
 {
-	
+	m_GameObjectManager->Draw();
 }
 
 void GameScene::Uninit()
 {
-	
+	m_GameObjectManager->Uninit();
 }

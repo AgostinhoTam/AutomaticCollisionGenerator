@@ -9,6 +9,7 @@ public:
 	virtual void Update(const float& DeltaTime){}
 	virtual void Draw(){}
 	virtual void Uninit(){}
+	GameObjectManager* GetGameObjectManager() { return m_GameObjectManager; }
 protected:
-	SceneManager* m_SceneManager;
+	GameObjectManager* m_GameObjectManager{};
 };

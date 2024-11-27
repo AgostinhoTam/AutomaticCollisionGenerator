@@ -59,8 +59,6 @@ void Field::Init()
 
 	m_Shader = ShaderManager::LoadShader(SHADER_NAME::UNLIT_TEXTURE);
 
-	//Renderer::CreateVertexShader(&m_VertexShader, &m_VertexLayout, "shader\\unlitTextureVS.cso");
-	//Renderer::CreatePixelShader(&m_PixelShader, "shader\\unlitTexturePS.cso");
 
 }
 
@@ -68,10 +66,6 @@ void Field::Uninit()
 {
 	if(m_VertexBuffer)m_VertexBuffer->Release();
 	if(m_Texture)m_Texture->Release();
-	
-	//if(m_VertexLayout)m_VertexLayout->Release();
-	//if(m_VertexShader)m_VertexShader->Release();
-	//if(m_PixelShader)m_PixelShader->Release();
 }
 
 void Field::Update(const float& DeltaTime)

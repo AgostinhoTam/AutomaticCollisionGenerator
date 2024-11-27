@@ -51,6 +51,22 @@ public:
 			}
 		}
 	}
+
+	//　リスト指定で処理が早い
+	template<typename T>
+	T* GetGameObject(const GAMEOBJECT_TYPE& layer)
+	{
+		for (GameObject* object : m_GameObjectList[static_cast<int>(layer)])
+		{
+			if (!object)continue;
+			T* gameObject = dynamic_cast<T*>(object);
+			if (gameObject)
+			{
+				return gameObject;
+			}
+		}
+		return nullptr;
+	}
 private:
 	std::vector<GameObject*> m_GameObjectList[static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE)];
 };

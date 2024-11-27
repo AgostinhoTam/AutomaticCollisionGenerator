@@ -1,6 +1,5 @@
 #pragma once
 class Scene;
-class GameObjectManager;
 
 class SceneManager
 {
@@ -11,11 +10,9 @@ public:
 	static void Update(const float& DeltaTime);
 	static void Draw();
 	static void Uninit();
-	Scene* GetCurrentScene() { return m_CurrentScene; }
-	GameObjectManager* GetGameObjectManager() { return m_GameObjectManager; }
+	static Scene* GetCurrentScene() { return m_CurrentScene; }
 private:
 	SceneManager() {}
 	static SceneManager* m_Instance;
 	static Scene* m_CurrentScene;
-	static GameObjectManager* m_GameObjectManager;
 };

@@ -1,15 +1,19 @@
+#include "Manager/modelRendererManager.h"
+#include "Manager/shaderManager.h"
+#include "Manager/inputManager.h"
+#include "Renderer/modelRenderer.h"
+#include "StateMachine/PlayerState/playerStateIdle.h"
+#include "StateMachine/PlayerState/playerStateWalk.h"
 #include "GameObject/Character/Player/playerh.h"
 
 void Player::Init()
 {
-	//m_Component = new ModelRenderer(this);
-	//((ModelRenderer*)m_Component)->Load("asset\\model\\player.obj");
-
-	//m_Component = new AnimationModel(this);
-	//((AnimationModel*)m_Component)->Load("asset\\model\\Maria.fbx");
-	//((AnimationModel*)m_Component)->LoadAnimation("asset\\model\\Maria_Idle.fbx","Idle");
-	//((AnimationModel*)m_Component)->LoadAnimation("asset\\model\\Maria_Running.fbx", "Run");
-
+	m_Model = ModelRendererManager::Load("asset\\model\\cube.obj");
+	m_Shader = ShaderManager::LoadShader(SHADER_NAME::UNLIT_TEXTURE);
+	m_PlayerState.reserve(static_cast<int>(PLAYER_STATE::MAX_STATE));
+	m_PlayerState.try_emplace(PLAYER_STATE::IDLE, new PlayerStateIdle(this));
+	m_PlayerState.try_emplace(PLAYER_STATE::WALK, new PlayerStateWalk(this));
+	m_CurrentState = m_PlayerState[PLAYER_STATE::IDLE];
 	//m_ChildModel = new ModelRenderer(this);
 	//((ModelRenderer*)m_ChildModel)->Load("asset\\model\\6ce0b353b442_excalibur_sword__3d.obj");
 
@@ -25,18 +29,19 @@ void Player::Init()
 	//Scene* scene = Manager::GetScene();
 
 	//m_spriteEmitter = scene->AddGameObject<SpriteEmitter>(1);
-
-	////	ƒNƒH[ƒ^ƒjƒIƒ“‰Šú‰»
-	//m_Quaternion.x = 0.0f;
-	//m_Quaternion.y = 0.0f;
-	//m_Quaternion.z = 0.0f;
-	//m_Quaternion.w = 1.0f;
+	m_Scale = { 2.0f,2.0f,2.0f };
+	m_Position.y = 1.0f;
+	//	ƒNƒH[ƒ^ƒjƒIƒ“‰Šú‰»
+	m_Quaternion.x = 0.0f;
+	m_Quaternion.y = 0.0f;
+	m_Quaternion.z = 0.0f;
+	m_Quaternion.w = 1.0f;
 
 	//m_Scale = { 0.01f,0.01f,0.01f };
 
 	//m_AnimationName = "Idle";
 	//m_NextAnimationName = "Idle";
-
+	
 	
 }
 
@@ -55,10 +60,10 @@ void Player::Uninit()
 //	m_VertexLayout->Release();
 //	m_VertexShader->Release();
 //	m_PixelShader->Release();
-//}
-//
-//void Player::Update()
-//{
+}
+
+void Player::Update(const float& DeltaTime)
+{
 //	XMFLOAT3 oldPosition = m_Position;
 //
 //	float dt = 1.0f / 60.0f;
@@ -75,77 +80,87 @@ void Player::Uninit()
 //	XMFLOAT3 right = camera->GetRight();
 //	bool isInput = false;
 //
-//	if (Input::GetKeyPress('A'))
+	m_CurrentState->Update();
+
+	m_Position.x += m_MoveDirection.x;
+	m_Position.z += m_MoveDirection.y;
+//	if (InputManager::GetKeyPress('A'))
 //	{
-//		m_Position.x -= right.x * 0.1f;
-//		m_Position.y -= right.y * 0.1f;
-//		m_Position.z -= right.z * 0.1f;
-//		m_Rotation.y = camera->GetRotation().y-3.14f*0.5f;
-//		XMVECTOR quat = XMQuaternionRotationRollPitchYaw(0.0f, -AI_MATH_PI*0.5f, 0.0f);
-//		XMVECTOR camquat = XMQuaternionRotationRollPitchYaw(0.0f, camera->GetRotation().y, 0.0f);
-//		quat = XMQuaternionMultiply(quat, camquat);
-//		//XMVECTOR quat = XMQuaternionRotationRollPitchYaw(0.0f, -0.1f, 0.0f);
-//		//quat = XMQuaternionMultiply(XMLoadFloat4(&m_Quaternion), quat);	//	s—ñ‰‰ŽZ‚Å‰ñ“]‚ðŒvŽZ‚·‚é
-//		XMStoreFloat4(&m_Quaternion, quat);
-//		m_spriteEmitter->SpawnSprite(m_Position, XMFLOAT3(right.x, right.y, right.z), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-//		
-//		m_NextAnimationName = "Run";
-//		isInput = true;
+//		//m_Position.x -= right.x * 0.1f;
+//		//m_Position.y -= right.y * 0.1f;
+//		//m_Position.z -= right.z * 0.1f;
+////		m_Rotation.y = camera->GetRotation().y-3.14f*0.5f;
+//		m_Position.x -= 0.1f;
+//		m_Quaternion.y -= 0.1f;
+//		m_Quaternion.y = fmod(m_Quaternion.y, XM_2PI);
+//		//XMVECTOR quat = XMQuaternionRotationRollPitchYaw(0.0f, m_Quaternion.y, 0.0f);
+////		XMVECTOR camquat = XMQuaternionRotationRollPitchYaw(0.0f, camera->GetRotation().y, 0.0f);
+////		quat = XMQuaternionMultiply(quat, camquat);
+////		//XMVECTOR quat = XMQuaternionRotationRollPitchYaw(0.0f, -0.1f, 0.0f);
+////		//quat = XMQuaternionMultiply(XMLoadFloat4(&m_Quaternion), quat);	//	s—ñ‰‰ŽZ‚Å‰ñ“]‚ðŒvŽZ‚·‚é
+////		XMStoreFloat4(&m_Quaternion, quat);
+////		m_spriteEmitter->SpawnSprite(m_Position, XMFLOAT3(right.x, right.y, right.z), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+////		
+////		m_NextAnimationName = "Run";
+////		isInput = true;
 //	}
-//
-//	if (Input::GetKeyPress('D'))
+////
+//	if (InputManager::GetKeyPress('D'))
 //	{
-//		m_Position.x += right.x * 0.1f;
-//		m_Position.y += right.y * 0.1f;
-//		m_Position.z += right.z * 0.1f;
-//		XMVECTOR quat = XMQuaternionRotationRollPitchYaw(0.0f, AI_MATH_PI * 0.5f, 0.0f);
-//		XMVECTOR camquat = XMQuaternionRotationRollPitchYaw(0.0f, camera->GetRotation().y, 0.0f);
-//		quat = XMQuaternionMultiply(quat, camquat);
-//		//XMVECTOR quat = XMQuaternionRotationRollPitchYaw(0.0f, 0.1f, 0.0f);
-//		//quat = XMQuaternionMultiply(XMLoadFloat4(&m_Quaternion), quat);	//	s—ñ‰‰ŽZ‚Å‰ñ“]‚ðŒvŽZ‚·‚é
-//		XMStoreFloat4(&m_Quaternion, quat);
-//		//m_Rotation.y = camera->GetRotation().y + 3.14f * 0.5f;
-//		m_spriteEmitter->SpawnSprite(m_Position, XMFLOAT3(-right.x, -right.y, -right.z),XMFLOAT4(1.0f,1.0f,1.0f,1.0f));
-//		m_NextAnimationName = "Run";
-//		isInput = true;
+////		m_Position.x += right.x * 0.1f;
+////		m_Position.y += right.y * 0.1f;
+////		m_Position.z += right.z * 0.1f;
+//		m_Position.x += 0.1f;
+// 		m_Quaternion.y += 0.1f;
+//		m_Quaternion.y = fmod(m_Quaternion.y, -XM_2PI);
+////		XMVECTOR quat = XMQuaternionRotationRollPitchYaw(0.0f, AI_MATH_PI * 0.5f, 0.0f);
+////		XMVECTOR camquat = XMQuaternionRotationRollPitchYaw(0.0f, camera->GetRotation().y, 0.0f);
+////		quat = XMQuaternionMultiply(quat, camquat);
+////		//XMVECTOR quat = XMQuaternionRotationRollPitchYaw(0.0f, 0.1f, 0.0f);
+////		//quat = XMQuaternionMultiply(XMLoadFloat4(&m_Quaternion), quat);	//	s—ñ‰‰ŽZ‚Å‰ñ“]‚ðŒvŽZ‚·‚é
+////		XMStoreFloat4(&m_Quaternion, quat);
+////		//m_Rotation.y = camera->GetRotation().y + 3.14f * 0.5f;
+////		m_spriteEmitter->SpawnSprite(m_Position, XMFLOAT3(-right.x, -right.y, -right.z),XMFLOAT4(1.0f,1.0f,1.0f,1.0f));
+////		m_NextAnimationName = "Run";
+////		isInput = true;
 //	}
-//
-//
-//	if (Input::GetKeyPress('W'))
-//	{
-//		
-//		m_Position.x += forward.x * 0.1f;
-//		m_Position.y += forward.y * 0.1f;
-//		m_Position.z += forward.z * 0.1f;
-//		m_Rotation.y = camera->GetRotation().y;
-//		XMVECTOR quat = XMQuaternionRotationRollPitchYaw(0.0f, 0.0f, 0.0f);
-//		XMVECTOR camquat = XMQuaternionRotationRollPitchYaw(0.0f, camera->GetRotation().y, 0.0f);
-//		quat = XMQuaternionMultiply(quat, camquat);
-//		//quat = XMQuaternionMultiply(XMLoadFloat4(&m_Quaternion), quat);	//	s—ñ‰‰ŽZ‚Å‰ñ“]‚ðŒvŽZ‚·‚é
-//		XMStoreFloat4(&m_Quaternion, quat);
-//		m_spriteEmitter->SpawnSprite(m_Position,XMFLOAT3(-forward.x,-forward.y,-forward.z), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-//		m_NextAnimationName = "Run";
-//		isInput = true;
-//	}
-//
-//	if (Input::GetKeyPress('S'))
-//	{
-//		
-//		m_Position.x -= forward.x * 0.1f;
-//		m_Position.y -= forward.y * 0.1f;
-//		m_Position.z -= forward.z * 0.1f;
-//		m_Rotation.y = camera->GetRotation().y+3.14f;
-//		XMVECTOR quat = XMQuaternionRotationRollPitchYaw(0.0f, AI_MATH_PI, 0.0f);
-//		XMVECTOR camquat = XMQuaternionRotationRollPitchYaw(0.0f, camera->GetRotation().y, 0.0f);
-//		quat = XMQuaternionMultiply(quat, camquat);
-//		//quat = XMQuaternionMultiply(XMLoadFloat4(&m_Quaternion), quat);	//	s—ñ‰‰ŽZ‚Å‰ñ“]‚ðŒvŽZ‚·‚é
-//		XMStoreFloat4(&m_Quaternion, quat);
-//		m_spriteEmitter->SpawnSprite(m_Position, XMFLOAT3(forward.x, forward.y, forward.z), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-//
-//		m_NextAnimationName = "Run";
-//		isInput = true;
-//	}
-//
+////
+////
+////	if (Input::GetKeyPress('W'))
+////	{
+////		
+////		m_Position.x += forward.x * 0.1f;
+////		m_Position.y += forward.y * 0.1f;
+////		m_Position.z += forward.z * 0.1f;
+////		m_Rotation.y = camera->GetRotation().y;
+////		XMVECTOR quat = XMQuaternionRotationRollPitchYaw(0.0f, 0.0f, 0.0f);
+////		XMVECTOR camquat = XMQuaternionRotationRollPitchYaw(0.0f, camera->GetRotation().y, 0.0f);
+////		quat = XMQuaternionMultiply(quat, camquat);
+////		//quat = XMQuaternionMultiply(XMLoadFloat4(&m_Quaternion), quat);	//	s—ñ‰‰ŽZ‚Å‰ñ“]‚ðŒvŽZ‚·‚é
+////		XMStoreFloat4(&m_Quaternion, quat);
+////		m_spriteEmitter->SpawnSprite(m_Position,XMFLOAT3(-forward.x,-forward.y,-forward.z), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+////		m_NextAnimationName = "Run";
+////		isInput = true;
+////	}
+////
+////	if (Input::GetKeyPress('S'))
+////	{
+////		
+////		m_Position.x -= forward.x * 0.1f;
+////		m_Position.y -= forward.y * 0.1f;
+////		m_Position.z -= forward.z * 0.1f;
+////		m_Rotation.y = camera->GetRotation().y+3.14f;
+////		XMVECTOR quat = XMQuaternionRotationRollPitchYaw(0.0f, AI_MATH_PI, 0.0f);
+////		XMVECTOR camquat = XMQuaternionRotationRollPitchYaw(0.0f, camera->GetRotation().y, 0.0f);
+////		quat = XMQuaternionMultiply(quat, camquat);
+////		//quat = XMQuaternionMultiply(XMLoadFloat4(&m_Quaternion), quat);	//	s—ñ‰‰ŽZ‚Å‰ñ“]‚ðŒvŽZ‚·‚é
+////		XMStoreFloat4(&m_Quaternion, quat);
+////		m_spriteEmitter->SpawnSprite(m_Position, XMFLOAT3(forward.x, forward.y, forward.z), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+////
+////		m_NextAnimationName = "Run";
+////		isInput = true;
+////	}
+////
 //
 //	if (Input::GetKeyTrigger(VK_SPACE))
 //	{
@@ -255,6 +270,8 @@ void Player::Uninit()
 
 void Player::Draw()
 {
+
+	ModelRenderer::Draw(m_Model,this);
 	//((AnimationModel*)m_Component)->Update(m_AnimationName.c_str(), m_AnimationFrame);
 
 	//((AnimationModel*)m_Component)->Update(m_AnimationName.c_str(), m_AnimationFrame, m_NextAnimationName.c_str(), m_AnimationFrame, m_BlendRatio);
@@ -293,4 +310,16 @@ void Player::Draw()
 	//Renderer::SetWorldMatrix(childWorld);
 
 	//m_ChildModel->Draw();
+}
+
+void Player::ChangeState(PLAYER_STATE State)
+{
+	//	“¯‚¶State‚É‘JˆÚ‚µ‚È‚¢‚æ‚¤‚É
+	if (m_CurrentState == m_PlayerState[State])return;
+
+	m_CurrentState = m_PlayerState[State];
+
+	if (!m_CurrentState) return;
+	
+	m_CurrentState->Init();
 }

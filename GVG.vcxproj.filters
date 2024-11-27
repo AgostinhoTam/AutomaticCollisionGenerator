@@ -54,6 +54,15 @@
     <ClCompile Include="Manager\shaderManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Manager\inputManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="StateMachine\PlayerState\playerStateWalk.cpp">
+      <Filter>StateMachine\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="StateMachine\PlayerState\playerStateIdle.cpp">
+      <Filter>StateMachine\PlayerState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject\Field\field.h">
@@ -116,6 +125,24 @@
     <ClInclude Include="Structure\shaderStructure.h">
       <Filter>Structure</Filter>
     </ClInclude>
+    <ClInclude Include="Manager\inputManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="StateMachine\PlayerState\playerStateWalk.h">
+      <Filter>StateMachine\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="StateMachine\PlayerState\playerState.h">
+      <Filter>StateMachine\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="Enum\playerStateEnum.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="StateMachine\PlayerState\playerStateIdle.h">
+      <Filter>StateMachine\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="Enum\moveDirection.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Main">
@@ -148,12 +175,6 @@
     <Filter Include="Enum">
       <UniqueIdentifier>{bad4e557-6e2a-402d-bfcb-940bd87d82ff}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameObject\Chatacter">
-      <UniqueIdentifier>{0f07b9ed-0572-4da8-97b8-3d0a0865b4bd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject\Chatacter\Player">
-      <UniqueIdentifier>{21da2594-8f90-409a-a81c-a65bc3be5715}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Structure">
       <UniqueIdentifier>{070a58e8-ca38-49d2-9d79-49377a7da421}</UniqueIdentifier>
     </Filter>
@@ -162,6 +183,12 @@
     </Filter>
     <Filter Include="GameObject\Character\Player">
       <UniqueIdentifier>{f3a6387f-75fa-412e-9e6e-fcc7c17636f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateMachine">
+      <UniqueIdentifier>{a7faff98-bb76-45db-8656-4e95c848f0e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateMachine\PlayerState">
+      <UniqueIdentifier>{d567643f-0c6f-4416-9e7f-6fbe5a57ee01}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

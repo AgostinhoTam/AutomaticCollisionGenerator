@@ -2,7 +2,7 @@
 
 #include <string>
 #include <unordered_map>
-
+class GameObject;
 
 class ModelRenderer
 {
@@ -10,6 +10,6 @@ private:
 
 public:
 
-	void Draw(const MODEL*& model);
+	static void Draw(const MODEL* model,const GameObject* object);
 
 };

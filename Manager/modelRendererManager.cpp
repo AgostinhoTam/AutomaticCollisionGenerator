@@ -5,7 +5,6 @@
 #pragma comment(lib, "shlwapi.lib")
 
 #include "Main/main.h"
-#include "Renderer/renderer.h"
 #include "Enum/modelEnum.h"
 #include "Manager/modelRendererManager.h"
 
@@ -154,9 +153,9 @@ void ModelRendererManager::LoadObj( const char *FileName, MODEL_OBJ *ModelObj )
 
 
 
-	XMFLOAT3* positionArray;
-	XMFLOAT3* normalArray;
-	XMFLOAT2* texcoordArray;
+	XMFLOAT3* positionArray{};
+	XMFLOAT3* normalArray{};
+	XMFLOAT2* texcoordArray{};
 
 	unsigned int	positionNum = 0;
 	unsigned int	normalNum = 0;

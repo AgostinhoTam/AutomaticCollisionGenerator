@@ -1,5 +1,7 @@
 #pragma once
+#include "Renderer/renderer.h"
 // マテリアル構造体
+
 struct MODEL_MATERIAL
 {
 	char						Name[256];
@@ -62,6 +64,6 @@ public:
 
 	static void UnloadAll();
 
-	MODEL* Load( const char *FileName );
+	static MODEL* Load( const char *FileName );
 
 };
