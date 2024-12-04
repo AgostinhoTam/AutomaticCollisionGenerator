@@ -1,11 +1,11 @@
 #include "GameObject/Character/Player/playerh.h"
+#include "GameObject/Camera/camera.h"
 #include "Manager/inputManager.h"
 #include "playerStateIdle.h"
 
 void PlayerStateIdle::Init()
 {
 	if (!m_Player)return;
-
 	m_Player->SetMoveForwardDirection(0);
 	m_Player->SetMoveRightDirection(0);
 }

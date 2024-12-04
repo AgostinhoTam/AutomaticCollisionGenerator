@@ -24,4 +24,5 @@ public:
 	void Update(const float& DeltaTime);
 	void Uninit();
 	void Draw();
+	const XMMATRIX& GetViewMatrix() const { return XMLoadFloat4x4(&m_MtxView); }
 };

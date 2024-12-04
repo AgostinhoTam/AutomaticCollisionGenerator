@@ -9,15 +9,15 @@
 #pragma comment (lib, "assimp-vc143-mt.lib")
 
 
-
+class GameObject;
 //変形後頂点構造体
 struct DEFORM_VERTEX
 {
 	aiVector3D Position;
 	aiVector3D Normal;
-	int				BoneNum;
-	std::string		BoneName[4];//本来はボーンインデックスで管理するべき
-	float			BoneWeight[4];
+	int				BoneNum = {};
+	std::string		BoneName[4] = {};//本来はボーンインデックスで管理するべき
+	float			BoneWeight[4] = {};
 };
 
 //ボーン構造体
@@ -46,5 +46,5 @@ public:
 
 	void Load( const char *FileName );
 	void Uninit();
-	void Draw();
+	void Draw(GameObject* Object);
 };

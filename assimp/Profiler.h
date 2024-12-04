@@ -2,7 +2,7 @@
 Open Asset Import Library (assimp)
 ----------------------------------------------------------------------
 
-Copyright (c) 2006-2022, assimp team
+Copyright (c) 2006-2024, assimp team
 
 
 All rights reserved.
@@ -52,8 +52,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endif
 
 #include <chrono>
-#include "DefaultLogger.hpp>
-#include "TinyFormatter.h"
+#include <assimp/DefaultLogger.hpp>
+#include <assimp/TinyFormatter.h>
 
 #include <map>
 
@@ -68,9 +68,7 @@ using namespace Formatter;
  */
 class Profiler {
 public:
-    Profiler() {
-        // empty
-    }
+    Profiler() = default;
 
 
     /** Start a named timer */

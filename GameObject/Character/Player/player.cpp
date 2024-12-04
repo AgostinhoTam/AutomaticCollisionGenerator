@@ -1,47 +1,48 @@
 #include "Manager/modelRendererManager.h"
+#include "Manager/sceneManager.h"
 #include "Manager/shaderManager.h"
 #include "Manager/inputManager.h"
+#include "Manager/gameObjectManager.h"
+#include "Scene/scene.h"
 #include "Renderer/modelRenderer.h"
+#include "Renderer/animationModel.h"
 #include "StateMachine/PlayerState/playerStateIdle.h"
 #include "StateMachine/PlayerState/playerStateWalk.h"
 #include "GameObject/Character/Player/playerh.h"
+#include "GameObject/Camera/camera.h"
+
+constexpr float PLAYER_MAX_SPEED = 300.0f;
+constexpr float PLAYER_ACCL_SPEED = 20.0f;
 
 void Player::Init()
 {
-	m_Model = ModelRendererManager::Load("asset\\model\\cube.obj");
+	m_Model = ModelRendererManager::Load("asset\\model\\1fe8be154891_freedom_gundam_full.obj");
+	m_AnimationModel = new AnimationModel;
+	if(m_AnimationModel)m_AnimationModel->Load("asset\\model\\playerrobot.fbx");
+
 	m_Shader = ShaderManager::LoadShader(SHADER_NAME::UNLIT_TEXTURE);
+	m_MaxMovementSpeed = PLAYER_MAX_SPEED;
+	m_AcclSpeed = PLAYER_ACCL_SPEED;
+
+
+	Scene* scene = SceneManager::GetInstance()->GetCurrentScene();
+	if (scene)
+	{
+		GameObjectManager* objectManager = scene->GetGameObjectManager();
+		if (objectManager)
+		{
+			m_Camera = objectManager->GetGameObject<Camera>(GAMEOBJECT_TYPE::CAMERA);
+		}
+	}
+
 	m_PlayerState.reserve(static_cast<int>(PLAYER_STATE::MAX_STATE));
-	m_PlayerState.try_emplace(PLAYER_STATE::IDLE, new PlayerStateIdle(this));
-	m_PlayerState.try_emplace(PLAYER_STATE::WALK, new PlayerStateWalk(this));
+	m_PlayerState.try_emplace(PLAYER_STATE::IDLE, new PlayerStateIdle(this, m_Camera));
+	m_PlayerState.try_emplace(PLAYER_STATE::WALK, new PlayerStateWalk(this, m_Camera));
 	m_CurrentState = m_PlayerState[PLAYER_STATE::IDLE];
-	//m_ChildModel = new ModelRenderer(this);
-	//((ModelRenderer*)m_ChildModel)->Load("asset\\model\\6ce0b353b442_excalibur_sword__3d.obj");
-
-	//Renderer::CreateVertexShader(&m_VertexShader, &m_VertexLayout,
-	//	"shader\\unlitTextureVS.cso");
-
-	//Renderer::CreatePixelShader(&m_PixelShader,
-	//	"shader\\unlitTexturePS.cso");
-
-	//m_SE = new Audio(this);
-	//m_SE->Load("asset\\audio\\wan.wav");
-	//
-	//Scene* scene = Manager::GetScene();
-
-	//m_spriteEmitter = scene->AddGameObject<SpriteEmitter>(1);
 	m_Scale = { 2.0f,2.0f,2.0f };
+
 	m_Position.y = 1.0f;
-	//	クォータニオン初期化
-	m_Quaternion.x = 0.0f;
-	m_Quaternion.y = 0.0f;
-	m_Quaternion.z = 0.0f;
-	m_Quaternion.w = 1.0f;
 
-	//m_Scale = { 0.01f,0.01f,0.01f };
-
-	//m_AnimationName = "Idle";
-	//m_NextAnimationName = "Idle";
-	
 	
 }
 
@@ -60,30 +61,20 @@ void Player::Uninit()
 //	m_VertexLayout->Release();
 //	m_VertexShader->Release();
 //	m_PixelShader->Release();
+	m_AnimationModel->Uninit();
 }
 
 void Player::Update(const float& DeltaTime)
 {
-//	XMFLOAT3 oldPosition = m_Position;
-//
-//	float dt = 1.0f / 60.0f;
-//
-//	//m_Component->Update();
-//	Scene* scene;
-//	scene = Manager::GetScene();
-//
-//	//　雪のEmitterはプレイヤーに追従する
-//	scene->GetGameObject<SnowEmitter>()->SetPosition(XMFLOAT3(m_Position.x,m_Position.y+10.0f,m_Position.z));
-//
-//	Camera* camera = scene->GetGameObject<Camera>();
-//	XMFLOAT3 forward = camera->GetForward();
-//	XMFLOAT3 right = camera->GetRight();
-//	bool isInput = false;
-//
+	if (!m_Model)return;
+	if (!m_CurrentState)return;
+	if (!m_AnimationModel)return;
+	if (!m_Camera)return;
+
 	m_CurrentState->Update();
 
-	m_Position.x += m_MoveDirection.x;
-	m_Position.z += m_MoveDirection.y;
+	Character::Update(DeltaTime);
+
 //	if (InputManager::GetKeyPress('A'))
 //	{
 //		//m_Position.x -= right.x * 0.1f;
@@ -271,7 +262,8 @@ void Player::Update(const float& DeltaTime)
 void Player::Draw()
 {
 
-	ModelRenderer::Draw(m_Model,this);
+	//ModelRenderer::Draw(m_Model,this);
+	m_AnimationModel->Draw(this);
 	//((AnimationModel*)m_Component)->Update(m_AnimationName.c_str(), m_AnimationFrame);
 
 	//((AnimationModel*)m_Component)->Update(m_AnimationName.c_str(), m_AnimationFrame, m_NextAnimationName.c_str(), m_AnimationFrame, m_BlendRatio);

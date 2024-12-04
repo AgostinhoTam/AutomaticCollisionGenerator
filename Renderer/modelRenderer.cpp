@@ -10,11 +10,11 @@ void ModelRenderer::Draw(const MODEL* Model,const GameObject* Object)
 	XMMATRIX world, scale, rot, trans;
 	const XMFLOAT3& objPosition = Object->GetPosition();
 	const XMFLOAT3& objScale = Object->GetScale();
-	const XMFLOAT4& objQuaternion = Object->GetQuaternion();
+	const XMFLOAT3& objRotation = Object->GetRotation();
 	const Shader* Shader = Object->GetShader();
 	scale = XMMatrixScaling(objScale.x, objScale.y, objScale.z);
 
-	XMVECTOR quaternion = XMQuaternionRotationRollPitchYaw(objQuaternion.x, objQuaternion.y, objQuaternion.z);
+	XMVECTOR quaternion = XMQuaternionRotationRollPitchYaw(objRotation.x, objRotation.y, objRotation.z);
 	quaternion = XMQuaternionNormalize(quaternion);
 	rot = XMMatrixRotationQuaternion(quaternion);
 

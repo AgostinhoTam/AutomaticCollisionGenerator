@@ -3,6 +3,7 @@
 #include "Enum/playerStateEnum.h"
 #include <unordered_map>
 class PlayerState;
+class Camera;
 class Player : public Character
 {
 private:
@@ -18,6 +19,7 @@ private:
 	class SpriteEmitter* m_spriteEmitter;
 	int		m_AnimationFrame = 0;
 	float m_BlendRatio{};
+	Camera* m_Camera;
 public:
 	virtual void Init()override;
 	virtual void Uninit()override;
