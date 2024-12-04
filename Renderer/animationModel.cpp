@@ -1,9 +1,33 @@
 #include "Main/main.h"
 #include "Renderer/renderer.h"
+#include "GameObject/gameobject.h"
 #include "Renderer/animationModel.h"
 
-void AnimationModel::Draw()
+void AnimationModel::Draw(GameObject* Object)
 {
+	//	ワールドマトリクス設定
+	XMMATRIX world, scale, rot, trans;
+	const XMFLOAT3& objPosition = Object->GetPosition();
+	const XMFLOAT3& objScale = Object->GetScale();
+	const XMFLOAT3& objRotation = Object->GetRotation();
+	const Shader* Shader = Object->GetShader();
+	scale = XMMatrixScaling(objScale.x, objScale.y, objScale.z);
+
+	XMVECTOR quaternion = XMQuaternionRotationRollPitchYaw(objRotation.x, objRotation.y, objRotation.z);
+	quaternion = XMQuaternionNormalize(quaternion);
+	rot = XMMatrixRotationQuaternion(quaternion);
+
+	trans = XMMatrixTranslation(objPosition.x, objPosition.y, objPosition.z);
+	world = scale * rot * trans;
+	Renderer::SetWorldMatrix(world);
+
+	//入力レイアウト設定
+	Renderer::GetDeviceContext()->IASetInputLayout(Shader->m_VertexLayout);
+
+	//シェーダー設定
+	Renderer::GetDeviceContext()->VSSetShader(Shader->m_VertexShader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(Shader->m_PixelShader, NULL, 0);
+
 	// プリミティブトポロジ設定
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -187,16 +211,19 @@ void AnimationModel::Load( const char *FileName )
 
 
 	//テクスチャ読み込み
-	for(int i = 0; i < m_AiScene->mNumTextures; i++)
+	for(unsigned int i = 0; i < m_AiScene->mNumTextures; i++)
 	{
 		aiTexture* aitexture = m_AiScene->mTextures[i];
 
 		ID3D11ShaderResourceView* texture;
 
 		// テクスチャ読み込み
-		TexMetadata metadata;
-		ScratchImage image;
-		LoadFromWICMemory(aitexture->pcData, aitexture->mWidth, WIC_FLAGS_NONE, &metadata, image);
+		TexMetadata metadata{};
+		ScratchImage image{};
+		if (aitexture->mHeight == 0)
+		{
+			LoadFromWICMemory(reinterpret_cast<const std::byte*>(aitexture->pcData), static_cast<size_t>(aitexture->mWidth), WIC_FLAGS_NONE, &metadata, image);
+		}
 		CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &texture);
 		assert(texture);
 

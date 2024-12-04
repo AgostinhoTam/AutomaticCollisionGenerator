@@ -2,7 +2,7 @@
 Open Asset Import Library (assimp)
 ----------------------------------------------------------------------
 
-Copyright (c) 2006-2022, assimp team
+Copyright (c) 2006-2024, assimp team
 All rights reserved.
 
 Redistribution and use of this software in source and binary forms,
@@ -46,8 +46,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #pragma GCC system_header
 #endif
 
-#include "DefaultIOStream.h"
-#include "TinyFormatter.h"
+#include <assimp/DefaultIOStream.h>
+#include <assimp/TinyFormatter.h>
 #include <stdexcept>
 
 using std::runtime_error;

@@ -17,8 +17,8 @@ void InputManager::Init()
 	GetCursorPos(&m_CurrentMousePos);
 	m_LastMousePos = m_CurrentMousePos;
 	ScreenToClient(GetWindow(), &m_CurrentMousePos);
-	m_MouseDelta.x = 0.0f;
-	m_MouseDelta.y = 0.0f;
+	m_MouseDelta.x = 0;
+	m_MouseDelta.y = 0;
 
 }
 

@@ -63,6 +63,9 @@
     <ClCompile Include="StateMachine\PlayerState\playerStateIdle.cpp">
       <Filter>StateMachine\PlayerState</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Character\character.cpp">
+      <Filter>GameObject\Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject\Field\field.h">
