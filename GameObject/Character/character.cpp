@@ -1,39 +1,73 @@
 #include "character.h"
-constexpr float FRICTION = 0.98f;
-
+constexpr float FRICTION = 0.9f;
+constexpr float MAX_DROP_SPEED = -50.0f;
+constexpr float GRAVITY = -9.8f;
 void Character::Update(const float& DeltaTime)
 {
 	XMVECTOR position = XMLoadFloat3(&m_Position);
 	XMVECTOR velocity = XMLoadFloat3(&m_Velocity);
-	XMVECTOR accl = XMLoadFloat3(&m_Accl);
-	XMVECTOR dir = XMVectorSet(m_MoveDirection.x, 0.0f, m_MoveDirection.y, 0.0f); //xz移動
-	//	方向正規化
-	XMVECTOR dirNormalize = XMVector3Normalize(dir);
-	
-	//	速度
-	XMVECTOR targetVelocity = dirNormalize * m_MaxMovementSpeed;
 
-	//	加速度
-	accl = dirNormalize * m_AcclSpeed * DeltaTime;
+	UpdateHorizontalVelocity(velocity, DeltaTime);
 
-	//	最終速度
-	XMVECTOR finalVelocity = XMVectorAdd(accl, velocity);
-	
-	//	減速
-	finalVelocity *= FRICTION;
+	UpdateVerticalVelocity(velocity,DeltaTime);
 
-	XMVECTOR velocityXZ = XMVectorSet(XMVectorGetX(finalVelocity), XMVectorGetZ(finalVelocity),0.0f,0.0f);
-	float velocityMagnitude = XMVectorGetX(XMVector2Length(velocityXZ));
-
-	if (velocityMagnitude > m_MaxMovementSpeed)
-	{
-		finalVelocity = targetVelocity;
-	}
-
-	position = XMVectorMultiplyAdd(finalVelocity, XMVectorReplicate(DeltaTime), position);
+	position = XMVectorMultiplyAdd(velocity, XMVectorReplicate(DeltaTime), position);
 	
 	XMStoreFloat3(&m_Position,position);
-	XMStoreFloat3(&m_Velocity, finalVelocity);
+	XMStoreFloat3(&m_Velocity, velocity);
 
-	m_MoveDirection = { 0,0 };
+	m_MoveDirection = { 0,0,0 };
+}
+
+void Character::UpdateVerticalVelocity(XMVECTOR& Velocity, const float& DeltaTime)
+{
+	float groundHeight = 0.0f;
+
+	float velocityY = XMVectorGetY(Velocity);
+
+	if (m_IsGround)
+	{
+		velocityY = 0.0f;
+	}
+	else
+	{
+		velocityY += GRAVITY * DeltaTime;
+		if (velocityY < MAX_DROP_SPEED)
+		{
+			velocityY = MAX_DROP_SPEED;
+		}
+	}
+	Velocity = XMVectorSetY(Velocity,velocityY);
+}
+
+void Character::UpdateHorizontalVelocity(XMVECTOR& Velocity,const float& DeltaTime)
+{
+	//	平面方向正規化
+	XMVECTOR dirNormalize = XMVectorSet(m_MoveDirection.x, 0.0f, m_MoveDirection.z, 0.0f); //xz移動
+	dirNormalize = XMVector3Normalize(dirNormalize);
+
+	//	加速度
+	XMVECTOR accl = dirNormalize * m_MaxHorizontalAcclSpeed * DeltaTime;
+
+	//	加速度適用
+	Velocity = XMVectorAdd(Velocity, accl);
+
+	//	入力がなければ減速
+	//if (XMVectorGetX(dirNormalize) == 0.0f && XMVectorGetZ(dirNormalize) == 0.0f)
+	//{
+		XMVECTOR velocityXZ = XMVectorSet(XMVectorGetX(Velocity), 0.0f, XMVectorGetZ(Velocity), 0.0f);
+		velocityXZ *= FRICTION;
+		Velocity = XMVectorSet(XMVectorGetX(velocityXZ), XMVectorGetY(Velocity), XMVectorGetZ(velocityXZ), 0.0f);
+	/*}*/
+
+	//	速度上限
+	XMVECTOR velocityXZ = XMVectorSet(XMVectorGetX(Velocity), 0.0f, XMVectorGetZ(Velocity), 0.0f);
+	float velocityMagnitude = XMVectorGetX(XMVector2Length(velocityXZ));
+	if (velocityMagnitude > m_MaxMovementSpeed)
+	{
+		//	速度調整
+		velocityXZ = XMVector3Normalize(velocityXZ) * m_MaxMovementSpeed;
+
+		Velocity = XMVectorSet(XMVectorGetX(velocityXZ), XMVectorGetY(Velocity), XMVectorGetZ(velocityXZ), 0.0f);
+	}
 }

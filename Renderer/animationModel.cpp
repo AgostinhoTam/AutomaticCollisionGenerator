@@ -11,6 +11,7 @@ void AnimationModel::Draw(GameObject* Object)
 	const XMFLOAT3& objScale = Object->GetScale();
 	const XMFLOAT3& objRotation = Object->GetRotation();
 	const Shader* Shader = Object->GetShader();
+
 	scale = XMMatrixScaling(objScale.x, objScale.y, objScale.z);
 
 	XMVECTOR quaternion = XMQuaternionRotationRollPitchYaw(objRotation.x, objRotation.y, objRotation.z);

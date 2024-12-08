@@ -12,8 +12,8 @@
 #include "GameObject/Camera/camera.h"
 
 constexpr float PLAYER_MAX_SPEED = 300.0f;
-constexpr float PLAYER_ACCL_SPEED = 20.0f;
-
+constexpr float PLAYER_MAX_ACCL_SPEED = 20.0f;
+constexpr float PLAYER_MAX_JUMP_SPEED = 100.0f;
 void Player::Init()
 {
 	m_Model = ModelRendererManager::Load("asset\\model\\1fe8be154891_freedom_gundam_full.obj");
@@ -21,8 +21,9 @@ void Player::Init()
 	if(m_AnimationModel)m_AnimationModel->Load("asset\\model\\playerrobot.fbx");
 
 	m_Shader = ShaderManager::LoadShader(SHADER_NAME::UNLIT_TEXTURE);
+
 	m_MaxMovementSpeed = PLAYER_MAX_SPEED;
-	m_AcclSpeed = PLAYER_ACCL_SPEED;
+	m_MaxHorizontalAcclSpeed = PLAYER_MAX_ACCL_SPEED;
 
 
 	Scene* scene = SceneManager::GetInstance()->GetCurrentScene();
@@ -42,7 +43,7 @@ void Player::Init()
 	m_Scale = { 2.0f,2.0f,2.0f };
 
 	m_Position.y = 1.0f;
-
+	m_IsGround = true;
 	
 }
 
@@ -73,7 +74,10 @@ void Player::Update(const float& DeltaTime)
 
 	m_CurrentState->Update();
 
+	UpdatePlayerRotation();
+
 	Character::Update(DeltaTime);
+
 
 //	if (InputManager::GetKeyPress('A'))
 //	{
@@ -314,4 +318,32 @@ void Player::ChangeState(PLAYER_STATE State)
 	if (!m_CurrentState) return;
 	
 	m_CurrentState->Init();
+}
+
+void Player::UpdatePlayerRotation()
+{
+	
+	// 移動入力がある場合に回転を更新
+	if (m_MoveDirection.x != 0.0f || m_MoveDirection.z != 0.0f)
+	{
+		const XMFLOAT3& cameraForward = m_Camera->GetForward();
+		const XMFLOAT3& cameraRight = m_Camera->GetRight();
+
+		float moveX = m_MoveDirection.x * cameraRight.x + m_MoveDirection.z * cameraForward.x;
+		float moveZ = m_MoveDirection.x * cameraRight.z + m_MoveDirection.z * cameraForward.z;
+
+		// 正規化して方向ベクトル
+		XMVECTOR moveVector = XMVectorSet(moveX, 0.0f, moveZ, 0.0f);
+		moveVector = XMVector3Normalize(moveVector);
+
+		XMFLOAT3 normalizeMove;
+		XMStoreFloat3(&normalizeMove, moveVector);
+
+		m_MoveDirection = XMFLOAT3(normalizeMove.x, 0.0f, normalizeMove.z);
+
+		// 回転更新
+		float yaw = atan2f(normalizeMove.x, normalizeMove.z);
+		m_Rotation.y = yaw;
+
+	}
 }

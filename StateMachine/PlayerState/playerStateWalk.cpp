@@ -18,12 +18,13 @@ void PlayerStateWalk::Update()
 
 	UserInputDection();
 
-	UpdatePlayerRotation();
+	//UpdatePlayerRotation();
 
 }
 
 void PlayerStateWalk::UserInputDection()
 {
+	m_Player->SetMoveDirection(XMFLOAT3(0.0f, 0.0f, 0.0f));
 
 	bool hasInput = false;
 	if (InputManager::GetKeyPress('A'))
@@ -56,7 +57,7 @@ void PlayerStateWalk::UserInputDection()
 
 void PlayerStateWalk::UpdatePlayerRotation()
 {
-	const XMFLOAT2& moveDirection = m_Player->GetMoveDirection();
+	const XMFLOAT3& moveDirection = m_Player->GetMoveDirection();
 
 	// 移動入力がある場合に回転を更新
 	if (moveDirection.x != 0.0f || moveDirection.y != 0.0f)
@@ -64,8 +65,8 @@ void PlayerStateWalk::UpdatePlayerRotation()
 		const XMFLOAT3& cameraForward = m_Camera->GetForward();
 		const XMFLOAT3& cameraRight = m_Camera->GetRight();
 		
-		float moveX = moveDirection.x * cameraRight.x + moveDirection.y * cameraForward.x;
-		float moveZ = moveDirection.x * cameraRight.z + moveDirection.y * cameraForward.z;
+		float moveX = moveDirection.x * cameraRight.x + moveDirection.z * cameraForward.x;
+		float moveZ = moveDirection.x * cameraRight.z + moveDirection.z * cameraForward.z;
 
 		// 正規化して方向ベクトル
 		XMVECTOR moveVector = XMVectorSet(moveX, 0.0f, moveZ, 0.0f);
@@ -74,7 +75,7 @@ void PlayerStateWalk::UpdatePlayerRotation()
 		XMFLOAT3 normalizeMove;
 		XMStoreFloat3(&normalizeMove, moveVector);
 
-		m_Player->SetMoveDirection(XMFLOAT2(normalizeMove.x, normalizeMove.z));
+		m_Player->SetMoveDirection(XMFLOAT3(normalizeMove.x, 0.0f,normalizeMove.z));
 
 		// 回転更新
 		float yaw = atan2f(normalizeMove.x, normalizeMove.z);

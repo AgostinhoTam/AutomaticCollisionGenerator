@@ -66,6 +66,9 @@
     <ClCompile Include="GameObject\Character\character.cpp">
       <Filter>GameObject\Character</Filter>
     </ClCompile>
+    <ClCompile Include="StateMachine\PlayerState\playerStateJump.cpp">
+      <Filter>StateMachine\PlayerState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject\Field\field.h">
@@ -145,6 +148,9 @@
     </ClInclude>
     <ClInclude Include="Enum\moveDirection.h">
       <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="StateMachine\PlayerState\playerStateJump.h">
+      <Filter>StateMachine\PlayerState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

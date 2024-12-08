@@ -188,6 +188,7 @@
     <ClCompile Include="Renderer\renderer.cpp" />
     <ClCompile Include="Scene\gameScene.cpp" />
     <ClCompile Include="StateMachine\PlayerState\playerStateIdle.cpp" />
+    <ClCompile Include="StateMachine\PlayerState\playerStateJump.cpp" />
     <ClCompile Include="StateMachine\PlayerState\playerStateWalk.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -215,6 +216,7 @@
     <ClInclude Include="Scene\scene.h" />
     <ClInclude Include="StateMachine\PlayerState\playerState.h" />
     <ClInclude Include="StateMachine\PlayerState\playerStateIdle.h" />
+    <ClInclude Include="StateMachine\PlayerState\playerStateJump.h" />
     <ClInclude Include="StateMachine\PlayerState\playerStateWalk.h" />
     <ClInclude Include="Structure\shaderStructure.h" />
   </ItemGroup>

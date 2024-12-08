@@ -43,12 +43,12 @@ void Camera::Update(const float& DeltaTime)
 	
 	m_Target = targetPos;
 
-	m_Rotation.y += mouseDeltaPos.x*m_Sensitivity;
-	m_Rotation.x += mouseDeltaPos.y*m_Sensitivity;
+	m_Rotation.y += mouseDeltaPos.x * m_Sensitivity;
+	m_Rotation.x += mouseDeltaPos.y * m_Sensitivity;
 
-	const float maxYRotation = XM_PIDIV2 - 0.1f;
-	const float minYRotation = -XM_PIDIV2 + 0.1f;
-	m_Rotation.y = std::max(minYRotation, std::min(maxYRotation, m_Rotation.y));
+	const float maxXRotation = XM_PIDIV2 - 0.1f;
+	const float minXRotation = -XM_PIDIV2 + 0.1f;
+	m_Rotation.x = std::max(minXRotation, std::min(maxXRotation, m_Rotation.x));
 
 	XMVECTOR rotationQuat = XMQuaternionRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z);
 
