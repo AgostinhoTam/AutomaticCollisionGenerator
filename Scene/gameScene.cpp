@@ -12,11 +12,10 @@ void GameScene::Init()
 	{
 		m_GameObjectManager->AddGameObject<Camera>(GAMEOBJECT_TYPE::CAMERA);
 		m_GameObjectManager->AddGameObjectArg<Field>(GAMEOBJECT_TYPE::FIELD, XMFLOAT3(0, 0, 0), XMFLOAT2(50, 50));
-		m_GameObjectManager->AddGameObject<Player>(GAMEOBJECT_TYPE::PLAYER);
+		Player* player = m_GameObjectManager->AddGameObject<Player>(GAMEOBJECT_TYPE::PLAYER);
 		m_GameObjectManager->Init();
 	}
 	
-
 
 }
 
@@ -33,4 +32,5 @@ void GameScene::Draw()
 void GameScene::Uninit()
 {
 	m_GameObjectManager->Uninit();
+	delete m_GameObjectManager;
 }

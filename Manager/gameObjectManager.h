@@ -67,6 +67,8 @@ public:
 		}
 		return nullptr;
 	}
+
+	const std::vector<GameObject*>& GetGameObjectsList(const int type) { return m_GameObjectList[type]; }
 private:
 	std::vector<GameObject*> m_GameObjectList[static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE)];
 };

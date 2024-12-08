@@ -27,9 +27,6 @@
     <ClCompile Include="Manager\modelRendererManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Main\main.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\Camera\camera.cpp">
       <Filter>GameObject\Camera</Filter>
     </ClCompile>
@@ -68,6 +65,30 @@
     </ClCompile>
     <ClCompile Include="StateMachine\PlayerState\playerStateJump.cpp">
       <Filter>StateMachine\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_draw.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_dx11.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_win32.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_tables.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_widgets.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\debuggerImGuiManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\main.cpp">
+      <Filter>Main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -152,6 +173,33 @@
     <ClInclude Include="StateMachine\PlayerState\playerStateJump.h">
       <Filter>StateMachine\PlayerState</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\imconfig.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_dx11.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_win32.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_internal.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_rectpack.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_textedit.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_truetype.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\debuggerImGuiManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Main">
@@ -198,6 +246,9 @@
     </Filter>
     <Filter Include="StateMachine\PlayerState">
       <UniqueIdentifier>{d567643f-0c6f-4416-9e7f-6fbe5a57ee01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{ebade162-2618-4ad6-b573-27dde9fdea21}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

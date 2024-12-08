@@ -33,7 +33,7 @@ Field::Field(const XMFLOAT3& location, const XMFLOAT2& size)
 
 void Field::Init()
 {
-	
+	m_Name = "Field";
 	m_Scale = XMFLOAT3(1.0f, 1.0f, 1.0f);
 	m_Rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	//頂点バッファ

@@ -1,5 +1,5 @@
 #include "character.h"
-constexpr float FRICTION = 0.9f;
+constexpr float FRICTION = 0.98f;
 constexpr float MAX_DROP_SPEED = -50.0f;
 constexpr float GRAVITY = -9.8f;
 void Character::Update(const float& DeltaTime)
@@ -52,16 +52,12 @@ void Character::UpdateHorizontalVelocity(XMVECTOR& Velocity,const float& DeltaTi
 	//	加速度適用
 	Velocity = XMVectorAdd(Velocity, accl);
 
-	//	入力がなければ減速
-	//if (XMVectorGetX(dirNormalize) == 0.0f && XMVectorGetZ(dirNormalize) == 0.0f)
-	//{
-		XMVECTOR velocityXZ = XMVectorSet(XMVectorGetX(Velocity), 0.0f, XMVectorGetZ(Velocity), 0.0f);
-		velocityXZ *= FRICTION;
-		Velocity = XMVectorSet(XMVectorGetX(velocityXZ), XMVectorGetY(Velocity), XMVectorGetZ(velocityXZ), 0.0f);
-	/*}*/
+
+	XMVECTOR velocityXZ = XMVectorSet(XMVectorGetX(Velocity), 0.0f, XMVectorGetZ(Velocity), 0.0f);
+	velocityXZ *= FRICTION;
+	Velocity = XMVectorSet(XMVectorGetX(velocityXZ), XMVectorGetY(Velocity), XMVectorGetZ(velocityXZ), 0.0f);
 
 	//	速度上限
-	XMVECTOR velocityXZ = XMVectorSet(XMVectorGetX(Velocity), 0.0f, XMVectorGetZ(Velocity), 0.0f);
 	float velocityMagnitude = XMVectorGetX(XMVector2Length(velocityXZ));
 	if (velocityMagnitude > m_MaxMovementSpeed)
 	{

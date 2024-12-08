@@ -2,6 +2,7 @@
 #include "Main/main.h"
 #include "Enum/gameObjectEnum.h"
 #include "Structure/shaderStructure.h"
+#include <string>
 class GameObject 
 {
 public:
@@ -19,9 +20,11 @@ public:
 	const XMFLOAT3& GetScale() const{ return m_Scale; }
 	const GAMEOBJECT_TYPE& GetGameObjectType() const{ return m_ObjectType; }
 	const Shader* GetShader()const { return m_Shader; }
+	const std::string GetName() const{ return m_Name; }
 	XMFLOAT3 XMQuaternionToEulerAngle(XMVECTOR Quat);
 	void	SetRotation(const XMFLOAT3& rotation) { m_Rotation = rotation; }
 protected:
+	std::string m_Name;
 	XMFLOAT3 m_Position = {0.0f,0.0f,0.0f};
 	XMFLOAT3 m_Scale = { 1.0f,1.0f,1.0f };
 	XMFLOAT3 m_Rotation = { 0.0f,0.0f,0.0f };

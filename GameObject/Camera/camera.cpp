@@ -21,6 +21,7 @@ void Camera::Init()
 	m_Position = XMFLOAT3(0.0f, 5.0f, -10.0f);
 	m_Target = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_Up = GetUp();
+	m_Name = "Camera";
 	Scene* scene = SceneManager::GetCurrentScene();
 	if (scene)
 	{

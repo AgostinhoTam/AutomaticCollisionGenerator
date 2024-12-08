@@ -24,7 +24,7 @@ void Player::Init()
 
 	m_MaxMovementSpeed = PLAYER_MAX_SPEED;
 	m_MaxHorizontalAcclSpeed = PLAYER_MAX_ACCL_SPEED;
-
+	m_Name = "Player";
 
 	Scene* scene = SceneManager::GetInstance()->GetCurrentScene();
 	if (scene)
