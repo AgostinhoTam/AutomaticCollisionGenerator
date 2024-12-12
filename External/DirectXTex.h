@@ -47,7 +47,7 @@ struct IWICImagingFactory;
 struct IWICMetadataQueryReader;
 #endif
 
-#define DIRECTX_TEX_VERSION 206
+#define DIRECTX_TEX_VERSION 202
 
 
 namespace DirectX
@@ -72,9 +72,7 @@ namespace DirectX
 
     size_t __cdecl BitsPerColor(_In_ DXGI_FORMAT fmt) noexcept;
 
-    size_t __cdecl BytesPerBlock(_In_ DXGI_FORMAT fmt) noexcept;
-
-    enum FORMAT_TYPE : uint32_t
+    enum FORMAT_TYPE
     {
         FORMAT_TYPE_TYPELESS,
         FORMAT_TYPE_FLOAT,
@@ -86,7 +84,7 @@ namespace DirectX
 
     FORMAT_TYPE __cdecl FormatDataType(_In_ DXGI_FORMAT fmt) noexcept;
 
-    enum CP_FLAGS : uint32_t
+    enum CP_FLAGS : unsigned long
     {
         CP_FLAGS_NONE = 0x0,
         // Normal operation
@@ -136,7 +134,7 @@ namespace DirectX
 
     //---------------------------------------------------------------------------------
     // Texture metadata
-    enum TEX_DIMENSION : uint32_t
+    enum TEX_DIMENSION
         // Subset here matches D3D10_RESOURCE_DIMENSION and D3D11_RESOURCE_DIMENSION
     {
         TEX_DIMENSION_TEXTURE1D = 2,
@@ -144,18 +142,18 @@ namespace DirectX
         TEX_DIMENSION_TEXTURE3D = 4,
     };
 
-    enum TEX_MISC_FLAG : uint32_t
+    enum TEX_MISC_FLAG : unsigned long
         // Subset here matches D3D10_RESOURCE_MISC_FLAG and D3D11_RESOURCE_MISC_FLAG
     {
         TEX_MISC_TEXTURECUBE = 0x4L,
     };
 
-    enum TEX_MISC_FLAG2 : uint32_t
+    enum TEX_MISC_FLAG2 : unsigned long
     {
         TEX_MISC2_ALPHA_MODE_MASK = 0x7L,
     };
 
-    enum TEX_ALPHA_MODE : uint32_t
+    enum TEX_ALPHA_MODE
         // Matches DDS_ALPHA_MODE, encoded in MISC_FLAGS2
     {
         TEX_ALPHA_MODE_UNKNOWN = 0,
@@ -177,7 +175,7 @@ namespace DirectX
         DXGI_FORMAT     format;
         TEX_DIMENSION   dimension;
 
-        size_t __cdecl ComputeIndex(size_t mip, size_t item, size_t slice) const noexcept;
+        size_t __cdecl ComputeIndex(_In_ size_t mip, _In_ size_t item, _In_ size_t slice) const noexcept;
             // Returns size_t(-1) to indicate an out-of-range error
 
         bool __cdecl IsCubemap() const noexcept { return (miscFlags & TEX_MISC_TEXTURECUBE) != 0; }
@@ -190,10 +188,6 @@ namespace DirectX
 
         bool __cdecl IsVolumemap() const noexcept { return (dimension == TEX_DIMENSION_TEXTURE3D); }
             // Helper for dimension
-
-        uint32_t __cdecl CalculateSubresource(size_t mip, size_t item) const noexcept;
-        uint32_t __cdecl CalculateSubresource(size_t mip, size_t item, size_t plane) const noexcept;
-            // Returns size_t(-1) to indicate an out-of-range error
     };
 
     struct DDSMetaData
@@ -210,7 +204,7 @@ namespace DirectX
         bool __cdecl IsDX10() const noexcept { return (fourCC == 0x30315844); }
     };
 
-    enum DDS_FLAGS : uint32_t
+    enum DDS_FLAGS : unsigned long
     {
         DDS_FLAGS_NONE = 0x0,
 
@@ -238,9 +232,6 @@ namespace DirectX
         DDS_FLAGS_PERMISSIVE = 0x80,
         // Allow some file variants due to common bugs in the header written by various leagcy DDS writers
 
-        DDS_FLAGS_IGNORE_MIPS = 0x100,
-        // Allow some files to be read that have incorrect mipcount values in the header by only reading the top-level mip
-
         DDS_FLAGS_FORCE_DX10_EXT = 0x10000,
         // Always use the 'DX10' header extension for DDS writer (i.e. don't try to write DX9 compatible DDS files)
 
@@ -257,7 +248,7 @@ namespace DirectX
         // Enables the loader to read large dimension .dds files (i.e. greater than known hardware requirements)
     };
 
-    enum TGA_FLAGS : uint32_t
+    enum TGA_FLAGS : unsigned long
     {
         TGA_FLAGS_NONE = 0x0,
 
@@ -280,7 +271,7 @@ namespace DirectX
         // If no colorspace is specified in TGA 2.0 metadata, assume sRGB
     };
 
-    enum WIC_FLAGS : uint32_t
+    enum WIC_FLAGS : unsigned long
     {
         WIC_FLAGS_NONE = 0x0,
 
@@ -325,7 +316,7 @@ namespace DirectX
     };
 
     HRESULT __cdecl GetMetadataFromDDSMemory(
-        _In_reads_bytes_(size) const uint8_t* pSource, _In_ size_t size,
+        _In_reads_bytes_(size) const void* pSource, _In_ size_t size,
         _In_ DDS_FLAGS flags,
         _Out_ TexMetadata& metadata) noexcept;
     HRESULT __cdecl GetMetadataFromDDSFile(
@@ -334,7 +325,7 @@ namespace DirectX
         _Out_ TexMetadata& metadata) noexcept;
 
     HRESULT __cdecl GetMetadataFromDDSMemoryEx(
-        _In_reads_bytes_(size) const uint8_t* pSource, _In_ size_t size,
+        _In_reads_bytes_(size) const void* pSource, _In_ size_t size,
         _In_ DDS_FLAGS flags,
         _Out_ TexMetadata& metadata,
         _Out_opt_ DDSMetaData* ddPixelFormat) noexcept;
@@ -345,14 +336,14 @@ namespace DirectX
         _Out_opt_ DDSMetaData* ddPixelFormat) noexcept;
 
     HRESULT __cdecl GetMetadataFromHDRMemory(
-        _In_reads_bytes_(size) const uint8_t* pSource, _In_ size_t size,
+        _In_reads_bytes_(size) const void* pSource, _In_ size_t size,
         _Out_ TexMetadata& metadata) noexcept;
     HRESULT __cdecl GetMetadataFromHDRFile(
         _In_z_ const wchar_t* szFile,
         _Out_ TexMetadata& metadata) noexcept;
 
     HRESULT __cdecl GetMetadataFromTGAMemory(
-        _In_reads_bytes_(size) const uint8_t* pSource, _In_ size_t size,
+        _In_reads_bytes_(size) const void* pSource, _In_ size_t size,
         _In_ TGA_FLAGS flags,
         _Out_ TexMetadata& metadata) noexcept;
     HRESULT __cdecl GetMetadataFromTGAFile(
@@ -362,7 +353,7 @@ namespace DirectX
 
 #ifdef _WIN32
     HRESULT __cdecl GetMetadataFromWICMemory(
-        _In_reads_bytes_(size) const uint8_t* pSource, _In_ size_t size,
+        _In_reads_bytes_(size) const void* pSource, _In_ size_t size,
         _In_ WIC_FLAGS flags,
         _Out_ TexMetadata& metadata,
         _In_ std::function<void __cdecl(IWICMetadataQueryReader*)> getMQR = nullptr);
@@ -376,39 +367,11 @@ namespace DirectX
 
     // Compatability helpers
     HRESULT __cdecl GetMetadataFromTGAMemory(
-        _In_reads_bytes_(size) const uint8_t* pSource, _In_ size_t size,
+        _In_reads_bytes_(size) const void* pSource, _In_ size_t size,
         _Out_ TexMetadata& metadata) noexcept;
     HRESULT __cdecl GetMetadataFromTGAFile(
         _In_z_ const wchar_t* szFile,
         _Out_ TexMetadata& metadata) noexcept;
-
-#ifdef __cpp_lib_byte
-    HRESULT __cdecl GetMetadataFromDDSMemory(
-        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
-        _In_ DDS_FLAGS flags,
-        _Out_ TexMetadata& metadata) noexcept;
-    HRESULT __cdecl GetMetadataFromDDSMemoryEx(
-        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
-        _In_ DDS_FLAGS flags,
-        _Out_ TexMetadata& metadata,
-        _Out_opt_ DDSMetaData* ddPixelFormat) noexcept;
-    HRESULT __cdecl GetMetadataFromHDRMemory(
-        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
-        _Out_ TexMetadata& metadata) noexcept;
-    HRESULT __cdecl GetMetadataFromTGAMemory(
-        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
-        _In_ TGA_FLAGS flags,
-        _Out_ TexMetadata& metadata) noexcept;
-
-#ifdef _WIN32
-    HRESULT __cdecl GetMetadataFromWICMemory(
-        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
-        _In_ WIC_FLAGS flags,
-        _Out_ TexMetadata& metadata,
-        _In_ std::function<void __cdecl(IWICMetadataQueryReader*)> getMQR = nullptr);
-#endif
-#endif // __cpp_lib_byte
-
 
     //---------------------------------------------------------------------------------
     // Bitmap image container
@@ -489,10 +452,7 @@ namespace DirectX
 
         void __cdecl Release() noexcept;
 
-        uint8_t* __cdecl GetBufferPointer() const noexcept { return m_buffer; }
-
-        const uint8_t* __cdecl GetConstBufferPointer() const noexcept { return m_buffer; }
-
+        void *__cdecl GetBufferPointer() const noexcept { return m_buffer; }
         size_t __cdecl GetBufferSize() const noexcept { return m_size; }
 
         HRESULT __cdecl Resize(size_t size) noexcept;
@@ -502,8 +462,8 @@ namespace DirectX
             // Shorten size without reallocation
 
     private:
-        uint8_t* m_buffer;
-        size_t   m_size;
+        void*   m_buffer;
+        size_t  m_size;
     };
 
     //---------------------------------------------------------------------------------
@@ -511,7 +471,7 @@ namespace DirectX
 
     // DDS operations
     HRESULT __cdecl LoadFromDDSMemory(
-        _In_reads_bytes_(size) const uint8_t* pSource, _In_ size_t size,
+        _In_reads_bytes_(size) const void* pSource, _In_ size_t size,
         _In_ DDS_FLAGS flags,
         _Out_opt_ TexMetadata* metadata, _Out_ ScratchImage& image) noexcept;
     HRESULT __cdecl LoadFromDDSFile(
@@ -520,7 +480,7 @@ namespace DirectX
         _Out_opt_ TexMetadata* metadata, _Out_ ScratchImage& image) noexcept;
 
     HRESULT __cdecl LoadFromDDSMemoryEx(
-        _In_reads_bytes_(size) const uint8_t* pSource, _In_ size_t size,
+        _In_reads_bytes_(size) const void* pSource, _In_ size_t size,
         _In_ DDS_FLAGS flags,
         _Out_opt_ TexMetadata* metadata,
         _Out_opt_ DDSMetaData* ddPixelFormat,
@@ -548,7 +508,7 @@ namespace DirectX
 
     // HDR operations
     HRESULT __cdecl LoadFromHDRMemory(
-        _In_reads_bytes_(size) const uint8_t* pSource, _In_ size_t size,
+        _In_reads_bytes_(size) const void* pSource, _In_ size_t size,
         _Out_opt_ TexMetadata* metadata, _Out_ ScratchImage& image) noexcept;
     HRESULT __cdecl LoadFromHDRFile(
         _In_z_ const wchar_t* szFile,
@@ -559,7 +519,7 @@ namespace DirectX
 
     // TGA operations
     HRESULT __cdecl LoadFromTGAMemory(
-        _In_reads_bytes_(size) const uint8_t* pSource, _In_ size_t size,
+        _In_reads_bytes_(size) const void* pSource, _In_ size_t size,
         _In_ TGA_FLAGS flags,
         _Out_opt_ TexMetadata* metadata, _Out_ ScratchImage& image) noexcept;
     HRESULT __cdecl LoadFromTGAFile(
@@ -577,7 +537,7 @@ namespace DirectX
     // WIC operations
 #ifdef _WIN32
     HRESULT __cdecl LoadFromWICMemory(
-        _In_reads_bytes_(size) const uint8_t* pSource, _In_ size_t size,
+        _In_reads_bytes_(size) const void* pSource, _In_ size_t size,
         _In_ WIC_FLAGS flags,
         _Out_opt_ TexMetadata* metadata, _Out_ ScratchImage& image,
         _In_ std::function<void __cdecl(IWICMetadataQueryReader*)> getMQR = nullptr);
@@ -609,7 +569,7 @@ namespace DirectX
 
     // Compatability helpers
     HRESULT __cdecl LoadFromTGAMemory(
-        _In_reads_bytes_(size) const uint8_t* pSource, _In_ size_t size,
+        _In_reads_bytes_(size) const void* pSource, _In_ size_t size,
         _Out_opt_ TexMetadata* metadata, _Out_ ScratchImage& image) noexcept;
     HRESULT __cdecl LoadFromTGAFile(
         _In_z_ const wchar_t* szFile,
@@ -618,38 +578,10 @@ namespace DirectX
     HRESULT __cdecl SaveToTGAMemory(_In_ const Image& image, _Out_ Blob& blob, _In_opt_ const TexMetadata* metadata = nullptr) noexcept;
     HRESULT __cdecl SaveToTGAFile(_In_ const Image& image, _In_z_ const wchar_t* szFile, _In_opt_ const TexMetadata* metadata = nullptr) noexcept;
 
-#ifdef __cpp_lib_byte
-    HRESULT __cdecl LoadFromDDSMemory(
-        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
-        _In_ DDS_FLAGS flags,
-        _Out_opt_ TexMetadata* metadata, _Out_ ScratchImage& image) noexcept;
-    HRESULT __cdecl LoadFromDDSMemoryEx(
-        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
-        _In_ DDS_FLAGS flags,
-        _Out_opt_ TexMetadata* metadata,
-        _Out_opt_ DDSMetaData* ddPixelFormat,
-        _Out_ ScratchImage& image) noexcept;
-    HRESULT __cdecl LoadFromHDRMemory(
-        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
-        _Out_opt_ TexMetadata* metadata, _Out_ ScratchImage& image) noexcept;
-    HRESULT __cdecl LoadFromTGAMemory(
-        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
-        _In_ TGA_FLAGS flags,
-        _Out_opt_ TexMetadata* metadata, _Out_ ScratchImage& image) noexcept;
-
-#ifdef _WIN32
-    HRESULT __cdecl LoadFromWICMemory(
-        _In_reads_bytes_(size) const std::byte* pSource, _In_ size_t size,
-        _In_ WIC_FLAGS flags,
-        _Out_opt_ TexMetadata* metadata, _Out_ ScratchImage& image,
-        _In_ std::function<void __cdecl(IWICMetadataQueryReader*)> getMQR = nullptr);
-#endif
-#endif // __cpp_lib_byte
-
     //---------------------------------------------------------------------------------
     // Texture conversion, resizing, mipmap generation, and block compression
 
-    enum TEX_FR_FLAGS : uint32_t
+    enum TEX_FR_FLAGS : unsigned long
     {
         TEX_FR_ROTATE0 = 0x0,
         TEX_FR_ROTATE90 = 0x1,
@@ -667,7 +599,7 @@ namespace DirectX
         // Flip and/or rotate image
 #endif
 
-    enum TEX_FILTER_FLAGS : uint32_t
+    enum TEX_FILTER_FLAGS : unsigned long
     {
         TEX_FILTER_DEFAULT = 0,
 
@@ -721,9 +653,9 @@ namespace DirectX
         // Forces use of the WIC path even when logic would have picked a non-WIC path when both are an option
     };
 
-    constexpr uint32_t TEX_FILTER_DITHER_MASK = 0xF0000;
-    constexpr uint32_t TEX_FILTER_MODE_MASK = 0xF00000;
-    constexpr uint32_t TEX_FILTER_SRGB_MASK = 0xF000000;
+    constexpr unsigned long TEX_FILTER_DITHER_MASK = 0xF0000;
+    constexpr unsigned long TEX_FILTER_MODE_MASK = 0xF00000;
+    constexpr unsigned long TEX_FILTER_SRGB_MASK = 0xF000000;
 
     HRESULT __cdecl Resize(
         _In_ const Image& srcImage, _In_ size_t width, _In_ size_t height,
@@ -790,7 +722,7 @@ namespace DirectX
         _In_ float alphaReference, _Inout_ ScratchImage& mipChain) noexcept;
 
 
-    enum TEX_PMALPHA_FLAGS : uint32_t
+    enum TEX_PMALPHA_FLAGS : unsigned long
     {
         TEX_PMALPHA_DEFAULT = 0,
 
@@ -813,7 +745,7 @@ namespace DirectX
         _In_ TEX_PMALPHA_FLAGS flags, _Out_ ScratchImage& result) noexcept;
         // Converts to/from a premultiplied alpha version of the texture
 
-    enum TEX_COMPRESS_FLAGS : uint32_t
+    enum TEX_COMPRESS_FLAGS : unsigned long
     {
         TEX_COMPRESS_DEFAULT = 0,
 
@@ -899,7 +831,7 @@ namespace DirectX
     //---------------------------------------------------------------------------------
     // Normal map operations
 
-    enum CNMAP_FLAGS : uint32_t
+    enum CNMAP_FLAGS : unsigned long
     {
         CNMAP_DEFAULT = 0,
 
@@ -948,7 +880,7 @@ namespace DirectX
         _In_ const Image& srcImage, _In_ const Rect& srcRect, _In_ const Image& dstImage,
         _In_ TEX_FILTER_FLAGS filter, _In_ size_t xOffset, _In_ size_t yOffset) noexcept;
 
-    enum CMSE_FLAGS : uint32_t
+    enum CMSE_FLAGS : unsigned long
     {
         CMSE_DEFAULT = 0,
 
@@ -990,7 +922,7 @@ namespace DirectX
     //---------------------------------------------------------------------------------
     // WIC utility code
 #ifdef _WIN32
-    enum WICCodecs : uint32_t
+    enum WICCodecs
     {
         WIC_CODEC_BMP = 1,          // Windows Bitmap (.bmp)
         WIC_CODEC_JPEG,             // Joint Photographic Experts Group (.jpg, .jpeg)
@@ -1012,20 +944,8 @@ namespace DirectX
     // DDS helper functions
     HRESULT __cdecl EncodeDDSHeader(
         _In_ const TexMetadata& metadata, DDS_FLAGS flags,
-        _Out_writes_bytes_to_opt_(maxsize, required) uint8_t* pDestination, _In_ size_t maxsize,
+        _Out_writes_bytes_to_opt_(maxsize, required) void* pDestination, _In_ size_t maxsize,
         _Out_ size_t& required) noexcept;
-
-#ifdef __cpp_lib_byte
-    HRESULT __cdecl EncodeDDSHeader(
-        _In_ const TexMetadata& metadata, DDS_FLAGS flags,
-        _Out_writes_bytes_to_opt_(maxsize, required) std::byte* pDestination, _In_ size_t maxsize,
-        _Out_ size_t& required) noexcept;
-
-    HRESULT __cdecl EncodeDDSHeader(
-        _In_ const TexMetadata& metadata, DDS_FLAGS flags,
-        _Reserved_ std::nullptr_t, _In_ size_t maxsize,
-        _Out_ size_t& required) noexcept;
-#endif
 
     //---------------------------------------------------------------------------------
     // Direct3D interop

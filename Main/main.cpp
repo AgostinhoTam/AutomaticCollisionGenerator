@@ -88,12 +88,12 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		else
 		{
 			dwCurrentTime = timeGetTime();
-
-			if((dwCurrentTime - dwExecLastTime) >= (1000 / 60))
+			float deltaTime = static_cast<float>((dwCurrentTime - dwExecLastTime) / 1000.0f);
+			if((deltaTime) >= FRAME_PER_SEC)
 			{
 				dwExecLastTime = dwCurrentTime;
 				if (!SceneManager)return (int)msg.wParam;
-				SceneManager->Update(FRAME_PER_SEC);
+				SceneManager->Update(deltaTime);
 				SceneManager->Draw();
 
 			}

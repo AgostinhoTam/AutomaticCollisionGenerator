@@ -42,9 +42,6 @@
     <ClCompile Include="Renderer\modelRenderer.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Character\Player\player.cpp">
-      <Filter>GameObject\Character\Player</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer\animationModel.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
@@ -55,9 +52,6 @@
       <Filter>Manager</Filter>
     </ClCompile>
     <ClCompile Include="StateMachine\PlayerState\playerStateWalk.cpp">
-      <Filter>StateMachine\PlayerState</Filter>
-    </ClCompile>
-    <ClCompile Include="StateMachine\PlayerState\playerStateIdle.cpp">
       <Filter>StateMachine\PlayerState</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\Character\character.cpp">
@@ -89,6 +83,12 @@
     </ClCompile>
     <ClCompile Include="Main\main.cpp">
       <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Character\Player\player.cpp">
+      <Filter>GameObject\Character\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="StateMachine\PlayerState\playerStateIdle.cpp">
+      <Filter>StateMachine\PlayerState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

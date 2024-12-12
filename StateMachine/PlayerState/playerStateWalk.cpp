@@ -1,14 +1,16 @@
 #include "GameObject/Character/Player/playerh.h"
 #include "GameObject/Camera/camera.h"
 #include "Manager/inputManager.h"
+#include "Renderer\animationModel.h"
+#include "Enum\playerStateEnum.h"
 #include "playerStateWalk.h"
 
 void PlayerStateWalk::Init()
 {
 	if (!m_Player)return;
 	if (!m_Camera)return;
-
 	UserInputDection();
+	m_AnimationModel->SetNextAnimation("Run");
 }
 
 void PlayerStateWalk::Update()
@@ -18,7 +20,6 @@ void PlayerStateWalk::Update()
 
 	UserInputDection();
 
-	//UpdatePlayerRotation();
 
 }
 
@@ -47,40 +48,43 @@ void PlayerStateWalk::UserInputDection()
 		m_Player->SetMoveForwardDirection(-1);
 		hasInput = true;
 	}
-
 	if (!hasInput)
 	{
 		m_Player->ChangeState(PLAYER_STATE::IDLE);
+		if (!m_AnimationModel->GetIsTransitioning())
+		{
+			m_AnimationModel->SetNextAnimationFrame(m_AnimationModel->GetNextAnimationFrame());
+		}
 	}
 
 }
 
-void PlayerStateWalk::UpdatePlayerRotation()
+void PlayerStateWalk::UpdateAnimation()
 {
-	const XMFLOAT3& moveDirection = m_Player->GetMoveDirection();
-
-	// ˆÚ“®“ü—Í‚ª‚ ‚éê‡‚É‰ñ“]‚ðXV
-	if (moveDirection.x != 0.0f || moveDirection.y != 0.0f)
+	if (!m_AnimationModel)return;
+	const char* curAnimationName = m_AnimationModel->GetCurrentAnimationName().c_str();
+	const char* nextAnimationName = m_AnimationModel->GetNextAnimationName().c_str();
+	//	‘JˆÚŠ®¬‚µ‚½‚ç
+	if (m_AnimationModel->GetBlendRatio() >= 1)
 	{
-		const XMFLOAT3& cameraForward = m_Camera->GetForward();
-		const XMFLOAT3& cameraRight = m_Camera->GetRight();
-		
-		float moveX = moveDirection.x * cameraRight.x + moveDirection.z * cameraForward.x;
-		float moveZ = moveDirection.x * cameraRight.z + moveDirection.z * cameraForward.z;
+		m_AnimationModel->SetIsTransitioning(false);
+		m_AnimationModel->SetCurrentAnimation(m_AnimationModel->GetNextAnimationName());
+		int nextFrame = m_AnimationModel->GetNextAnimationFrame();
+		m_AnimationModel->SetCurrentAnimationFrame(nextFrame);
+		m_AnimationModel->SetBlendRatio(0);
+	}
+	m_AnimationModel->Update(curAnimationName, m_AnimationModel->GetCurrentAnimationFrame(), nextAnimationName, m_AnimationModel->GetNextAnimationFrame(), m_AnimationModel->GetBlendRatio());
 
-		// ³‹K‰»‚µ‚Ä•ûŒüƒxƒNƒgƒ‹
-		XMVECTOR moveVector = XMVectorSet(moveX, 0.0f, moveZ, 0.0f);
-		moveVector = XMVector3Normalize(moveVector);
-
-		XMFLOAT3 normalizeMove;
-		XMStoreFloat3(&normalizeMove, moveVector);
-
-		m_Player->SetMoveDirection(XMFLOAT3(normalizeMove.x, 0.0f,normalizeMove.z));
-
-		// ‰ñ“]XV
-		float yaw = atan2f(normalizeMove.x, normalizeMove.z);
-		XMFLOAT3 playerRotation = m_Player->GetRotation();
-		playerRotation.y = yaw;
-		m_Player->SetRotation(playerRotation);
+	//	‘JˆÚ’†‚¾‚Á‚½‚ç
+	if (m_AnimationModel->GetIsTransitioning())
+	{
+		m_AnimationModel->AddBlendRatio(0.01f);
+		m_AnimationModel->AddCurrentAnimationFrame(1);
+		m_AnimationModel->AddNextAnimationFrame(1);
+	}
+	//	•’Ê‚ÌÄ¶
+	else if (!m_AnimationModel->GetIsTransitioning())
+	{
+		m_AnimationModel->AddCurrentAnimationFrame(1);
 	}
 }

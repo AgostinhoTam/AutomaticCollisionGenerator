@@ -27,8 +27,6 @@ Field::Field(const XMFLOAT3& location, const XMFLOAT2& size)
 	vertex[3].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[3].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[3].TexCoord = XMFLOAT2(1.0f, 1.0f);
-
-	Init();
 }
 
 void Field::Init()

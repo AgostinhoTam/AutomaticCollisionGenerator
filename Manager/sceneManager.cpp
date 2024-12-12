@@ -2,6 +2,7 @@
 #include "Manager/gameObjectManager.h"
 #include "Manager/sceneManager.h"
 #include "Manager/shaderManager.h"
+#include "Manager/modelRendererManager.h"
 #include "Manager\debuggerImGuiManager.h"
 #include "Renderer/renderer.h"
 #include "Scene/gameScene.h"
@@ -22,7 +23,11 @@ void SceneManager::Init()
 	Renderer::Init();
 	ShaderManager::Init();
 	InputManager::Init();
+#ifdef _DEBUG
 	DebuggerImGuiManager::Init();
+
+#endif // _DEBUG
+
 	m_CurrentScene = new GameScene;
 	if (m_CurrentScene) {
 		m_CurrentScene->Init();
@@ -51,5 +56,10 @@ void SceneManager::Uninit()
 	delete m_CurrentScene;
 	InputManager::Uninit();
 	ShaderManager::Uninit();
+	ModelRendererManager::UnloadAll();
+#ifdef _DEBUG
 	DebuggerImGuiManager::Uninit();
+
+#endif // _DEBUG
+
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include "enum\modelEnum.h"
 #include "Renderer/renderer.h"
 // マテリアル構造体
 
@@ -49,13 +50,13 @@ struct MODEL
 #include <string>
 #include <unordered_map>
 
-
+class AnimationModel;
 class ModelRendererManager
 {
 private:
 
 	static std::unordered_map<std::string, MODEL*> m_ModelPool;
-
+	static std::unordered_map<MODEL_NAME, AnimationModel*> m_AnimationModelPool;
 	static void LoadModel(const char *FileName, MODEL *Model);
 	static void LoadObj( const char *FileName, MODEL_OBJ *ModelObj );
 	static void LoadMaterial( const char *FileName, MODEL_MATERIAL **MaterialArray, unsigned int *MaterialNum );
@@ -65,5 +66,6 @@ public:
 	static void UnloadAll();
 
 	static MODEL* Load( const char *FileName );
+	static AnimationModel* LoadAnimationModel(const MODEL_NAME& Model);
 
 };

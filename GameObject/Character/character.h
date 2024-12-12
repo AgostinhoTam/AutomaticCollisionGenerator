@@ -18,12 +18,12 @@ public:
 	void SetMoveDirection(XMFLOAT3 direction) { m_MoveDirection = direction; }
 	void UpdateVerticalVelocity(XMVECTOR& Velocity, const float& DeltaTime);
 	void UpdateHorizontalVelocity(XMVECTOR& Velocity, const float& DeltaTime);
+	AnimationModel* GetAnimationModel() const{ return m_AnimationModel; }
 protected:
 	XMFLOAT3 m_Velocity{};
 	XMFLOAT3 m_Accl{};
-	MODEL* m_Model;
-	AnimationModel* m_AnimationModel;
-	XMFLOAT3 m_MoveDirection;
+	AnimationModel* m_AnimationModel{};
+	XMFLOAT3 m_MoveDirection{};
 	float	m_MaxMovementSpeed = 0;
 	float	m_MaxHorizontalAcclSpeed = 0;
 	float	m_MaxJumpSpeed = 0;

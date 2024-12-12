@@ -51,6 +51,6 @@ Shader* ShaderManager::LoadShader(const SHADER_NAME& ShaderName)
 	{
 		return it->second;
 	}
-	Shader shader{};
+
 	return m_ShaderList[SHADER_NAME::UNLIT_TEXTURE];
 }

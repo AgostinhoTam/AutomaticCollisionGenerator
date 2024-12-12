@@ -1,6 +1,7 @@
 #include "Manager\debuggerImGuiManager.h"
 #include "Main\main.h"
 #include "Renderer\renderer.h"
+#include "Renderer\animationModel.h"
 #include "Manager\sceneManager.h"
 #include "Scene\scene.h"
 #include "Manager\gameObjectManager.h"
@@ -61,7 +62,7 @@ void DebuggerImGuiManager::Render(const std::vector<GameObject*>(&ObjectList)[st
 		ImGui::Text("Name: %s", m_TargetObject->GetName().c_str());
 		ImGui::Text("Position: %.2f, %.2f, %.2f", position.x, position.y, position.z);
 		ImGui::Text("Rotation: %.2f, %.2f, %.2f", rotation.x, rotation.y, rotation.z);
-
+		
 		Character* characterObject = dynamic_cast<Character*>(m_TargetObject);
 		if (characterObject)
 		{
@@ -71,6 +72,15 @@ void DebuggerImGuiManager::Render(const std::vector<GameObject*>(&ObjectList)[st
 
 			ImGui::Text("Velocity: %.2f, %.2f, %.2f", velocity.x, velocity.y, velocity.z);
 			ImGui::Text("Acceleration: %.2f, %.2f, %.2f", acceleration.x, acceleration.y, acceleration.z);
+			AnimationModel* model = characterObject->GetAnimationModel();
+			
+			ImGui::Text("CurrentAnimationName:%s", model->GetCurrentAnimationName().c_str());
+			ImGui::Text("CurrAnimationFrame: %d", model->GetCurrentAnimationFrame());
+			ImGui::Text("IsTransitioning: %d", model->GetIsTransitioning());
+			ImGui::Text("NextAnimationName:%s", model->GetNextAnimationName().c_str());
+			ImGui::Text("NextAnimationFrame: %d", model->GetNextAnimationFrame());
+			ImGui::Text("BlendRatio: %f", model->GetBlendRatio());
+
 		}
 
 		ImGui::End();
