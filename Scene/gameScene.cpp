@@ -3,7 +3,9 @@
 #include "GameObject/Character/Player/playerh.h"
 #include "GameObject/Field/field.h"
 #include "GameObject/Camera/camera.h"
-#include "Enum/gameObjectEnum.h"
+#include "GameObject\Character\Enemy\enemy.h"
+#include "System\Enum\enemyTypeEnum.h"
+#include "System\Enum/gameObjectEnum.h"
 #include "gameScene.h"
 void GameScene::Init()
 {
@@ -12,7 +14,8 @@ void GameScene::Init()
 	{
 		m_GameObjectManager->AddGameObject<Camera>(GAMEOBJECT_TYPE::CAMERA);
 		m_GameObjectManager->AddGameObjectArg<Field>(GAMEOBJECT_TYPE::FIELD, XMFLOAT3(0, 0, 0), XMFLOAT2(50, 50));
-		Player* player = m_GameObjectManager->AddGameObject<Player>(GAMEOBJECT_TYPE::PLAYER);
+		m_GameObjectManager->AddGameObject<Player>(GAMEOBJECT_TYPE::PLAYER);
+		m_GameObjectManager->AddGameObjectArg<Enemy>(GAMEOBJECT_TYPE::ENEMY,ENEMY_TYPE::ENEMY)->SetPosition(XMFLOAT3(-1.0f, 0.0f, 0.0f));
 		m_GameObjectManager->Init();
 	}
 	

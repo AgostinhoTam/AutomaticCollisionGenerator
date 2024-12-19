@@ -1,6 +1,6 @@
 #pragma once
 #include "GameObject/gameobject.h"
-#include "Enum/moveDirection.h"
+#include "System\Enum/moveDirection.h"
 struct MODEL;
 class AnimationModel;
 class Character :public GameObject

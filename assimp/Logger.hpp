@@ -2,7 +2,7 @@
 Open Asset Import Library (assimp)
 ----------------------------------------------------------------------
 
-Copyright (c) 2006-2024, assimp team
+Copyright (c) 2006-2022, assimp team
 
 All rights reserved.
 
@@ -46,8 +46,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef INCLUDED_AI_LOGGER_H
 #define INCLUDED_AI_LOGGER_H
 
-#include <assimp/types.h>
-#include <assimp/TinyFormatter.h>
+#include "types.h"
+#include "TinyFormatter.h"
 
 namespace Assimp {
 

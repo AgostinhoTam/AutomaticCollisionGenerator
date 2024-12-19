@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <unordered_map>
-#include "Enum/gameObjectEnum.h"
+#include "System\Enum/gameObjectEnum.h"
 
 class GameObject;
 

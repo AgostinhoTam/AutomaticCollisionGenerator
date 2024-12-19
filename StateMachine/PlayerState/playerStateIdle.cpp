@@ -1,8 +1,8 @@
 #include "GameObject/Character/Player/playerh.h"
 #include "GameObject/Camera/camera.h"
 #include "Manager/inputManager.h"
-#include "Renderer\animationModel.h"
-#include "Enum\playerStateEnum.h"
+#include "System\Renderer\animationModel.h"
+#include "System\Enum\playerStateEnum.h"
 #include "playerStateIdle.h"
 
 void PlayerStateIdle::Init()
@@ -44,19 +44,19 @@ void PlayerStateIdle::UpdateAnimation()
 		m_AnimationModel->SetCurrentAnimationFrame(nextFrame);
 		m_AnimationModel->SetBlendRatio(0);
 	}
-	m_AnimationModel->Update(curAnimationName, m_AnimationModel->GetCurrentAnimationFrame(), nextAnimationName, m_AnimationModel->GetNextAnimationFrame(), m_AnimationModel->GetBlendRatio());
+	m_AnimationModel->Update();
 	//	‘JˆÚ’†‚¾‚Á‚½‚ç
 	if (m_AnimationModel->GetIsTransitioning())
 	{
 
-		m_AnimationModel->AddBlendRatio(0.01f);
-		m_AnimationModel->AddCurrentAnimationFrame(1);
-		m_AnimationModel->AddNextAnimationFrame(1);
+		m_AnimationModel->AddBlendRatio();
+		m_AnimationModel->AddCurrentAnimationFrame();
+		m_AnimationModel->AddNextAnimationFrame();
 	}
 	//	•’Ê‚ÌÄ¶
 	else if (!m_AnimationModel->GetIsTransitioning())
 	{
-		m_AnimationModel->AddCurrentAnimationFrame(1);
+		m_AnimationModel->AddCurrentAnimationFrame();
 	}
 
 

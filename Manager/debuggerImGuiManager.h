@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "Enum\gameObjectEnum.h"
+#include "System\Enum\gameObjectEnum.h"
 class GameObject;
 class Scene;
 class DebuggerImGuiManager

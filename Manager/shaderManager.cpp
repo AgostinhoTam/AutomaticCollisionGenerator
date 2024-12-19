@@ -1,4 +1,4 @@
-#include "Renderer/renderer.h"
+#include "System\Renderer/renderer.h"
 #include "Manager/shaderManager.h"
 
 std::unordered_map<SHADER_NAME, Shader*> ShaderManager::m_ShaderList;
@@ -6,7 +6,7 @@ std::unordered_map<SHADER_NAME, Shader*> ShaderManager::m_ShaderList;
 void ShaderManager::Init()
 {
 	CreateShader(SHADER_NAME::UNLIT_TEXTURE, "shader\\unlitTexturePS.cso", "shader\\unlitTextureVS.cso");
-
+	CreateShader(SHADER_NAME::DEBUG_LINE, "shader\\debugLinePS.cso", "shader\\debugLineVS.cso");
 }
 
 void ShaderManager::Uninit()
@@ -33,8 +33,14 @@ Shader* ShaderManager::CreateShader(const SHADER_NAME& ShaderName,const char* PS
 
 	Shader* shader = new Shader;
 
-	Renderer::CreateVertexShader(&shader->m_VertexShader, &shader->m_VertexLayout,
-	VSFileName);
+	if (ShaderName == SHADER_NAME::DEBUG_LINE)
+	{
+		Renderer::CreateDebugVertexShader(&shader->m_VertexShader, &shader->m_VertexLayout, VSFileName);
+	}
+	else
+	{
+		Renderer::CreateVertexShader(&shader->m_VertexShader, &shader->m_VertexLayout, VSFileName);
+	}
 
 	Renderer::CreatePixelShader(&shader->m_PixelShader,
 	PSFileName);

@@ -153,6 +153,17 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="shader\debugLinePS.hlsl">
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">shader\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">shader\%(Filename).cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="shader\debugLineVS.hlsl">
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">shader\%(Filename).cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="shader\unlitTexturePS.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">shader\%(Filename).cso</ObjectFileOutput>
@@ -174,6 +185,7 @@
     <ClCompile Include="GameObject\2DPolygon\polygon2D.cpp" />
     <ClCompile Include="GameObject\Camera\camera.cpp" />
     <ClCompile Include="GameObject\Character\character.cpp" />
+    <ClCompile Include="GameObject\Character\Enemy\enemy.cpp" />
     <ClCompile Include="GameObject\Character\Player\player.cpp" />
     <ClCompile Include="GameObject\Field\field.cpp" />
     <ClCompile Include="GameObject\gameobject.cpp" />
@@ -184,19 +196,21 @@
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Main\main.cpp" />
+    <ClCompile Include="Manager\animationRendererManager.cpp" />
     <ClCompile Include="Manager\debuggerImGuiManager.cpp" />
     <ClCompile Include="Manager\gameObjectManager.cpp" />
     <ClCompile Include="Manager\inputManager.cpp" />
     <ClCompile Include="Manager\modelRendererManager.cpp" />
     <ClCompile Include="Manager\sceneManager.cpp" />
     <ClCompile Include="Manager\shaderManager.cpp" />
-    <ClCompile Include="Renderer\animationModel.cpp" />
-    <ClCompile Include="Renderer\modelRenderer.cpp" />
-    <ClCompile Include="Renderer\renderer.cpp" />
     <ClCompile Include="Scene\gameScene.cpp" />
     <ClCompile Include="StateMachine\PlayerState\playerStateIdle.cpp" />
     <ClCompile Include="StateMachine\PlayerState\playerStateJump.cpp" />
     <ClCompile Include="StateMachine\PlayerState\playerStateWalk.cpp" />
+    <ClCompile Include="System\Collision\sphereCollision.cpp" />
+    <ClCompile Include="System\Renderer\animationModel.cpp" />
+    <ClCompile Include="System\Renderer\modelRenderer.cpp" />
+    <ClCompile Include="System\Renderer\renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enum\gameObjectEnum.h" />
@@ -207,6 +221,7 @@
     <ClInclude Include="GameObject\2DPolygon\polygon2D.h" />
     <ClInclude Include="GameObject\Camera\camera.h" />
     <ClInclude Include="GameObject\Character\character.h" />
+    <ClInclude Include="GameObject\Character\Enemy\enemy.h" />
     <ClInclude Include="GameObject\Character\Player\playerh.h" />
     <ClInclude Include="GameObject\Field\field.h" />
     <ClInclude Include="GameObject\gameobject.h" />
@@ -219,15 +234,13 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="Main\main.h" />
+    <ClInclude Include="Manager\animationRendererManager.h" />
     <ClInclude Include="Manager\debuggerImGuiManager.h" />
     <ClInclude Include="Manager\gameObjectManager.h" />
     <ClInclude Include="Manager\inputManager.h" />
     <ClInclude Include="Manager\modelRendererManager.h" />
     <ClInclude Include="Manager\sceneManager.h" />
     <ClInclude Include="Manager\shaderManager.h" />
-    <ClInclude Include="Renderer\animationModel.h" />
-    <ClInclude Include="Renderer\modelRenderer.h" />
-    <ClInclude Include="Renderer\renderer.h" />
     <ClInclude Include="Scene\gameScene.h" />
     <ClInclude Include="Scene\scene.h" />
     <ClInclude Include="StateMachine\PlayerState\playerState.h" />
@@ -235,6 +248,11 @@
     <ClInclude Include="StateMachine\PlayerState\playerStateJump.h" />
     <ClInclude Include="StateMachine\PlayerState\playerStateWalk.h" />
     <ClInclude Include="Structure\shaderStructure.h" />
+    <ClInclude Include="System\Collision\collision.h" />
+    <ClInclude Include="System\Collision\sphereCollision.h" />
+    <ClInclude Include="System\Renderer\animationModel.h" />
+    <ClInclude Include="System\Renderer\modelRenderer.h" />
+    <ClInclude Include="System\Renderer\renderer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

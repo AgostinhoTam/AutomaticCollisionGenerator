@@ -3,13 +3,11 @@
 #include <stdio.h>
 #include <shlwapi.h>
 #pragma comment(lib, "shlwapi.lib")
-
 #include "Main/main.h"
-#include "Renderer\animationModel.h"
 #include "Manager/modelRendererManager.h"
 
 std::unordered_map<std::string, MODEL*> ModelRendererManager::m_ModelPool;
-std::unordered_map<MODEL_NAME, AnimationModel*> ModelRendererManager::m_AnimationModelPool;
+
 
 void ModelRendererManager::UnloadAll()
 {
@@ -30,12 +28,7 @@ void ModelRendererManager::UnloadAll()
 	}
 	m_ModelPool.clear();
 
-	for (std::pair<MODEL_NAME, AnimationModel*> pair : m_AnimationModelPool)
-	{
-		pair.second->Uninit();
-		delete pair.second;
-	}
-	m_AnimationModelPool.clear();
+
 }
 
 
@@ -66,26 +59,6 @@ MODEL* ModelRendererManager::Load(const char* FileName)
 
 
 
-AnimationModel* ModelRendererManager::LoadAnimationModel(const MODEL_NAME& Model)
-{
-	if (m_AnimationModelPool.find(Model) != m_AnimationModelPool.end())
-	{
-		return m_AnimationModelPool[Model];
-	}
-
-	AnimationModel* animationModel = new AnimationModel;
-	if (!animationModel)return nullptr;
-	switch (Model)
-	{
-	case MODEL_NAME::PLAYER:
-		animationModel->Load("asset\\model\\Ch44_nonPBR.fbx");
-		animationModel->LoadAnimation("asset\\model\\Standing Idle.fbx", "Idle");
-		animationModel->LoadAnimation("asset\\model\\Walk With Rifle.fbx", "Run");
-		m_AnimationModelPool.try_emplace(Model, animationModel);
-		break;
-	}
-	return m_AnimationModelPool[Model];
-}
 
 void ModelRendererManager::LoadModel(const char* FileName, MODEL* Model)
 {
