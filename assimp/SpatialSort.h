@@ -2,7 +2,7 @@
 Open Asset Import Library (assimp)
 ----------------------------------------------------------------------
 
-Copyright (c) 2006-2024, assimp team
+Copyright (c) 2006-2022, assimp team
 
 
 All rights reserved.
@@ -49,7 +49,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #pragma GCC system_header
 #endif
 
-#include <assimp/types.h>
+#include "types.h"
 #include <vector>
 #include <limits>
 
@@ -79,7 +79,7 @@ public:
             unsigned int pElementOffset);
 
     /** Destructor */
-    ~SpatialSort() = default;
+    ~SpatialSort();
 
     // ------------------------------------------------------------------------------------
     /** Sets the input data for the SpatialSort. This replaces existing data, if any.
@@ -162,7 +162,7 @@ protected:
         unsigned int mIndex; ///< The vertex referred by this entry
         aiVector3D mPosition; ///< Position
         /// Distance of this vertex to the sorting plane. This is set by Finalize.
-        ai_real mDistance;
+        ai_real mDistance; 
 
         Entry() AI_NO_EXCEPT
                 : mIndex(std::numeric_limits<unsigned int>::max()),

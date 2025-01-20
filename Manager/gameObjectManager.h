@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <unordered_map>
-#include "Enum/gameObjectEnum.h"
+#include "System\Enum/gameObjectEnum.h"
 
 class GameObject;
 
@@ -67,6 +67,8 @@ public:
 		}
 		return nullptr;
 	}
+
+	const std::vector<GameObject*>& GetGameObjectsList(const int type) { return m_GameObjectList[type]; }
 private:
 	std::vector<GameObject*> m_GameObjectList[static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE)];
 };

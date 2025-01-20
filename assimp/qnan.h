@@ -3,7 +3,7 @@
 Open Asset Import Library (assimp)
 ---------------------------------------------------------------------------
 
-Copyright (c) 2006-2024, assimp team
+Copyright (c) 2006-2022, assimp team
 
 
 
@@ -58,10 +58,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #   pragma GCC system_header
 #endif
 
-#include <assimp/defs.h>
+#include "defs.h"
 
 #include <limits>
-#include <stdint.h>
+#include <stdint.h"
 
 // ---------------------------------------------------------------------------
 /** Data structure to represent the bit pattern of a 32 Bit

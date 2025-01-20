@@ -24,5 +24,7 @@ public:
 	void Update(const float& DeltaTime);
 	void Uninit();
 	void Draw();
+	bool CheckView(const XMFLOAT3& Pos);
+	XMFLOAT2 WordToScreen(const XMFLOAT3 Pos);
 	const XMMATRIX& GetViewMatrix() const { return XMLoadFloat4x4(&m_MtxView); }
 };

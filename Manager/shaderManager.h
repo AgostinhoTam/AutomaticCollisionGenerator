@@ -1,7 +1,7 @@
 #pragma once
 #include <unordered_map>
-#include "Structure/shaderStructure.h"
-#include "Enum/shaderEnum.h"
+#include "System\Structure/shaderStructure.h"
+#include "System\Enum/shaderEnum.h"
 
 class ShaderManager
 {

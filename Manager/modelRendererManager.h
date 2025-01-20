@@ -1,5 +1,6 @@
 #pragma once
-#include "Renderer/renderer.h"
+#include "System\enum\modelEnum.h"
+#include "System\Renderer/renderer.h"
 // マテリアル構造体
 
 struct MODEL_MATERIAL
@@ -49,7 +50,7 @@ struct MODEL
 #include <string>
 #include <unordered_map>
 
-
+class AnimationModel;
 class ModelRendererManager
 {
 private:
@@ -65,5 +66,6 @@ public:
 	static void UnloadAll();
 
 	static MODEL* Load( const char *FileName );
+	static void Draw(const MODEL* model, const GameObject* object);
 
 };

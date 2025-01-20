@@ -52,8 +52,6 @@ cbuffer LightBuffer : register(b4)
 
 
 
-
-
 struct VS_IN
 {
 	float4 Position		: POSITION0;

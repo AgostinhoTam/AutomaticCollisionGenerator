@@ -1,5 +1,6 @@
 #include "GameObject/gameobject.h"
 #include "Manager/gameObjectManager.h"
+#include "Manager\debuggerImGuiManager.h"
 
 void GameObjectManager::Init()
 {
@@ -27,6 +28,7 @@ void GameObjectManager::Uninit()
 	}
 }
 
+
 void GameObjectManager::Update(const float& DeltaTime)
 {
 	for (int type = 0; type < static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE); ++type)
@@ -37,6 +39,7 @@ void GameObjectManager::Update(const float& DeltaTime)
 			object->Update(DeltaTime);
 		}
 	}
+
 }
 
 
@@ -50,5 +53,10 @@ void GameObjectManager::Draw()
 			object->Draw();
 		}
 	}
+#ifdef _DEBUG
+	DebuggerImGuiManager::Render(m_GameObjectList);
+
+#endif // _DEBUG
+
 }
 

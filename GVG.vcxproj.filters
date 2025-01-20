@@ -13,22 +13,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject\Field\field.cpp">
-      <Filter>GameObject\Field</Filter>
+      <Filter>GameObject\Camera\Field</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\gameobject.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\2DPolygon\polygon2D.cpp">
       <Filter>GameObject\Polygon2D</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\renderer.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Manager\modelRendererManager.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="Main\main.cpp">
-      <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\Camera\camera.cpp">
       <Filter>GameObject\Camera</Filter>
@@ -42,15 +33,6 @@
     <ClCompile Include="Scene\gameScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\modelRenderer.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\Character\Player\player.cpp">
-      <Filter>GameObject\Character\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\animationModel.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="Manager\shaderManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
@@ -60,16 +42,68 @@
     <ClCompile Include="StateMachine\PlayerState\playerStateWalk.cpp">
       <Filter>StateMachine\PlayerState</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Character\character.cpp">
+      <Filter>GameObject\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="StateMachine\PlayerState\playerStateJump.cpp">
+      <Filter>StateMachine\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui.cpp">
+      <Filter>System\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_draw.cpp">
+      <Filter>System\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_dx11.cpp">
+      <Filter>System\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_win32.cpp">
+      <Filter>System\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_tables.cpp">
+      <Filter>System\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_widgets.cpp">
+      <Filter>System\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\debuggerImGuiManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Character\Player\player.cpp">
+      <Filter>GameObject\Character\Player</Filter>
+    </ClCompile>
     <ClCompile Include="StateMachine\PlayerState\playerStateIdle.cpp">
       <Filter>StateMachine\PlayerState</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Character\character.cpp">
-      <Filter>GameObject\Character</Filter>
+    <ClCompile Include="Manager\animationRendererManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Character\Enemy\enemy.cpp">
+      <Filter>GameObject\Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Renderer\renderer.cpp">
+      <Filter>System\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Renderer\animationModel.cpp">
+      <Filter>System\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Collision\sphereCollision.cpp">
+      <Filter>System\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Collision\collision.cpp" />
+    <ClCompile Include="Manager\modelRendererManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Bullet\projection.cpp">
+      <Filter>GameObject\Projection</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject\Field\field.h">
-      <Filter>GameObject\Field</Filter>
+      <Filter>GameObject\Camera\Field</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\gameobject.h">
       <Filter>GameObject</Filter>
@@ -83,12 +117,6 @@
     <ClInclude Include="Manager\sceneManager.h">
       <Filter>Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\renderer.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Manager\modelRendererManager.h">
-      <Filter>Manager</Filter>
-    </ClInclude>
     <ClInclude Include="Main\main.h">
       <Filter>Main</Filter>
     </ClInclude>
@@ -98,17 +126,8 @@
     <ClInclude Include="Manager\gameObjectManager.h">
       <Filter>Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Enum\gameObjectEnum.h">
-      <Filter>Enum</Filter>
-    </ClInclude>
     <ClInclude Include="Scene\gameScene.h">
       <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Enum\modelEnum.h">
-      <Filter>Enum</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\modelRenderer.h">
-      <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\Character\Player\playerh.h">
       <Filter>GameObject\Character\Player</Filter>
@@ -116,17 +135,11 @@
     <ClInclude Include="GameObject\Character\character.h">
       <Filter>GameObject\Character</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\animationModel.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Manager\shaderManager.h">
       <Filter>Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Enum\shaderEnum.h">
-      <Filter>Enum</Filter>
-    </ClInclude>
     <ClInclude Include="Structure\shaderStructure.h">
-      <Filter>Structure</Filter>
+      <Filter>System\Structure</Filter>
     </ClInclude>
     <ClInclude Include="Manager\inputManager.h">
       <Filter>Manager</Filter>
@@ -137,14 +150,83 @@
     <ClInclude Include="StateMachine\PlayerState\playerState.h">
       <Filter>StateMachine\PlayerState</Filter>
     </ClInclude>
-    <ClInclude Include="Enum\playerStateEnum.h">
-      <Filter>Enum</Filter>
-    </ClInclude>
     <ClInclude Include="StateMachine\PlayerState\playerStateIdle.h">
       <Filter>StateMachine\PlayerState</Filter>
     </ClInclude>
-    <ClInclude Include="Enum\moveDirection.h">
-      <Filter>Enum</Filter>
+    <ClInclude Include="StateMachine\PlayerState\playerStateJump.h">
+      <Filter>StateMachine\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imconfig.h">
+      <Filter>System\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui.h">
+      <Filter>System\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_dx11.h">
+      <Filter>System\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_win32.h">
+      <Filter>System\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_internal.h">
+      <Filter>System\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_rectpack.h">
+      <Filter>System\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_textedit.h">
+      <Filter>System\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_truetype.h">
+      <Filter>System\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\debuggerImGuiManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\animationRendererManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Character\Enemy\enemy.h">
+      <Filter>GameObject\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Renderer\renderer.h">
+      <Filter>System\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Renderer\animationModel.h">
+      <Filter>System\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Collision\sphereCollision.h">
+      <Filter>System\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Collision\collision.h">
+      <Filter>System\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\modelRendererManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Enum\enemyTypeEnum.h">
+      <Filter>System\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Enum\gameObjectEnum.h">
+      <Filter>System\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Enum\modelEnum.h">
+      <Filter>System\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Enum\moveDirection.h">
+      <Filter>System\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Enum\playerStateEnum.h">
+      <Filter>System\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Enum\shaderEnum.h">
+      <Filter>System\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Bullet\projection.h">
+      <Filter>GameObject\Projection</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Enum\projectionTypeEnum.h">
+      <Filter>System\Enum</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -160,26 +242,14 @@
     <Filter Include="Scene">
       <UniqueIdentifier>{8094c2ae-3ed1-4480-affb-a0cec9e934ad}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameObject\Field">
-      <UniqueIdentifier>{1dc1e11a-ff45-47cb-a545-4efc69fa85c6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameObject\Polygon2D">
       <UniqueIdentifier>{ce0912fd-6c03-4f3a-913a-fefbb7a18165}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Renderer">
-      <UniqueIdentifier>{90599ce9-a7c4-4661-a3b6-094c2d658ddd}</UniqueIdentifier>
     </Filter>
     <Filter Include="GameObject\Camera">
       <UniqueIdentifier>{82b06a96-477c-4c89-be04-ac0fd37aba9d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Shader">
       <UniqueIdentifier>{fb8edb45-c914-49ca-a47f-591342c83809}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Enum">
-      <UniqueIdentifier>{bad4e557-6e2a-402d-bfcb-940bd87d82ff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Structure">
-      <UniqueIdentifier>{070a58e8-ca38-49d2-9d79-49377a7da421}</UniqueIdentifier>
     </Filter>
     <Filter Include="GameObject\Character">
       <UniqueIdentifier>{1cac8e21-6117-46f4-9e2f-4875f0dc2fe1}</UniqueIdentifier>
@@ -192,6 +262,33 @@
     </Filter>
     <Filter Include="StateMachine\PlayerState">
       <UniqueIdentifier>{d567643f-0c6f-4416-9e7f-6fbe5a57ee01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Character\Enemy">
+      <UniqueIdentifier>{28ae762d-79ee-456f-b5b0-997f3fbec24d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{ee8ad3ac-3813-4b24-8054-ae232d67584f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Renderer">
+      <UniqueIdentifier>{90599ce9-a7c4-4661-a3b6-094c2d658ddd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Collision">
+      <UniqueIdentifier>{ba9a1ebf-d812-4400-a1a4-540f9c09a5bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\ImGui">
+      <UniqueIdentifier>{ebade162-2618-4ad6-b573-27dde9fdea21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Enum">
+      <UniqueIdentifier>{bad4e557-6e2a-402d-bfcb-940bd87d82ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Structure">
+      <UniqueIdentifier>{070a58e8-ca38-49d2-9d79-49377a7da421}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Projection">
+      <UniqueIdentifier>{cbf928b3-c503-4431-bf18-53ba007fe45b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Camera\Field">
+      <UniqueIdentifier>{1dc1e11a-ff45-47cb-a545-4efc69fa85c6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

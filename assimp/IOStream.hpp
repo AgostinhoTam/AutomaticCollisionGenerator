@@ -3,7 +3,7 @@
 Open Asset Import Library (assimp)
 ---------------------------------------------------------------------------
 
-Copyright (c) 2006-2024, assimp team
+Copyright (c) 2006-2022, assimp team
 
 All rights reserved.
 
@@ -50,7 +50,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #   pragma GCC system_header
 #endif
 
-#include <assimp/types.h>
+#include "types.h"
 
 #ifndef __cplusplus
 #   error This header requires C++ to be used. aiFileIO.h is the \
@@ -73,14 +73,14 @@ class ASSIMP_API IOStream
 {
 protected:
     /** Constructor protected, use IOSystem::Open() to create an instance. */
-    IOStream() AI_NO_EXCEPT = default;
+    IOStream() AI_NO_EXCEPT;
 
 public:
     // -------------------------------------------------------------------
     /** @brief Destructor. Deleting the object closes the underlying file,
      * alternatively you may use IOSystem::Close() to release the file.
      */
-    virtual ~IOStream() = default;
+    virtual ~IOStream();
 
     // -------------------------------------------------------------------
     /** @brief Read from the file
@@ -125,6 +125,17 @@ public:
      */
     virtual void Flush() = 0;
 }; //! class IOStream
+
+// ----------------------------------------------------------------------------------
+AI_FORCE_INLINE
+IOStream::IOStream() AI_NO_EXCEPT {
+    // empty
+}
+
+// ----------------------------------------------------------------------------------
+AI_FORCE_INLINE
+IOStream::~IOStream() = default;
+// ----------------------------------------------------------------------------------
 
 } //!namespace Assimp
 

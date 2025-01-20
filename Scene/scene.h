@@ -1,5 +1,6 @@
 #pragma once
 class SceneManager;
+class GameObjectManager;
 class Scene
 {
 public:
@@ -9,7 +10,7 @@ public:
 	virtual void Update(const float& DeltaTime){}
 	virtual void Draw(){}
 	virtual void Uninit(){}
-	GameObjectManager* GetGameObjectManager() { return m_GameObjectManager; }
+	GameObjectManager* GetGameObjectManager() const { return m_GameObjectManager; }
 protected:
 	GameObjectManager* m_GameObjectManager{};
 };

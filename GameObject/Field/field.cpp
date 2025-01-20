@@ -1,8 +1,8 @@
 
 #include "Main/main.h"
-#include "Renderer/renderer.h"
+#include "System\Renderer/renderer.h"
 #include "Manager/shaderManager.h"
-#include "Enum/shaderEnum.h"
+#include "System\Enum/shaderEnum.h"
 #include "GameObject/Field/field.h"
 
 Field::Field(const XMFLOAT3& location, const XMFLOAT2& size)
@@ -27,13 +27,11 @@ Field::Field(const XMFLOAT3& location, const XMFLOAT2& size)
 	vertex[3].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[3].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[3].TexCoord = XMFLOAT2(1.0f, 1.0f);
-
-	Init();
 }
 
 void Field::Init()
 {
-	
+	m_Name = "Field";
 	m_Scale = XMFLOAT3(1.0f, 1.0f, 1.0f);
 	m_Rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	//頂点バッファ

@@ -1,14 +1,16 @@
 #include "GameObject/Character/Player/playerh.h"
 #include "GameObject/Camera/camera.h"
 #include "Manager/inputManager.h"
+#include "System\Renderer\animationModel.h"
+#include "System\Enum\playerStateEnum.h"
 #include "playerStateWalk.h"
 
 void PlayerStateWalk::Init()
 {
 	if (!m_Player)return;
 	if (!m_Camera)return;
-
 	UserInputDection();
+	m_AnimationModel->SetNextAnimation("Run");
 }
 
 void PlayerStateWalk::Update()
@@ -18,12 +20,12 @@ void PlayerStateWalk::Update()
 
 	UserInputDection();
 
-	UpdatePlayerRotation();
 
 }
 
 void PlayerStateWalk::UserInputDection()
 {
+	m_Player->SetMoveDirection(XMFLOAT3(0.0f, 0.0f, 0.0f));
 
 	bool hasInput = false;
 	if (InputManager::GetKeyPress('A'))
@@ -46,40 +48,41 @@ void PlayerStateWalk::UserInputDection()
 		m_Player->SetMoveForwardDirection(-1);
 		hasInput = true;
 	}
-
 	if (!hasInput)
 	{
 		m_Player->ChangeState(PLAYER_STATE::IDLE);
+		if (!m_AnimationModel->GetIsTransitioning())
+		{
+			m_AnimationModel->SetNextAnimationFrame(m_AnimationModel->GetNextAnimationFrame());
+		}
 	}
 
 }
 
-void PlayerStateWalk::UpdatePlayerRotation()
+void PlayerStateWalk::UpdateAnimation()
 {
-	const XMFLOAT2& moveDirection = m_Player->GetMoveDirection();
+	if (!m_AnimationModel)return;
 
-	// ˆÚ“®“ü—Í‚ª‚ ‚éê‡‚É‰ñ“]‚ðXV
-	if (moveDirection.x != 0.0f || moveDirection.y != 0.0f)
+	//	‘JˆÚŠ®¬‚µ‚½‚ç
+	if (m_AnimationModel->GetBlendRatio() >= 1)
 	{
-		const XMFLOAT3& cameraForward = m_Camera->GetForward();
-		const XMFLOAT3& cameraRight = m_Camera->GetRight();
-		
-		float moveX = moveDirection.x * cameraRight.x + moveDirection.y * cameraForward.x;
-		float moveZ = moveDirection.x * cameraRight.z + moveDirection.y * cameraForward.z;
+		m_AnimationModel->SetIsTransitioning(false);
+		m_AnimationModel->SetCurrentAnimation(m_AnimationModel->GetNextAnimationName());
+		m_AnimationModel->SetCurrentAnimationFrame(m_AnimationModel->GetNextAnimationFrame());
+		m_AnimationModel->SetBlendRatio(0);
+	}
+	m_AnimationModel->Update();
 
-		// ³‹K‰»‚µ‚Ä•ûŒüƒxƒNƒgƒ‹
-		XMVECTOR moveVector = XMVectorSet(moveX, 0.0f, moveZ, 0.0f);
-		moveVector = XMVector3Normalize(moveVector);
-
-		XMFLOAT3 normalizeMove;
-		XMStoreFloat3(&normalizeMove, moveVector);
-
-		m_Player->SetMoveDirection(XMFLOAT2(normalizeMove.x, normalizeMove.z));
-
-		// ‰ñ“]XV
-		float yaw = atan2f(normalizeMove.x, normalizeMove.z);
-		XMFLOAT3 playerRotation = m_Player->GetRotation();
-		playerRotation.y = yaw;
-		m_Player->SetRotation(playerRotation);
+	//	‘JˆÚ’†‚¾‚Á‚½‚ç
+	if (m_AnimationModel->GetIsTransitioning())
+	{
+		m_AnimationModel->AddBlendRatio();
+		m_AnimationModel->AddCurrentAnimationFrame();
+		m_AnimationModel->AddNextAnimationFrame();
+	}
+	//	•’Ê‚ÌÄ¶
+	else if (!m_AnimationModel->GetIsTransitioning())
+	{
+		m_AnimationModel->AddCurrentAnimationFrame();
 	}
 }

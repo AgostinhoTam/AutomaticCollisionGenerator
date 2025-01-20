@@ -1,8 +1,8 @@
 #include "Main/main.h"
 
-#include "GameObject/2DPolygon/polygon2D.h"
 #include <thread>
 #include "Manager/sceneManager.h"
+#include "Manager\debuggerImGuiManager.h"
 const char* CLASS_NAME = "AppClass";
 const char* WINDOW_NAME = "DX11ゲーム";
 
@@ -70,6 +70,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	if (!SceneManager)return 0;
 	SceneManager->Init();
 
+
 	while(1)
 	{
         if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -87,13 +88,14 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		else
 		{
 			dwCurrentTime = timeGetTime();
-
-			if((dwCurrentTime - dwExecLastTime) >= (1000 / 60))
+			float deltaTime = static_cast<float>((dwCurrentTime - dwExecLastTime) / 1000.0f);
+			if((deltaTime) >= FRAME_PER_SEC)
 			{
 				dwExecLastTime = dwCurrentTime;
 				if (!SceneManager)return (int)msg.wParam;
-				SceneManager->Update(FRAME_PER_SEC);
+				SceneManager->Update(deltaTime);
 				SceneManager->Draw();
+
 			}
 		}
 	}
@@ -109,10 +111,13 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 }
 
 
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM IParam);
 
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
+
+{	//	もしImGuiのUIにクリックしたら、処理はImGuiに向く
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))return true;
 
 	switch(uMsg)
 	{
