@@ -25,8 +25,11 @@ ID3D11DepthStencilState* Renderer::m_DepthStateDisable{};
 
 ID3D11BlendState*		Renderer::m_BlendState{};
 ID3D11BlendState*		Renderer::m_BlendStateATC{};
+ID3D11BlendState*		Renderer::m_BlendStateAdd{};
 
-
+ID3D11RasterizerState*	Renderer::m_RasterStateCullOff{};
+ID3D11RasterizerState*	Renderer::m_RasterStateCullFront{};
+ID3D11RasterizerState*	Renderer::m_RasterStateCullBack{};
 
 
 void Renderer::Init()
@@ -121,14 +124,14 @@ void Renderer::Init()
 	rasterizerDesc.CullMode = D3D11_CULL_BACK; 
 	rasterizerDesc.DepthClipEnable = TRUE; 
 	rasterizerDesc.MultisampleEnable = FALSE; 
+	m_Device->CreateRasterizerState( &rasterizerDesc, &m_RasterStateCullBack );
+	m_DeviceContext->RSSetState(m_RasterStateCullBack);
 
-	ID3D11RasterizerState *rs;
-	m_Device->CreateRasterizerState( &rasterizerDesc, &rs );
+	rasterizerDesc.CullMode = D3D11_CULL_NONE;
+	m_Device->CreateRasterizerState(&rasterizerDesc, &m_RasterStateCullOff);
 
-	m_DeviceContext->RSSetState( rs );
-
-
-
+	rasterizerDesc.CullMode = D3D11_CULL_FRONT;
+	m_Device->CreateRasterizerState(&rasterizerDesc, &m_RasterStateCullFront);
 
 	// ブレンドステート設定
 	D3D11_BLEND_DESC blendDesc{};
@@ -145,8 +148,14 @@ void Renderer::Init()
 
 	m_Device->CreateBlendState( &blendDesc, &m_BlendState );
 
+
+	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+	m_Device->CreateBlendState(&blendDesc, &m_BlendStateAdd);
+
+	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
 	blendDesc.AlphaToCoverageEnable = TRUE;
 	m_Device->CreateBlendState( &blendDesc, &m_BlendStateATC );
+
 
 	float blendFactor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 	m_DeviceContext->OMSetBlendState(m_BlendState, blendFactor, 0xffffffff );
@@ -224,7 +233,6 @@ void Renderer::Init()
 
 
 
-
 	// ライト初期化
 	LIGHT light{};
 	light.Enable = true;
@@ -297,6 +305,25 @@ void Renderer::SetDepthEnable( bool Enable )
 
 }
 
+void Renderer::SetCullingMode(const CULL_MODE& CullMode)
+{
+	switch (CullMode)
+	{
+	case CULL_MODE::CULL_MODE_NONE:
+		m_DeviceContext->RSSetState(m_RasterStateCullOff);
+		break;
+	case CULL_MODE::CULL_MODE_FRONT:
+		m_DeviceContext->RSSetState(m_RasterStateCullFront);
+		break;
+	case CULL_MODE::CULL_MODE_BACK:
+		m_DeviceContext->RSSetState(m_RasterStateCullBack);
+		break;
+	default:
+		m_DeviceContext->RSSetState(m_RasterStateCullOff);
+		break;
+	}
+}
+
 
 
 void Renderer::SetATCEnable( bool Enable )
@@ -307,6 +334,11 @@ void Renderer::SetATCEnable( bool Enable )
 		m_DeviceContext->OMSetBlendState(m_BlendStateATC, blendFactor, 0xffffffff);
 	else
 		m_DeviceContext->OMSetBlendState(m_BlendState, blendFactor, 0xffffffff);
+
+}
+
+void Renderer::SetBlendState(const BLEND_MODE& BlendMode)
+{
 
 }
 
@@ -354,8 +386,6 @@ void Renderer::SetLight( LIGHT Light )
 {
 	m_DeviceContext->UpdateSubresource(m_LightBuffer, 0, NULL, &Light, 0, 0);
 }
-
-
 
 
 

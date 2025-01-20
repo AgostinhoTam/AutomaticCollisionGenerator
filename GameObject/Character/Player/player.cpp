@@ -5,7 +5,6 @@
 #include "Manager/gameObjectManager.h"
 #include "System\Enum\playerStateEnum.h"
 #include "Scene/scene.h"
-#include "System\Renderer/modelRenderer.h"
 #include "System\Renderer/animationModel.h"
 #include "StateMachine/PlayerState/playerStateIdle.h"
 #include "StateMachine/PlayerState/playerStateWalk.h"
@@ -44,8 +43,7 @@ void Player::Init()
 	m_CurrentState = m_PlayerState[PLAYER_STATE::IDLE];
 	m_CurrentState->Init();
 	m_Scale = { PLAYER_SCALE,PLAYER_SCALE,PLAYER_SCALE };
-	m_Collision = new SphereCollision(this, { 0.0f,0.0f,0.0f }, 5.0f);
-
+	m_Collision = new SphereCollision(this, { 0.0f,1.0f,0.0f }, 1.0f);
 	m_Position.y = 0.0f;
 	m_IsGround = true;
 

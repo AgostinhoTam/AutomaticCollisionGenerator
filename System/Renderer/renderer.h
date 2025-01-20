@@ -33,8 +33,21 @@ struct LIGHT
 	XMFLOAT4	Ambient;
 };
 
+enum class CULL_MODE
+{
+	CULL_MODE_NONE,			//カリング無し
+	CULL_MODE_FRONT,		//表のポリゴンを描画しない
+	CULL_MODE_BACK,			//裏のポリゴンを描画しない
 
+	CULL_MODE_NUM
+};
 
+enum class BLEND_MODE
+{
+	BLEND_MODE_NONE,		//ブレンド無し
+	BLEND_MODE_ALPHABLEND,	//αブレンド
+	BLEND_MODE_ADD,			//加算ブレンド
+};
 class Renderer
 {
 private:
@@ -53,13 +66,16 @@ private:
 	static ID3D11Buffer*			m_MaterialBuffer;
 	static ID3D11Buffer*			m_LightBuffer;
 
-
 	static ID3D11DepthStencilState* m_DepthStateEnable;
 	static ID3D11DepthStencilState* m_DepthStateDisable;
 
 	static ID3D11BlendState*		m_BlendState;
 	static ID3D11BlendState*		m_BlendStateATC;
+	static ID3D11BlendState*		m_BlendStateAdd;
 
+	static ID3D11RasterizerState*	m_RasterStateCullOff;
+	static ID3D11RasterizerState*	m_RasterStateCullFront;
+	static ID3D11RasterizerState*	m_RasterStateCullBack;
 
 
 public:
@@ -69,7 +85,9 @@ public:
 	static void End();
 
 	static void SetDepthEnable(bool Enable);
+	static void SetCullingMode(const CULL_MODE& CullMode);
 	static void SetATCEnable(bool Enable);
+	static void SetBlendState(const BLEND_MODE& BlendMode);
 	static void SetWorldViewProjection2D();
 	static void SetWorldMatrix(XMMATRIX WorldMatrix);
 	static void SetViewMatrix(XMMATRIX ViewMatrix);

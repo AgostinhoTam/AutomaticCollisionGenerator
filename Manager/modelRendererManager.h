@@ -66,6 +66,6 @@ public:
 	static void UnloadAll();
 
 	static MODEL* Load( const char *FileName );
-
+	static void Draw(const MODEL* model, const GameObject* object);
 
 };

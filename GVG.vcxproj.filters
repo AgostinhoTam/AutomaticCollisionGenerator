@@ -10,25 +10,16 @@
     <FxCompile Include="shader\unlitTextureVS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="shader\debugLineVS.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="shader\debugLinePS.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject\Field\field.cpp">
-      <Filter>GameObject\Field</Filter>
+      <Filter>GameObject\Camera\Field</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\gameobject.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\2DPolygon\polygon2D.cpp">
       <Filter>GameObject\Polygon2D</Filter>
-    </ClCompile>
-    <ClCompile Include="Manager\modelRendererManager.cpp">
-      <Filter>Manager</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\Camera\camera.cpp">
       <Filter>GameObject\Camera</Filter>
@@ -93,9 +84,6 @@
     <ClCompile Include="GameObject\Character\Enemy\enemy.cpp">
       <Filter>GameObject\Character\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="System\Renderer\modelRenderer.cpp">
-      <Filter>System\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="System\Renderer\renderer.cpp">
       <Filter>System\Renderer</Filter>
     </ClCompile>
@@ -105,10 +93,17 @@
     <ClCompile Include="System\Collision\sphereCollision.cpp">
       <Filter>System\Collision</Filter>
     </ClCompile>
+    <ClCompile Include="System\Collision\collision.cpp" />
+    <ClCompile Include="Manager\modelRendererManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Bullet\projection.cpp">
+      <Filter>GameObject\Projection</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject\Field\field.h">
-      <Filter>GameObject\Field</Filter>
+      <Filter>GameObject\Camera\Field</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\gameobject.h">
       <Filter>GameObject</Filter>
@@ -122,9 +117,6 @@
     <ClInclude Include="Manager\sceneManager.h">
       <Filter>Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Manager\modelRendererManager.h">
-      <Filter>Manager</Filter>
-    </ClInclude>
     <ClInclude Include="Main\main.h">
       <Filter>Main</Filter>
     </ClInclude>
@@ -134,14 +126,8 @@
     <ClInclude Include="Manager\gameObjectManager.h">
       <Filter>Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Enum\gameObjectEnum.h">
-      <Filter>System\Enum</Filter>
-    </ClInclude>
     <ClInclude Include="Scene\gameScene.h">
       <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Enum\modelEnum.h">
-      <Filter>System\Enum</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\Character\Player\playerh.h">
       <Filter>GameObject\Character\Player</Filter>
@@ -151,9 +137,6 @@
     </ClInclude>
     <ClInclude Include="Manager\shaderManager.h">
       <Filter>Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="Enum\shaderEnum.h">
-      <Filter>System\Enum</Filter>
     </ClInclude>
     <ClInclude Include="Structure\shaderStructure.h">
       <Filter>System\Structure</Filter>
@@ -167,14 +150,8 @@
     <ClInclude Include="StateMachine\PlayerState\playerState.h">
       <Filter>StateMachine\PlayerState</Filter>
     </ClInclude>
-    <ClInclude Include="Enum\playerStateEnum.h">
-      <Filter>System\Enum</Filter>
-    </ClInclude>
     <ClInclude Include="StateMachine\PlayerState\playerStateIdle.h">
       <Filter>StateMachine\PlayerState</Filter>
-    </ClInclude>
-    <ClInclude Include="Enum\moveDirection.h">
-      <Filter>System\Enum</Filter>
     </ClInclude>
     <ClInclude Include="StateMachine\PlayerState\playerStateJump.h">
       <Filter>StateMachine\PlayerState</Filter>
@@ -212,9 +189,6 @@
     <ClInclude Include="GameObject\Character\Enemy\enemy.h">
       <Filter>GameObject\Character\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="System\Renderer\modelRenderer.h">
-      <Filter>System\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="System\Renderer\renderer.h">
       <Filter>System\Renderer</Filter>
     </ClInclude>
@@ -226,6 +200,33 @@
     </ClInclude>
     <ClInclude Include="System\Collision\collision.h">
       <Filter>System\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\modelRendererManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Enum\enemyTypeEnum.h">
+      <Filter>System\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Enum\gameObjectEnum.h">
+      <Filter>System\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Enum\modelEnum.h">
+      <Filter>System\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Enum\moveDirection.h">
+      <Filter>System\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Enum\playerStateEnum.h">
+      <Filter>System\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Enum\shaderEnum.h">
+      <Filter>System\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Bullet\projection.h">
+      <Filter>GameObject\Projection</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Enum\projectionTypeEnum.h">
+      <Filter>System\Enum</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -240,9 +241,6 @@
     </Filter>
     <Filter Include="Scene">
       <UniqueIdentifier>{8094c2ae-3ed1-4480-affb-a0cec9e934ad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject\Field">
-      <UniqueIdentifier>{1dc1e11a-ff45-47cb-a545-4efc69fa85c6}</UniqueIdentifier>
     </Filter>
     <Filter Include="GameObject\Polygon2D">
       <UniqueIdentifier>{ce0912fd-6c03-4f3a-913a-fefbb7a18165}</UniqueIdentifier>
@@ -285,6 +283,12 @@
     </Filter>
     <Filter Include="System\Structure">
       <UniqueIdentifier>{070a58e8-ca38-49d2-9d79-49377a7da421}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Projection">
+      <UniqueIdentifier>{cbf928b3-c503-4431-bf18-53ba007fe45b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Camera\Field">
+      <UniqueIdentifier>{1dc1e11a-ff45-47cb-a545-4efc69fa85c6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

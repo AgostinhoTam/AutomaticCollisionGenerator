@@ -35,4 +35,5 @@ protected:
 	ID3D11Buffer* m_VertexBuffer = NULL;
 	ID3D11ShaderResourceView* m_Texture = NULL;
 	Collision* m_Collision{};
+	bool	m_IsUsed = false;
 };

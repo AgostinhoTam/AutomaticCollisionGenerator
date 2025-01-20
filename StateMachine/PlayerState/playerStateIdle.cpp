@@ -40,8 +40,7 @@ void PlayerStateIdle::UpdateAnimation()
 	{
 		m_AnimationModel->SetIsTransitioning(false);
 		m_AnimationModel->SetCurrentAnimation("Idle");
-		const unsigned int nextFrame = m_AnimationModel->GetNextAnimationFrame();
-		m_AnimationModel->SetCurrentAnimationFrame(nextFrame);
+		m_AnimationModel->SetCurrentAnimationFrame(m_AnimationModel->GetNextAnimationFrame());
 		m_AnimationModel->SetBlendRatio(0);
 	}
 	m_AnimationModel->Update();
