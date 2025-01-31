@@ -1,6 +1,7 @@
 #include "Main\main.h"
-#include "GameObject\gameobject.h"
 #include "Manager\inputManager.h"
+#include "GameObject\gameobject.h"
+//#include "System\Collision\sphereCollision.h"
 #include "System\Renderer\renderer.h"
 #include "System\Renderer\animationModel.h"
 
@@ -38,8 +39,17 @@ void AnimationModel::Draw(GameObject* Object)
 	// マテリアル設定
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
-	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	material.Ambient = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	if (!m_IsDebugMode)
+	{
+		material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	
+	}
+	else
+	{
+		Renderer::SetDepthEnable(false);
+		Renderer::SetBlendState(BLEND_MODE::BLEND_MODE_ATC);
+		material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.5f);
+	}
 	material.TextureEnable = true;
 	Renderer::SetMaterial(material);
 
@@ -69,6 +79,7 @@ void AnimationModel::Draw(GameObject* Object)
 		}
 
 		material.Diffuse = XMFLOAT4(diffuse.r, diffuse.g, diffuse.b, opacity);
+
 		material.Ambient = material.Diffuse;
 		Renderer::SetMaterial(material);
 
@@ -84,6 +95,8 @@ void AnimationModel::Draw(GameObject* Object)
 		// ポリゴン描画
 		Renderer::GetDeviceContext()->DrawIndexed(mesh->mNumFaces * 3, 0, 0);
 	}
+	Renderer::SetDepthEnable(true);
+	Renderer::SetBlendState(BLEND_MODE::BLEND_MODE_NONE);
 }
 
 void AnimationModel::Load(const char* FileName)
@@ -213,7 +226,7 @@ void AnimationModel::Load(const char* FileName)
 	}
 
 
-
+	// TODO Textureを再利用できるように
 	//テクスチャ読み込み
 	for (unsigned int i = 0; i < m_AiScene->mNumTextures; i++)
 	{
@@ -279,6 +292,11 @@ void AnimationModel::LoadAnimation(const char* FileName, const char* Name)
 
 void AnimationModel::CreateBone(aiNode* node)
 {
+	if (std::string(node->mName.C_Str()).find("$AssimpFbx$") != std::string::npos)
+	{
+		return; // 補助ボーンスキップ
+	}
+
 	BONE bone;
 
 	m_Bone[node->mName.C_Str()] = bone;
@@ -293,17 +311,14 @@ void AnimationModel::UpdateBoneMatrix(aiNode* node, aiMatrix4x4 matrix)
 {
 	BONE* bone = &m_Bone[node->mName.C_Str()];
 
-	//	マトリクスの乗算順番に注意
-	aiMatrix4x4 worldMatrix{};
+	aiMatrix4x4 worldMatrix = matrix * bone->AnimationMatrix;		//マトリクス
+	bone->localMatrix = TransformToXMMATRIX(worldMatrix);
 
-	worldMatrix *= matrix;		//親のマトリクス
-	worldMatrix *= bone->AnimationMatrix;	//自分のマトリクス
-
-	bone->worldMatrix = TransformToXMMATRIX(worldMatrix);
-
-
-	bone->Matrix = worldMatrix;
-	bone->Matrix *= bone->OffsetMatrix;
+	// **スキニング用の最終行列 (ワールド行列 × オフセット行列)**
+	bone->Matrix = worldMatrix * bone->OffsetMatrix;
+	
+	// **DirectX用の行列に変換**
+	bone->worldMatrix = TransformToXMMATRIX(bone->Matrix);
 
 	for (unsigned int n = 0; n < node->mNumChildren; ++n)
 	{
@@ -342,6 +357,65 @@ double AnimationModel::GetAnimationDuration(const std::string& AnimationName)
 	return (m_Animation[AnimationName]->mAnimations[0]->mDuration);
 }
 
+const XMFLOAT3& AnimationModel::GetHeadPosition(const std::string& BoneName, const XMFLOAT3& Scale, const XMMATRIX& PlayerMatrix)
+{
+	auto it = m_Bone.find(BoneName);
+	if (it != m_Bone.end())
+	{
+
+		XMMATRIX& headMatrix = it->second.localMatrix;
+
+		XMMATRIX scale = XMMatrixScaling(1.0f/Scale.x, 1.0f/Scale.y, 1.0f/Scale.z);	//　OwnerのScaleに合わせる
+		
+		XMMATRIX rotMatrix = XMMatrixRotationRollPitchYaw(0, 0, 0);
+		
+		XMMATRIX transMatrix = XMMatrixTranslation(0, 0, 0);
+
+		XMMATRIX worldMatrix = XMMatrixMultiply(rotMatrix, transMatrix);
+		worldMatrix = XMMatrixMultiply(worldMatrix, scale);
+		worldMatrix = XMMatrixMultiply(worldMatrix, headMatrix);
+		worldMatrix = XMMatrixMultiply(worldMatrix, PlayerMatrix);
+		
+		
+		XMVECTOR trans, rot, scaleVec;
+		XMMatrixDecompose(&scaleVec, &rot, &trans, worldMatrix);
+
+		return XMFLOAT3(XMVectorGetX(trans),XMVectorGetY(trans),XMVectorGetZ(trans));
+	}
+	return XMFLOAT3();
+}
+
+void AnimationModel::UpdateAnimationBlend()
+{
+
+	//	遷移中だったら
+	if (m_IsTransitioning)
+	{
+		AddBlendRatio();
+		AddCurrentAnimationFrame();
+		AddNextAnimationFrame();
+	}
+	//	普通の再生
+	else
+	{
+		AddCurrentAnimationFrame();
+	}
+	//	遷移完成したら
+	if (m_BlendRatio >= 1)
+	{
+		m_IsTransitioning = false;
+		SetCurrentAnimation(m_NextAnimation);
+		m_CurrentFrame = m_NextFrame;
+		m_BlendRatio = 0;
+	}
+	//	ボーン、メッシュ更新
+	Update();
+}
+
+
+
+
+
 void AnimationModel::SetNextAnimation(const std::string& AnimationName)
 {
 	m_NextAnimation = AnimationName;
@@ -357,7 +431,17 @@ void AnimationModel::Update()
 	if (m_Animation.count(m_NextAnimation) == 0)return;
 	if (!m_Animation[m_NextAnimation]->HasAnimations())return;
 
-
+	if (InputManager::GetKeyTrigger('J'))
+	{
+		if (m_IsDebugMode)
+		{
+			m_IsDebugMode = false;
+		}
+		else
+		{
+			m_IsDebugMode = true;
+		}
+	}
 	//	アニメーションデータから
 	aiAnimation* animation1 = m_Animation[m_CurrentAnimation]->mAnimations[0];
 	aiAnimation* animation2 = m_Animation[m_NextAnimation]->mAnimations[0];
@@ -554,8 +638,8 @@ void AnimationModel::Update()
 
 				vertex[v].TexCoord.x = mesh->mTextureCoords[0][v].x;
 				vertex[v].TexCoord.y = mesh->mTextureCoords[0][v].y;
-
 				vertex[v].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+
 			}
 		}
 		Renderer::GetDeviceContext()->Unmap(m_VertexBuffer[m], 0);

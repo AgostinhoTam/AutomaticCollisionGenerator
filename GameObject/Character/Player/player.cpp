@@ -11,6 +11,7 @@
 #include "GameObject/Character/Player/playerh.h"
 #include "GameObject/Camera/camera.h"
 #include "GameObject\Character\Enemy\enemy.h"
+#include "System\Collision\characterBoneCollision.h"
 #include "System\Collision\sphereCollision.h"
 constexpr float PLAYER_MAX_SPEED = 20.0f;
 constexpr float PLAYER_MAX_ACCL_SPEED = 50.0f;
@@ -19,6 +20,8 @@ constexpr float PLAYER_SCALE = 0.01f;
 void Player::Init()
 {
 	m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::PLAYER);
+	
+	CreateCharacterBoneCollision();
 
 	m_Shader = ShaderManager::LoadShader(SHADER_NAME::UNLIT_TEXTURE);
 
@@ -43,8 +46,8 @@ void Player::Init()
 	m_CurrentState = m_PlayerState[PLAYER_STATE::IDLE];
 	m_CurrentState->Init();
 	m_Scale = { PLAYER_SCALE,PLAYER_SCALE,PLAYER_SCALE };
-	m_Collision = new SphereCollision(this, { 0.0f,1.0f,0.0f }, 1.0f);
 	m_Position.y = 0.0f;
+	//m_Collision = new SphereCollision(m_Position, { 0.0f,1.0f,0.0f }, 1.0f);
 	m_IsGround = true;
 
 }
@@ -64,14 +67,20 @@ void Player::Update(const float& DeltaTime)
 	if (!m_CurrentState)return;
 	if (!m_AnimationModel)return;
 	if (!m_Camera)return;
+	
+	//	アニメーション更新
+	m_AnimationModel->UpdateAnimationBlend();
 
-	if (m_Collision)m_Collision->UpdateCollision();
+	//if (m_Collision)m_Collision->UpdateCollision(m_Position);
+
 
 	m_CurrentState->Update();
 
 	UpdatePlayerRotation();
 
+	// 移動更新
 	Character::Update(DeltaTime);
+	UpdateBoneCollision();
 
 }
 
@@ -80,11 +89,18 @@ void Player::Draw()
 	if (!m_CurrentState)return;
 	if (!m_AnimationModel)return;
 
-	m_CurrentState->UpdateAnimation();
-	m_AnimationModel->Draw(this);
 #ifdef _DEBUG
 	if (m_Collision)m_Collision->Draw();
+	for (auto& capsule : m_Collisions)
+	{
+		capsule.second->Draw();
+	}
 #endif // _DEBUG
+	m_AnimationModel->Draw(this);
+
+
+
+
 
 }
 

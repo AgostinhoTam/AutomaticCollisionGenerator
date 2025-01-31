@@ -47,6 +47,7 @@ enum class BLEND_MODE
 	BLEND_MODE_NONE,		//ブレンド無し
 	BLEND_MODE_ALPHABLEND,	//αブレンド
 	BLEND_MODE_ADD,			//加算ブレンド
+	BLEND_MODE_ATC			//Alpha-To-Coverage、草なとの半透明表現
 };
 class Renderer
 {

@@ -10,10 +10,16 @@
     <FxCompile Include="shader\unlitTextureVS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
+    <FxCompile Include="shader\debugLineVS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\debugLinePS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject\Field\field.cpp">
-      <Filter>GameObject\Camera\Field</Filter>
+      <Filter>GameObject\Field</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\gameobject.cpp">
       <Filter>GameObject</Filter>
@@ -93,17 +99,26 @@
     <ClCompile Include="System\Collision\sphereCollision.cpp">
       <Filter>System\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="System\Collision\collision.cpp" />
     <ClCompile Include="Manager\modelRendererManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\Bullet\projection.cpp">
       <Filter>GameObject\Projection</Filter>
     </ClCompile>
+    <ClCompile Include="System\Collision\capsuleCollision.cpp">
+      <Filter>System\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Collision\characterBoneCollision.cpp">
+      <Filter>System\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Collision\collision.cpp">
+      <Filter>System\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Behavior\behaviorTree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject\Field\field.h">
-      <Filter>GameObject\Camera\Field</Filter>
+      <Filter>GameObject\Field</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\gameobject.h">
       <Filter>GameObject</Filter>
@@ -132,14 +147,8 @@
     <ClInclude Include="GameObject\Character\Player\playerh.h">
       <Filter>GameObject\Character\Player</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Character\character.h">
-      <Filter>GameObject\Character</Filter>
-    </ClInclude>
     <ClInclude Include="Manager\shaderManager.h">
       <Filter>Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="Structure\shaderStructure.h">
-      <Filter>System\Structure</Filter>
     </ClInclude>
     <ClInclude Include="Manager\inputManager.h">
       <Filter>Manager</Filter>
@@ -228,6 +237,21 @@
     <ClInclude Include="System\Enum\projectionTypeEnum.h">
       <Filter>System\Enum</Filter>
     </ClInclude>
+    <ClInclude Include="System\Collision\capsuleCollision.h">
+      <Filter>System\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Collision\characterBoneCollision.h">
+      <Filter>System\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Structure\shaderStructure.h">
+      <Filter>System\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Behavior\behaviorTree.h">
+      <Filter>BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Character\character.h">
+      <Filter>GameObject\Character</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Main">
@@ -287,7 +311,10 @@
     <Filter Include="GameObject\Projection">
       <UniqueIdentifier>{cbf928b3-c503-4431-bf18-53ba007fe45b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameObject\Camera\Field">
+    <Filter Include="BehaviorTree">
+      <UniqueIdentifier>{6d149b7f-25f1-4cce-a854-45e2333907e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Field">
       <UniqueIdentifier>{1dc1e11a-ff45-47cb-a545-4efc69fa85c6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>

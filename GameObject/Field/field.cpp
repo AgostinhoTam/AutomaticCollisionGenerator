@@ -93,7 +93,7 @@ void Field::Draw()
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;
 	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
-	
+
 	//ƒ}ƒeƒŠƒAƒ‹
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));

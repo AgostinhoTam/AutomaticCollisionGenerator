@@ -22,7 +22,7 @@ void AnimationRendererManager::UnloadAll()
 
 
 
-
+//	TODO Ä—˜—po—ˆ‚Ä‚È‚¢
 
 AnimationModel* AnimationRendererManager::LoadAnimationModel(const MODEL_NAME& Model)
 {

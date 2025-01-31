@@ -9,5 +9,4 @@ public:
 	virtual void Uninit() override {}
 	virtual void Draw() override {}
 	virtual void UserInputDection() override;
-	virtual void UpdateAnimation()override;
 };

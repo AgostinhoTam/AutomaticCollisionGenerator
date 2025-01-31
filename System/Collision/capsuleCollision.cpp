@@ -2,36 +2,24 @@
 #include "GameObject\gameobject.h"
 #include "System\Renderer\renderer.h"
 #include "System\Collision\capsuleCollision.h"
-#include "sphereCollision.h"
 
 #ifdef _DEBUG
 constexpr int DEBUG_LINE_SEGMENTS = 32;	//デバッグ用の線の分割数
 #endif // _DEBUG
 
 
-SphereCollision::SphereCollision(const XMFLOAT3& Position, const XMFLOAT3& Offset, float Radius) :Collision(Position, Offset), m_Radius(Radius) // 引数（Ownerポインタ、Offset値、半径）
+CapsuleCollision::CapsuleCollision(const XMFLOAT3& StartPosition, const XMFLOAT3& Offset, float Radius) :Collision(StartPosition, Offset)
 {
 	Init();
 }
 
-bool SphereCollision::IsCollisionOverlapping(const Collision* Collision) const
+bool CapsuleCollision::IsCollisionOverlapping(const Collision* Collision) const
 {
 	if (!Collision)return false;
-	const SphereCollision* sphere = dynamic_cast<const SphereCollision*>(Collision);
-	if (sphere)
-	{
-		return IsCollisionOverlapping(sphere);
-	}
-	const CapsuleCollision* capsule = dynamic_cast<const CapsuleCollision*>(Collision);
-	if (capsule)
-	{
-		// TODO Capsule変更
-		return IsCollisionOverlapping(capsule);
-	}
-	return false;
+	return IsCollisionOverlapping(this);
 }
 
-bool SphereCollision::CheckSphereToSphere(const SphereCollision* Collision) const
+bool CapsuleCollision::IsCollisionOverlapping(const CapsuleCollision* Collision) const
 {
 	if (!Collision)return false;
 	XMVECTOR ownerPosition = XMLoadFloat3(&m_Position);
@@ -45,19 +33,20 @@ bool SphereCollision::CheckSphereToSphere(const SphereCollision* Collision) cons
 
 }
 
-void SphereCollision::UpdateCollision(const XMFLOAT3& Position)
+void CapsuleCollision::UpdateCollision(const XMFLOAT3& Position)
 {
+	
 	m_Position = { Position.x + m_Offset.x,Position.y + m_Offset.y, Position.z + m_Offset.z };
 }
 
-void SphereCollision::Init()
+void CapsuleCollision::Init()
 {
 	UpdateCollision(m_Position);
 	CreateLineVertex(m_SphereLineVertices);
 
 }
 
-void SphereCollision::Draw()
+void CapsuleCollision::Draw()
 {
 	XMMATRIX world, scale, rot, trans;
 
@@ -71,9 +60,7 @@ void SphereCollision::Draw()
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(world);
 
-
 	Renderer::GetDeviceContext()->IASetInputLayout(m_Shader->m_VertexLayout);
-
 
 	Renderer::GetDeviceContext()->VSSetShader(m_Shader->m_VertexShader, NULL, 0);
 	Renderer::GetDeviceContext()->PSSetShader(m_Shader->m_PixelShader, NULL, 0);
@@ -93,7 +80,7 @@ void SphereCollision::Draw()
 }
 
 //	デバッグの線の頂点情報保存
-void SphereCollision::CreateLineVertex(std::vector<XMFLOAT3>& SphereLineVertices)
+void CapsuleCollision::CreateLineVertex(std::vector<XMFLOAT3>& SphereLineVertices)
 {
 	SphereLineVertices.clear();
 
@@ -138,6 +125,8 @@ void SphereCollision::CreateLineVertex(std::vector<XMFLOAT3>& SphereLineVertices
 			SphereLineVertices.emplace_back(SphereLineVertices[SphereLineVertices.size() - DEBUG_LINE_SEGMENTS]);
 		}
 	}
+
+	ID3D11Buffer* vertexBuffer = nullptr;
 
 	D3D11_BUFFER_DESC bufferDesc = {};
 	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
