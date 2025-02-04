@@ -4,8 +4,8 @@ class SphereCollision :public Collision
 {
 public:
 	SphereCollision(const XMFLOAT3& Position, const XMFLOAT3& Offset, float Radius);
-	virtual bool IsCollisionOverlapping(const Collision* Collision)const override;
-	bool CheckSphereToSphere(const SphereCollision* Collision)const;
+	virtual bool IsCollisionOverlapping(const Collision* Collision) override;
+	bool CheckSphereToSphere(const SphereCollision* Collision);
 	float GetRadius()const { return m_Radius; }
 	virtual void UpdateCollision(const XMFLOAT3& Position)override;
 	virtual void Init()override;

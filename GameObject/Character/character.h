@@ -34,7 +34,7 @@ public:
 	void UpdateBoneCollision();
 	AnimationModel* GetAnimationModel() const{ return m_AnimationModel; }
 	void CreateCharacterBoneCollision();
-	void CreateSingleBoneCollision(const std::string& Head,const std::string& Tail,const XMFLOAT3& Offset, const float Radius);
+	void CreateSingleBoneCollision(const std::string& Head,const std::string& Tail,const XMFLOAT3& Offset, const float Radius =0.0f);
 	const std::unordered_map<std::string, Collision*>& GetCollisionList() { return m_Collisions; }
 protected:
 	XMFLOAT3 m_Velocity{};

@@ -13,4 +13,5 @@ public:
 	GameObjectManager* GetGameObjectManager() const { return m_GameObjectManager; }
 protected:
 	GameObjectManager* m_GameObjectManager{};
+
 };

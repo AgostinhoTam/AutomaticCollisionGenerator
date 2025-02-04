@@ -17,7 +17,7 @@ ID3D11Buffer*			Renderer::m_ViewBuffer{};
 ID3D11Buffer*			Renderer::m_ProjectionBuffer{};
 ID3D11Buffer*			Renderer::m_MaterialBuffer{};
 ID3D11Buffer*			Renderer::m_LightBuffer{};
-
+ID3D11Buffer*			Renderer::m_ColorBuffer{};
 
 ID3D11DepthStencilState* Renderer::m_DepthStateEnable{};
 ID3D11DepthStencilState* Renderer::m_DepthStateDisable{};
@@ -230,6 +230,9 @@ void Renderer::Init()
 	m_DeviceContext->VSSetConstantBuffers( 4, 1, &m_LightBuffer );
 	m_DeviceContext->PSSetConstantBuffers( 4, 1, &m_LightBuffer );
 
+	bufferDesc.ByteWidth = sizeof(XMFLOAT4);
+	m_Device->CreateBuffer(&bufferDesc, NULL, &m_ColorBuffer);
+	m_DeviceContext->PSSetConstantBuffers(5, 1, &m_ColorBuffer);
 
 
 
@@ -409,6 +412,11 @@ void Renderer::SetMaterial( MATERIAL Material )
 void Renderer::SetLight( LIGHT Light )
 {
 	m_DeviceContext->UpdateSubresource(m_LightBuffer, 0, NULL, &Light, 0, 0);
+}
+
+void Renderer::SetColor(XMFLOAT4 Color)
+{
+	m_DeviceContext->UpdateSubresource(m_ColorBuffer, 0, NULL, &Color, 0, 0);
 }
 
 

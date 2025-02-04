@@ -14,6 +14,6 @@ public:
 	virtual void Uninit()override;
 	void SetProjectionType(PROJECTION_TYPE& Type) { m_ProjectionType = Type; }
 protected:
-	PROJECTION_TYPE m_ProjectionType;
+	PROJECTION_TYPE m_ProjectionType{};
 	Collision* m_Collision{};
 };

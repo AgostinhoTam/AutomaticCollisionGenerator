@@ -1,7 +1,11 @@
+#include "GameObject\Character\Player\playerh.h"
 #include "Manager\animationRendererManager.h"
 #include "Manager\shaderManager.h"
+#include "Manager\gameObjectManager.h"
+#include "Manager\sceneManager.h"
 #include "System\Renderer\animationModel.h"
 #include "System\Collision\characterBoneCollision.h"
+#include "Scene\scene.h"
 #include "Behavior\behaviorTree.h"
 #include "enemy.h"
 namespace EnemyTypeA
@@ -14,7 +18,7 @@ namespace EnemyTypeA
 
 Enemy::Enemy(ENEMY_TYPE EnemyType)
 {
-	
+
 	switch (EnemyType)
 	{
 	case ENEMY_TYPE::ENEMY:
@@ -45,6 +49,11 @@ void Enemy::Init()
 	m_Position.y = 0;
 	m_IsGround = true;
 
+	GameObjectManager* gameObjectManager = SceneManager::GetInstance()->GetGameObjectManager();
+	if (gameObjectManager)
+	{
+		m_Player = gameObjectManager->GetGameObject<Player>(GAMEOBJECT_TYPE::PLAYER);
+	}
 }
 
 void Enemy::Uninit()
@@ -56,6 +65,7 @@ void Enemy::Uninit()
 void Enemy::Update(const float& DeltaTime)
 {
 	if (!m_AnimationModel)return;
+	CollisionCheck();
 	m_BehaviorRoot->Update();
 	Character::Update(DeltaTime);
 
@@ -73,4 +83,32 @@ void Enemy::Draw()
 		capsule.second->Draw();
 	}
 #endif // _DEBUG
+}
+
+void Enemy::CollisionCheck()
+{
+
+	const std::unordered_map<std::string,Collision*>& playerCollisonList =  m_Player->GetCollisionList();
+
+	for (const auto& enemyPair : m_Collisions)
+	{
+		bool isHit = false;
+
+
+		for (const auto& playerPair : playerCollisonList)
+		{
+			Collision* playerCollision = playerPair.second;
+
+			if (enemyPair.second->IsCollisionOverlapping(playerCollision))
+			{
+				isHit = true;
+				playerCollision->SetIsHit(isHit);
+				break;
+			}
+			
+		}
+		enemyPair.second->SetIsHit(isHit);
+		
+	}
+
 }

@@ -16,12 +16,11 @@
 constexpr float PLAYER_MAX_SPEED = 20.0f;
 constexpr float PLAYER_MAX_ACCL_SPEED = 50.0f;
 constexpr float PLAYER_MAX_JUMP_SPEED = 100.0f;
-constexpr float PLAYER_SCALE = 0.01f;
+constexpr float PLAYER_SCALE = 0.03f;
 void Player::Init()
 {
 	m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::PLAYER);
 	
-	CreateCharacterBoneCollision();
 
 	m_Shader = ShaderManager::LoadShader(SHADER_NAME::UNLIT_TEXTURE);
 
@@ -49,6 +48,7 @@ void Player::Init()
 	m_Position.y = 0.0f;
 	//m_Collision = new SphereCollision(m_Position, { 0.0f,1.0f,0.0f }, 1.0f);
 	m_IsGround = true;
+	CreateCharacterBoneCollision();
 
 }
 
@@ -67,7 +67,8 @@ void Player::Update(const float& DeltaTime)
 	if (!m_CurrentState)return;
 	if (!m_AnimationModel)return;
 	if (!m_Camera)return;
-	
+
+
 	//	アニメーション更新
 	m_AnimationModel->UpdateAnimationBlend();
 
@@ -118,7 +119,7 @@ void Player::ChangeState(PLAYER_STATE State)
 
 void Player::UpdatePlayerRotation()
 {
-
+	CollisionCheck();
 	// 移動入力がある場合に回転を更新
 	if (m_MoveDirection.x != 0.0f || m_MoveDirection.z != 0.0f)
 	{
@@ -142,6 +143,14 @@ void Player::UpdatePlayerRotation()
 		//yaw += XM_PI;
 		m_Rotation.y = yaw;
 
+	}
+}
+
+void Player::CollisionCheck()
+{
+	for (const auto& playerPair : m_Collisions)
+	{
+		playerPair.second->SetIsHit(false);
 	}
 }
 

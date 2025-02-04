@@ -13,7 +13,7 @@ class Collision
 public:
 	Collision(const XMFLOAT3& Position, const XMFLOAT3& Offset);	// 引数（Ownerポインタ、Offset値）
 	virtual ~Collision() {}
-	virtual bool IsCollisionOverlapping(const Collision* Collision)const = 0;
+	virtual bool IsCollisionOverlapping(const Collision* Collision) = 0;
 	virtual void UpdateCollision(const XMFLOAT3& Position) {}
 	virtual void Init() {}
 	virtual void Draw() {}
@@ -24,6 +24,8 @@ public:
 	const XMFLOAT3& GetPosition() { return m_Position; }
 	bool GetEnable() const { return m_IsEnable; }
 	void SetEnable(const bool Flag) { m_IsEnable = Flag; }
+	bool GetIsHit()const { return m_IsHit; }
+	void SetIsHit(const bool Flag) { m_IsHit = Flag; }
 protected:
 	Shader* m_Shader{};
 	XMFLOAT3 m_Position{};
@@ -33,4 +35,5 @@ protected:
 	ID3D11Buffer* m_VertexBuffer{};
 	ID3D11Buffer* m_IndexBuffer{};
 	bool m_IsEnable = true;
+	bool m_IsHit = false;
 };

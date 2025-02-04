@@ -26,6 +26,7 @@ struct BONE
 	aiMatrix4x4 AnimationMatrix;
 	aiMatrix4x4 OffsetMatrix;
 	XMFLOAT3	HeadPosition{};
+	float		Radius{};
 };
 
 class GameObject;
@@ -79,4 +80,6 @@ public:
 	const std::unordered_map<std::string, BONE>& GetBoneMap() { return m_Bone; }
 	const XMFLOAT3& GetHeadPosition(const std::string& BoneName,const XMFLOAT3& Scale,const XMMATRIX& PlayerMatrix);
 	void UpdateAnimationBlend();
+	const float CalculateCapsuleRadius(const std::string& HeadName,const std::string& TailName);
+	const float DistancePointLineSegment(const XMFLOAT3& Point, const XMFLOAT3& Start, const XMFLOAT3& End);
 };

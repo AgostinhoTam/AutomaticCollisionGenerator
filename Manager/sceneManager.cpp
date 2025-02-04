@@ -9,7 +9,7 @@
 
 SceneManager* SceneManager::m_Instance = nullptr;
 Scene* SceneManager::m_CurrentScene = nullptr;
-
+bool	SceneManager::m_IsDebugMode = false;
 SceneManager* SceneManager::GetInstance()
 {
 	if (!m_Instance) {
@@ -62,4 +62,10 @@ void SceneManager::Uninit()
 
 #endif // _DEBUG
 
+}
+
+GameObjectManager* SceneManager::GetGameObjectManager()
+{
+	if (!m_CurrentScene)return nullptr;
+	return m_CurrentScene->GetGameObjectManager();
 }

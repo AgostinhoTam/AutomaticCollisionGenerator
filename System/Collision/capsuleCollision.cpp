@@ -2,10 +2,10 @@
 #include "GameObject\gameobject.h"
 #include "System\Renderer\renderer.h"
 #include "System\Collision\capsuleCollision.h"
+#include "Manager\sceneManager.h"
 
-#ifdef _DEBUG
+
 constexpr int DEBUG_LINE_SEGMENTS = 32;	//デバッグ用の線の分割数
-#endif // _DEBUG
 
 
 CapsuleCollision::CapsuleCollision(const XMFLOAT3& StartPosition, const XMFLOAT3& Offset, float Radius) :Collision(StartPosition, Offset)
@@ -13,13 +13,13 @@ CapsuleCollision::CapsuleCollision(const XMFLOAT3& StartPosition, const XMFLOAT3
 	Init();
 }
 
-bool CapsuleCollision::IsCollisionOverlapping(const Collision* Collision) const
+bool CapsuleCollision::IsCollisionOverlapping(const Collision* Collision) 
 {
 	if (!Collision)return false;
 	return IsCollisionOverlapping(this);
 }
 
-bool CapsuleCollision::IsCollisionOverlapping(const CapsuleCollision* Collision) const
+bool CapsuleCollision::IsCollisionOverlapping(const CapsuleCollision* Collision) 
 {
 	if (!Collision)return false;
 	XMVECTOR ownerPosition = XMLoadFloat3(&m_Position);
@@ -42,12 +42,17 @@ void CapsuleCollision::UpdateCollision(const XMFLOAT3& Position)
 void CapsuleCollision::Init()
 {
 	UpdateCollision(m_Position);
-	CreateLineVertex(m_SphereLineVertices);
+	if (SceneManager::GetInstance()->GetIsDebugMode())
+	{
+		CreateLineVertex(m_SphereLineVertices);
+	}
 
 }
 
 void CapsuleCollision::Draw()
 {
+	if (!SceneManager::GetInstance()->GetIsDebugMode())return;
+
 	XMMATRIX world, scale, rot, trans;
 
 	scale = XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z);

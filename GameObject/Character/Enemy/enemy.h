@@ -2,6 +2,7 @@
 #include "GameObject\Character\character.h"
 #include "System\Enum\enemyTypeEnum.h"
 class BehaviorNode;
+class Player;
 class Enemy : public Character
 {
 public:
@@ -10,7 +11,9 @@ public:
 	virtual void Uninit()override;
 	virtual void Update(const float& DeltaTime)override;
 	virtual void Draw()override;
+	void CollisionCheck();
 private:
 	BehaviorNode* m_BehaviorRoot{};
+	Player* m_Player;
 };
 

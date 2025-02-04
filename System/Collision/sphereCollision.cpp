@@ -2,19 +2,20 @@
 #include "GameObject\gameobject.h"
 #include "System\Renderer\renderer.h"
 #include "System\Collision\capsuleCollision.h"
+#include "Manager\sceneManager.h"
 #include "sphereCollision.h"
 
-#ifdef _DEBUG
 constexpr int DEBUG_LINE_SEGMENTS = 32;	//デバッグ用の線の分割数
-#endif // _DEBUG
+
 
 
 SphereCollision::SphereCollision(const XMFLOAT3& Position, const XMFLOAT3& Offset, float Radius) :Collision(Position, Offset), m_Radius(Radius) // 引数（Ownerポインタ、Offset値、半径）
 {
+
 	Init();
 }
 
-bool SphereCollision::IsCollisionOverlapping(const Collision* Collision) const
+bool SphereCollision::IsCollisionOverlapping(const Collision* Collision) 
 {
 	if (!Collision)return false;
 	const SphereCollision* sphere = dynamic_cast<const SphereCollision*>(Collision);
@@ -31,7 +32,7 @@ bool SphereCollision::IsCollisionOverlapping(const Collision* Collision) const
 	return false;
 }
 
-bool SphereCollision::CheckSphereToSphere(const SphereCollision* Collision) const
+bool SphereCollision::CheckSphereToSphere(const SphereCollision* Collision) 
 {
 	if (!Collision)return false;
 	XMVECTOR ownerPosition = XMLoadFloat3(&m_Position);
@@ -53,12 +54,15 @@ void SphereCollision::UpdateCollision(const XMFLOAT3& Position)
 void SphereCollision::Init()
 {
 	UpdateCollision(m_Position);
-	CreateLineVertex(m_SphereLineVertices);
-
+	if (SceneManager::GetInstance()->GetIsDebugMode())
+	{
+		CreateLineVertex(m_SphereLineVertices);
+	}
 }
 
 void SphereCollision::Draw()
 {
+	if (!SceneManager::GetInstance()->GetIsDebugMode())return;
 	XMMATRIX world, scale, rot, trans;
 
 	scale = XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z);

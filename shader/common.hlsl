@@ -50,6 +50,10 @@ cbuffer LightBuffer : register(b4)
 	LIGHT Light;
 }
 
+cbuffer ColorBuffer : register(b5)
+{
+    float4 Color;
+}
 
 
 struct VS_IN

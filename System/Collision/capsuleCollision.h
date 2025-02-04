@@ -4,8 +4,8 @@ class CapsuleCollision :public Collision
 {
 public:
 	CapsuleCollision(const XMFLOAT3& StartPosition, const XMFLOAT3& Offset, float Radius);	// 引数（Ownerポインタ、Offset値、半径、高さ）
-	virtual bool IsCollisionOverlapping(const Collision* Collision)const override;
-	bool IsCollisionOverlapping(const CapsuleCollision* Collision)const;
+	virtual bool IsCollisionOverlapping(const Collision* Collision) override;
+	bool IsCollisionOverlapping(const CapsuleCollision* Collision);
 	virtual void UpdateCollision(const XMFLOAT3& Position)override;
 	virtual void Init()override;
 	virtual void Draw()override;

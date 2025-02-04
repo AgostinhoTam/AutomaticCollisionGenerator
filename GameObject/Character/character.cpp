@@ -111,42 +111,43 @@ void Character::CreateCharacterBoneCollision()
 	if (!m_AnimationModel)return;
 	m_BoneMap = m_AnimationModel->GetBoneMap();
 	if (m_BoneMap.empty())return;
-	
 	//　上半身
-	CreateSingleBoneCollision("mixamorig:Hips", "mixamorig:Spine",XMFLOAT3(0,0,0),0.1f);
-	CreateSingleBoneCollision("mixamorig:Spine", "mixamorig:Spine1", XMFLOAT3(0, 0, 0), 0.1f);
-	CreateSingleBoneCollision("mixamorig:Spine1", "mixamorig:Spine2", XMFLOAT3(0, 0, 0), 0.1f);
-	CreateSingleBoneCollision("mixamorig:Spine2", "mixamorig:Neck", XMFLOAT3(0, 0, 0), 0.1f);
+	//CreateSingleBoneCollision("mixamorig:Hips", "mixamorig:Spine",XMFLOAT3(0,0,0));
+	//CreateSingleBoneCollision("mixamorig:Spine", "mixamorig:Spine1", XMFLOAT3(0, 0, 0));
+	//CreateSingleBoneCollision("mixamorig:Spine1", "mixamorig:Spine2", XMFLOAT3(0, 0, 0));
+	//CreateSingleBoneCollision("mixamorig:Spine2", "mixamorig:Neck", XMFLOAT3(0, 0, 0));
+	CreateSingleBoneCollision("mixamorig:Hips", "mixamorig:Neck",XMFLOAT3(0,0,0));
 
 	//	頭
-	CreateSingleBoneCollision("mixamorig:Neck","mixamorig:Head", XMFLOAT3(0, 0, 0), 0.1f);
-	CreateSingleBoneCollision("mixamorig:Head", "mixamorig:HeadTop_End", XMFLOAT3(0, 0, 0), 0.1f);
+	//CreateSingleBoneCollision("mixamorig:Neck","mixamorig:Head", XMFLOAT3(0, 0, 0));
+	//CreateSingleBoneCollision("mixamorig:Head", "mixamorig:HeadTop_End", XMFLOAT3(0, 0, 0));
+	CreateSingleBoneCollision("mixamorig:Neck", "mixamorig:HeadTop_End", XMFLOAT3(0, 0, 0));
 
 	//　左手
-	CreateSingleBoneCollision("mixamorig:Spine2", "mixamorig:LeftShoulder", XMFLOAT3(0, 0, 0), 0.1f);
-	CreateSingleBoneCollision("mixamorig:LeftShoulder", "mixamorig:LeftArm", XMFLOAT3(0, 0, 0), 0.1f);
-	CreateSingleBoneCollision("mixamorig:LeftArm", "mixamorig:LeftForeArm", XMFLOAT3(0, 0, 0), 0.1f);
-	CreateSingleBoneCollision("mixamorig:LeftForeArm", "mixamorig:LeftHand", XMFLOAT3(0, 0, 0), 0.1f);
+	//CreateSingleBoneCollision("mixamorig:Spine2", "mixamorig:LeftShoulder", XMFLOAT3(0, 0, 0));
+	CreateSingleBoneCollision("mixamorig:LeftShoulder", "mixamorig:LeftArm", XMFLOAT3(0, 0, 0));
+	CreateSingleBoneCollision("mixamorig:LeftArm", "mixamorig:LeftForeArm", XMFLOAT3(0, 0, 0));
+	CreateSingleBoneCollision("mixamorig:LeftForeArm", "mixamorig:LeftHand", XMFLOAT3(0, 0, 0));
 
 	//　右手
-	CreateSingleBoneCollision("mixamorig:Spine2", "mixamorig:RightShoulder", XMFLOAT3(0, 0, 0), 0.1f);
-	CreateSingleBoneCollision("mixamorig:RightShoulder", "mixamorig:RightArm", XMFLOAT3(0, 0, 0), 0.1f);
-	CreateSingleBoneCollision("mixamorig:RightArm", "mixamorig:RightForeArm", XMFLOAT3(0, 0, 0), 0.1f);
-	CreateSingleBoneCollision("mixamorig:RightForeArm", "mixamorig:RightHand", XMFLOAT3(0, 0, 0), 0.1f);
+	//CreateSingleBoneCollision("mixamorig:Spine2", "mixamorig:RightShoulder", XMFLOAT3(0, 0, 0));
+	CreateSingleBoneCollision("mixamorig:RightShoulder", "mixamorig:RightArm", XMFLOAT3(0, 0, 0));
+	CreateSingleBoneCollision("mixamorig:RightArm", "mixamorig:RightForeArm", XMFLOAT3(0, 0, 0));
+	CreateSingleBoneCollision("mixamorig:RightForeArm", "mixamorig:RightHand", XMFLOAT3(0, 0, 0));
 	
 	//　左足
-	CreateSingleBoneCollision("mixamorig:Hips", "mixamorig:LeftUpLeg", XMFLOAT3(0, 0, 0), 0.1f);
-	CreateSingleBoneCollision("mixamorig:LeftUpLeg", "mixamorig:LeftLeg", XMFLOAT3(0, 0, 0), 0.1f);
-	CreateSingleBoneCollision("mixamorig:LeftLeg", "mixamorig:LeftFoot", XMFLOAT3(0, 0, 0), 0.1f);
-	CreateSingleBoneCollision("mixamorig:LeftFoot", "mixamorig:LeftToeBase", XMFLOAT3(0, 0, 0), 0.1f);
-	CreateSingleBoneCollision("mixamorig:LeftToeBase", "mixamorig:LeftToe_End", XMFLOAT3(0, 0, 0), 0.1f);
+	CreateSingleBoneCollision("mixamorig:Hips", "mixamorig:LeftUpLeg", XMFLOAT3(0, 0, 0));
+	CreateSingleBoneCollision("mixamorig:LeftUpLeg", "mixamorig:LeftLeg", XMFLOAT3(0, 0, 0));
+	CreateSingleBoneCollision("mixamorig:LeftLeg", "mixamorig:LeftFoot", XMFLOAT3(0, 0, 0));
+	CreateSingleBoneCollision("mixamorig:LeftFoot", "mixamorig:LeftToeBase", XMFLOAT3(0, 0, 0));
+	CreateSingleBoneCollision("mixamorig:LeftToeBase", "mixamorig:LeftToe_End", XMFLOAT3(0, 0, 0));
 
 	//	右足
-	CreateSingleBoneCollision("mixamorig:Hips", "mixamorig:RightUpLeg", XMFLOAT3(0, 0, 0), 0.1f);
-	CreateSingleBoneCollision("mixamorig:RightUpLeg", "mixamorig:RightLeg", XMFLOAT3(0, 0, 0), 0.1f);
-	CreateSingleBoneCollision("mixamorig:RightLeg", "mixamorig:RightFoot", XMFLOAT3(0, 0, 0), 0.1f);
-	CreateSingleBoneCollision("mixamorig:RightFoot", "mixamorig:RightToeBase", XMFLOAT3(0, 0, 0), 0.1f);
-	CreateSingleBoneCollision("mixamorig:RightToeBase", "mixamorig:RightToe_End", XMFLOAT3(0, 0, 0), 0.1f);
+	CreateSingleBoneCollision("mixamorig:Hips", "mixamorig:RightUpLeg", XMFLOAT3(0, 0, 0));
+	CreateSingleBoneCollision("mixamorig:RightUpLeg", "mixamorig:RightLeg", XMFLOAT3(0, 0, 0));
+	CreateSingleBoneCollision("mixamorig:RightLeg", "mixamorig:RightFoot", XMFLOAT3(0, 0, 0));
+	CreateSingleBoneCollision("mixamorig:RightFoot", "mixamorig:RightToeBase", XMFLOAT3(0, 0, 0));
+	CreateSingleBoneCollision("mixamorig:RightToeBase", "mixamorig:RightToe_End", XMFLOAT3(0, 0, 0));
 
 
 }
@@ -159,6 +160,15 @@ void Character::CreateSingleBoneCollision(const std::string& Head, const std::st
 	if (headBone != m_BoneMap.end() && tailBone != m_BoneMap.end())
 	{
 		std::string keyName = Head + Tail;
-		m_Collisions.emplace(keyName,new CharacterBoneCollision(Head,Tail,headBone->second.HeadPosition, tailBone->second.HeadPosition, Offset, Radius));
+		if (Radius == 0)	//　メッシュ計算する時
+		{
+			float radius = m_AnimationModel->CalculateCapsuleRadius(Head, Tail);
+			radius *= m_Scale.x;
+			m_Collisions.emplace(keyName,new CharacterBoneCollision(Head,Tail,headBone->second.HeadPosition, tailBone->second.HeadPosition, Offset, radius));
+		}
+		else //　計算しない時は指定
+		{
+			m_Collisions.emplace(keyName, new CharacterBoneCollision(Head, Tail, headBone->second.HeadPosition, tailBone->second.HeadPosition, Offset, Radius));
+		}
 	}
 }
