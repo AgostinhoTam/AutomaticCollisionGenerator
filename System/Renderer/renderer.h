@@ -47,6 +47,7 @@ enum class BLEND_MODE
 	BLEND_MODE_NONE,		//ブレンド無し
 	BLEND_MODE_ALPHABLEND,	//αブレンド
 	BLEND_MODE_ADD,			//加算ブレンド
+	BLEND_MODE_ATC			//Alpha-To-Coverage、草なとの半透明表現
 };
 class Renderer
 {
@@ -65,6 +66,7 @@ private:
 	static ID3D11Buffer*			m_ProjectionBuffer;
 	static ID3D11Buffer*			m_MaterialBuffer;
 	static ID3D11Buffer*			m_LightBuffer;
+	static ID3D11Buffer*			m_ColorBuffer;
 
 	static ID3D11DepthStencilState* m_DepthStateEnable;
 	static ID3D11DepthStencilState* m_DepthStateDisable;
@@ -94,6 +96,7 @@ public:
 	static void SetProjectionMatrix(XMMATRIX ProjectionMatrix);
 	static void SetMaterial(MATERIAL Material);
 	static void SetLight(LIGHT Light);
+	static void SetColor(XMFLOAT4 Color);
 
 	static ID3D11Device* GetDevice( void ){ return m_Device; }
 	static ID3D11DeviceContext* GetDeviceContext( void ){ return m_DeviceContext; }

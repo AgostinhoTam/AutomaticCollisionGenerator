@@ -50,6 +50,10 @@ cbuffer LightBuffer : register(b4)
 	LIGHT Light;
 }
 
+cbuffer ColorBuffer : register(b5)
+{
+    float4 Color;
+}
 
 
 struct VS_IN
@@ -66,4 +70,15 @@ struct PS_IN
 	float4 Position		: SV_POSITION;
 	float4 Diffuse		: COLOR0;
 	float2 TexCoord		: TEXCOORD0;
+};
+
+struct DEBUG_VS_IN
+{
+    float4 Position : POSITION0;
+    float4 Diffuse : COLOR0;
+};
+struct DEBUG_PS_IN
+{
+    float4 Position : SV_POSITION;
+    float4 Diffuse : COLOR0;
 };

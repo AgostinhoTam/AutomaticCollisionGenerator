@@ -16,7 +16,6 @@ public:
 	virtual void Uninit() {}
 	virtual void Draw() {}
 	virtual void UserInputDection() {}
-	virtual void UpdateAnimation(){}
 	const Player* GetPlayer()const { return m_Player; }
 
 };

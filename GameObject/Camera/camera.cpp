@@ -14,7 +14,7 @@
 /*===================================================================================
 ’è”
 ====================================================================================*/
-constexpr float CAMERA_LEN = 10.0f;
+constexpr float CAMERA_LEN = 5.0f;
 constexpr float CAMERA_SENSITIVE = 0.01f;
 void Camera::Init()
 {
@@ -38,6 +38,7 @@ void Camera::Init()
 void Camera::Update(const float& DeltaTime)
 {
 	if (!m_Player)return;
+
 
 	XMFLOAT3 targetPos = m_Player->GetPosition();
 	POINT mouseDeltaPos = InputManager::GetMouseDelta();

@@ -9,7 +9,7 @@
 
 SceneManager* SceneManager::m_Instance = nullptr;
 Scene* SceneManager::m_CurrentScene = nullptr;
-
+bool	SceneManager::m_IsDebugMode = false;
 SceneManager* SceneManager::GetInstance()
 {
 	if (!m_Instance) {
@@ -23,10 +23,9 @@ void SceneManager::Init()
 	Renderer::Init();
 	ShaderManager::Init();
 	InputManager::Init();
-#ifdef _DEBUG
+
 	DebuggerImGuiManager::Init();
 
-#endif // _DEBUG
 
 	m_CurrentScene = new GameScene;
 	if (m_CurrentScene) {
@@ -38,6 +37,10 @@ void SceneManager::Update(const float& DeltaTime)
 {
 	if (!m_CurrentScene)return;
 	InputManager::Update();
+	if (InputManager::GetKeyTrigger('K'))
+	{
+		InputManager::SetIsInputEnable(!InputManager::GetIsInputEnable());	//”½“]
+	}
 	m_CurrentScene->Update(DeltaTime);
 }
 
@@ -57,9 +60,14 @@ void SceneManager::Uninit()
 	InputManager::Uninit();
 	ShaderManager::Uninit();
 	ModelRendererManager::UnloadAll();
-#ifdef _DEBUG
+
 	DebuggerImGuiManager::Uninit();
 
-#endif // _DEBUG
 
+}
+
+GameObjectManager* SceneManager::GetGameObjectManager()
+{
+	if (!m_CurrentScene)return nullptr;
+	return m_CurrentScene->GetGameObjectManager();
 }

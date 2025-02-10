@@ -22,7 +22,7 @@ void AnimationRendererManager::UnloadAll()
 
 
 
-
+//	TODO Ä—˜—po—ˆ‚Ä‚È‚¢
 
 AnimationModel* AnimationRendererManager::LoadAnimationModel(const MODEL_NAME& Model)
 {
@@ -45,6 +45,7 @@ AnimationModel* AnimationRendererManager::LoadAnimationModel(const MODEL_NAME& M
 		animationModel->Load("asset\\model\\enemy.fbx");
 		animationModel->LoadAnimation("asset\\model\\enemy_Idle.fbx","Idle");
 		animationModel->LoadAnimation("asset\\model\\enemy_Run.fbx","Run");
+		animationModel->LoadAnimation("asset\\model\\enemy_Kick.fbx","Kick");
 		m_AnimationModelPool.try_emplace(Model, animationModel);
 		break;
 	default:

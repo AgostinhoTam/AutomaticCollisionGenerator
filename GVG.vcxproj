@@ -153,6 +153,18 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="shader\debugLinePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">shader\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">shader\%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="shader\debugLineVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">shader\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">shader\%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
     <FxCompile Include="shader\unlitTexturePS.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">shader\%(Filename).cso</ObjectFileOutput>
@@ -171,6 +183,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Behavior\behaviorTree.cpp" />
     <ClCompile Include="GameObject\2DPolygon\polygon2D.cpp" />
     <ClCompile Include="GameObject\Bullet\projection.cpp" />
     <ClCompile Include="GameObject\Camera\camera.cpp" />
@@ -197,12 +210,15 @@
     <ClCompile Include="StateMachine\PlayerState\playerStateIdle.cpp" />
     <ClCompile Include="StateMachine\PlayerState\playerStateJump.cpp" />
     <ClCompile Include="StateMachine\PlayerState\playerStateWalk.cpp" />
+    <ClCompile Include="System\Collision\capsuleCollision.cpp" />
+    <ClCompile Include="System\Collision\characterBoneCollision.cpp" />
     <ClCompile Include="System\Collision\collision.cpp" />
     <ClCompile Include="System\Collision\sphereCollision.cpp" />
     <ClCompile Include="System\Renderer\animationModel.cpp" />
     <ClCompile Include="System\Renderer\renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Behavior\behaviorTree.h" />
     <ClInclude Include="GameObject\2DPolygon\polygon2D.h" />
     <ClInclude Include="GameObject\Bullet\projection.h" />
     <ClInclude Include="GameObject\Camera\camera.h" />
@@ -233,7 +249,8 @@
     <ClInclude Include="StateMachine\PlayerState\playerStateIdle.h" />
     <ClInclude Include="StateMachine\PlayerState\playerStateJump.h" />
     <ClInclude Include="StateMachine\PlayerState\playerStateWalk.h" />
-    <ClInclude Include="Structure\shaderStructure.h" />
+    <ClInclude Include="System\Collision\capsuleCollision.h" />
+    <ClInclude Include="System\Collision\characterBoneCollision.h" />
     <ClInclude Include="System\Collision\collision.h" />
     <ClInclude Include="System\Collision\sphereCollision.h" />
     <ClInclude Include="System\Enum\enemyTypeEnum.h" />
@@ -245,6 +262,7 @@
     <ClInclude Include="System\Enum\shaderEnum.h" />
     <ClInclude Include="System\Renderer\animationModel.h" />
     <ClInclude Include="System\Renderer\renderer.h" />
+    <ClInclude Include="System\Structure\shaderStructure.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

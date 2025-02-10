@@ -49,7 +49,7 @@ void Field::Init()
 	//テキスチャー読み込み
 	TexMetadata metadata;
 	ScratchImage image;
-	HRESULT hr =LoadFromWICFile(L"asset\\texture\\pattern_shibafu.png", WIC_FLAGS_NONE, &metadata, image);
+	HRESULT hr =LoadFromWICFile(L"asset\\texture\\checker.png", WIC_FLAGS_NONE, &metadata, image);
 	if (SUCCEEDED(hr)) {
 		CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &m_Texture);
 		assert(m_Texture);
@@ -93,7 +93,7 @@ void Field::Draw()
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;
 	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
-	
+
 	//マテリアル
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));

@@ -59,30 +59,4 @@ void PlayerStateWalk::UserInputDection()
 
 }
 
-void PlayerStateWalk::UpdateAnimation()
-{
-	if (!m_AnimationModel)return;
 
-	//	‘JˆÚŠ®¬‚µ‚½‚ç
-	if (m_AnimationModel->GetBlendRatio() >= 1)
-	{
-		m_AnimationModel->SetIsTransitioning(false);
-		m_AnimationModel->SetCurrentAnimation(m_AnimationModel->GetNextAnimationName());
-		m_AnimationModel->SetCurrentAnimationFrame(m_AnimationModel->GetNextAnimationFrame());
-		m_AnimationModel->SetBlendRatio(0);
-	}
-	m_AnimationModel->Update();
-
-	//	‘JˆÚ’†‚¾‚Á‚½‚ç
-	if (m_AnimationModel->GetIsTransitioning())
-	{
-		m_AnimationModel->AddBlendRatio();
-		m_AnimationModel->AddCurrentAnimationFrame();
-		m_AnimationModel->AddNextAnimationFrame();
-	}
-	//	•’Ê‚ÌÄ¶
-	else if (!m_AnimationModel->GetIsTransitioning())
-	{
-		m_AnimationModel->AddCurrentAnimationFrame();
-	}
-}

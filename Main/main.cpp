@@ -49,7 +49,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 			rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance, nullptr);
 	}
 
-	CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);
+	(void)CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);
 
 
 	ShowWindow(g_Window, nCmdShow);
@@ -69,6 +69,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	if (!SceneManager)return 0;
 	SceneManager->Init();
+
+	SceneManager->SetIsDebugMode(true);
+
 
 
 	while(1)

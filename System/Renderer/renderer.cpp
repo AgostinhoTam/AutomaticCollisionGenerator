@@ -17,7 +17,7 @@ ID3D11Buffer*			Renderer::m_ViewBuffer{};
 ID3D11Buffer*			Renderer::m_ProjectionBuffer{};
 ID3D11Buffer*			Renderer::m_MaterialBuffer{};
 ID3D11Buffer*			Renderer::m_LightBuffer{};
-
+ID3D11Buffer*			Renderer::m_ColorBuffer{};
 
 ID3D11DepthStencilState* Renderer::m_DepthStateEnable{};
 ID3D11DepthStencilState* Renderer::m_DepthStateDisable{};
@@ -230,6 +230,9 @@ void Renderer::Init()
 	m_DeviceContext->VSSetConstantBuffers( 4, 1, &m_LightBuffer );
 	m_DeviceContext->PSSetConstantBuffers( 4, 1, &m_LightBuffer );
 
+	bufferDesc.ByteWidth = sizeof(XMFLOAT4);
+	m_Device->CreateBuffer(&bufferDesc, NULL, &m_ColorBuffer);
+	m_DeviceContext->PSSetConstantBuffers(5, 1, &m_ColorBuffer);
 
 
 
@@ -339,7 +342,31 @@ void Renderer::SetATCEnable( bool Enable )
 
 void Renderer::SetBlendState(const BLEND_MODE& BlendMode)
 {
+	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	UINT sampleMask = 0xffffffff;
 
+	switch (BlendMode)
+	{
+	case BLEND_MODE::BLEND_MODE_ALPHABLEND:
+		// 通常アルファブレンド
+		m_DeviceContext->OMSetBlendState(m_BlendState, blendFactor, sampleMask);
+		break;
+
+	case BLEND_MODE::BLEND_MODE_ADD:
+		// 加算
+		m_DeviceContext->OMSetBlendState(m_BlendStateAdd, blendFactor, sampleMask);
+		break;
+
+	case BLEND_MODE::BLEND_MODE_ATC:
+		// AlphaToCoverage
+		m_DeviceContext->OMSetBlendState(m_BlendStateATC, blendFactor, sampleMask);
+		break;
+	case BLEND_MODE::BLEND_MODE_NONE:
+	default:
+		// ブレンド無効 (nullを渡せばブレンドなし)
+		m_DeviceContext->OMSetBlendState(nullptr, blendFactor, sampleMask);
+		break;
+	}
 }
 
 void Renderer::SetWorldViewProjection2D()
@@ -385,6 +412,11 @@ void Renderer::SetMaterial( MATERIAL Material )
 void Renderer::SetLight( LIGHT Light )
 {
 	m_DeviceContext->UpdateSubresource(m_LightBuffer, 0, NULL, &Light, 0, 0);
+}
+
+void Renderer::SetColor(XMFLOAT4 Color)
+{
+	m_DeviceContext->UpdateSubresource(m_ColorBuffer, 0, NULL, &Color, 0, 0);
 }
 
 
@@ -442,8 +474,8 @@ void Renderer::CreateDebugVertexShader(ID3D11VertexShader** VertexShader, ID3D11
 
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
-		{ "POSITION", 1, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR",    1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 4 * 3, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 4 * 3, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 	UINT numElements = ARRAYSIZE(layout);
 

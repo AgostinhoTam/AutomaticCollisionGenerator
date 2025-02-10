@@ -30,33 +30,3 @@ void PlayerStateIdle::UserInputDection()
 
 }
 
-void PlayerStateIdle::UpdateAnimation()
-{
-	if (!m_AnimationModel)return;
-	const char* curAnimationName = m_AnimationModel->GetCurrentAnimationName().c_str();
-	const char* nextAnimationName = m_AnimationModel->GetNextAnimationName().c_str();
-	//	‘JˆÚŠ®¬‚µ‚½‚ç
-	if (m_AnimationModel->GetBlendRatio() >= 1)
-	{
-		m_AnimationModel->SetIsTransitioning(false);
-		m_AnimationModel->SetCurrentAnimation("Idle");
-		m_AnimationModel->SetCurrentAnimationFrame(m_AnimationModel->GetNextAnimationFrame());
-		m_AnimationModel->SetBlendRatio(0);
-	}
-	m_AnimationModel->Update();
-	//	‘JˆÚ’†‚¾‚Á‚½‚ç
-	if (m_AnimationModel->GetIsTransitioning())
-	{
-
-		m_AnimationModel->AddBlendRatio();
-		m_AnimationModel->AddCurrentAnimationFrame();
-		m_AnimationModel->AddNextAnimationFrame();
-	}
-	//	•’Ê‚ÌÄ¶
-	else if (!m_AnimationModel->GetIsTransitioning())
-	{
-		m_AnimationModel->AddCurrentAnimationFrame();
-	}
-
-
-}
