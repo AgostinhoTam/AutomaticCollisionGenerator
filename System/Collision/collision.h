@@ -26,6 +26,9 @@ public:
 	void SetEnable(const bool Flag) { m_IsEnable = Flag; }
 	bool GetIsHit()const { return m_IsHit; }
 	void SetIsHit(const bool Flag) { m_IsHit = Flag; }
+	bool GetIsSelected()const { return m_IsSelected; }
+	void SetIsSelected(const bool Flag) { m_IsSelected = Flag; }
+	void ResetAllCollisionFlag();
 protected:
 	Shader* m_Shader{};
 	XMFLOAT3 m_Position{};
@@ -36,4 +39,5 @@ protected:
 	ID3D11Buffer* m_IndexBuffer{};
 	bool m_IsEnable = true;
 	bool m_IsHit = false;
+	bool m_IsSelected = false;
 };

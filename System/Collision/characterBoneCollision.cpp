@@ -11,6 +11,7 @@ constexpr int DEBUG_LINE_SEGMENTS = 18;	//デバッグ用の線の分割数
 constexpr int DEBUG_LINE_CONNECTION = 4;
 constexpr XMFLOAT4 DEBUG_LINE_COLOR = XMFLOAT4(0.1f, 1.0f, 0.1f, 1.0f);
 constexpr XMFLOAT4 DEBUG_HITTED_LINE_COLOR = XMFLOAT4(1.0f, 0.1f, 0.1f, 1.0f);
+constexpr XMFLOAT4 DEBUG_SELECTED_LINE_COLOR = XMFLOAT4(0.5f, 0.5f, 0.1f, 1.0f);
 
 
 
@@ -27,12 +28,6 @@ bool CharacterBoneCollision::IsCollisionOverlapping(const Collision* Collision)
 	{
 		return CheckCapsuleToCapsule(bone);
 	}
-	//const CapsuleCollision* capsule = dynamic_cast<const CapsuleCollision*>(Collision);
-	//if (capsule)
-	//{
-	//	// TODO Capsule変更
-	//	return IsCollisionOverlapping(capsule);
-	//}
 	return false;
 }
 
@@ -58,7 +53,7 @@ float CharacterBoneCollision::CheckDistanceSegmentToSegment(const XMVECTOR& Star
 
 	//	各ベクトルの長さと内積を求める
 	float lengthSE1 = XMVectorGetX(XMVector3Dot(vSE1, vSE1));	
-	float dSE12 = XMVectorGetX(XMVector3Dot(vSE1, vSE1));
+	float dSE12 = XMVectorGetX(XMVector3Dot(vSE1, vSE2));
 	float lengthSE2 = XMVectorGetX(XMVector3Dot(vSE2, vSE2));
 	float dSS1 = XMVectorGetX(XMVector3Dot(vSE1, vSS));
 	float eSS2 = XMVectorGetX(XMVector3Dot(vSE2, vSS));
@@ -104,8 +99,6 @@ bool CharacterBoneCollision::CheckSphereToSphere(const SphereCollision* Collisio
 
 void CharacterBoneCollision::UpdateCollision(const XMFLOAT3& Position)
 {
-	m_IsHit = false;
-	m_StartPosition = { Position.x + m_Offset.x,Position.y + m_Offset.y, Position.z + m_Offset.z };
 }
 
 void CharacterBoneCollision::UpdateBonePosition(const std::string& BoneName,const XMFLOAT3& Position)
@@ -147,6 +140,11 @@ void CharacterBoneCollision::Draw()
 	{
 		color = DEBUG_LINE_COLOR;
 	}
+	if (m_IsSelected)
+	{
+		color = DEBUG_SELECTED_LINE_COLOR;
+	}
+
 	Renderer::SetColor(color);
 
 	// プリミティブトポロジ設定

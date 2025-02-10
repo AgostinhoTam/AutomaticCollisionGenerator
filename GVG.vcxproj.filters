@@ -114,7 +114,9 @@
     <ClCompile Include="System\Collision\collision.cpp">
       <Filter>System\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="Behavior\behaviorTree.cpp" />
+    <ClCompile Include="Behavior\behaviorTree.cpp">
+      <Filter>BehaviorTree</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject\Field\field.h">

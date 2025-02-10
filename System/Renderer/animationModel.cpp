@@ -6,6 +6,8 @@
 #include "System\Renderer\renderer.h"
 #include "System\Renderer\animationModel.h"
 
+constexpr float RADIUS_ADJUSTMENT = 0.7f;
+
 void AnimationModel::Update()
 {
 	if (m_Animation.count(m_CurrentAnimation) == 0)return;
@@ -263,16 +265,16 @@ void AnimationModel::Draw(GameObject* Object)
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
 	material.Ambient = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	if (!m_IsDebugMode)
-	{
-		material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	
-	}
-	else
-	{
-		Renderer::SetDepthEnable(false);
-		Renderer::SetBlendState(BLEND_MODE::BLEND_MODE_ATC);
-		material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.5f);
-	}
+	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	
+	//if (!m_IsDebugMode)
+	//{
+	//}
+	//else
+	//{
+	//	Renderer::SetDepthEnable(false);
+	//	Renderer::SetBlendState(BLEND_MODE::BLEND_MODE_ATC);
+	//	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.5f);
+	//}
 	material.TextureEnable = true;
 	Renderer::SetMaterial(material);
 
@@ -576,7 +578,7 @@ double AnimationModel::GetAnimationDuration(const std::string& AnimationName)
 	return (m_Animation[AnimationName]->mAnimations[0]->mDuration);
 }
 
-const XMFLOAT3& AnimationModel::GetHeadPosition(const std::string& BoneName, const XMFLOAT3& Scale, const XMMATRIX& PlayerMatrix)
+XMFLOAT3 AnimationModel::GetHeadPosition(const std::string& BoneName, const XMFLOAT3& Scale, const XMMATRIX& PlayerMatrix)
 {
 	auto it = m_Bone.find(BoneName);
 	if (it != m_Bone.end())
@@ -601,7 +603,7 @@ const XMFLOAT3& AnimationModel::GetHeadPosition(const std::string& BoneName, con
 
 		return XMFLOAT3(XMVectorGetX(trans),XMVectorGetY(trans),XMVectorGetZ(trans));
 	}
-	return XMFLOAT3();
+	return XMFLOAT3(0,0,0);
 }
 
 void AnimationModel::UpdateAnimationBlend()
@@ -697,9 +699,12 @@ const float AnimationModel::CalculateCapsuleRadius(const std::string& HeadName, 
 	// 3) ”¼Œa 
 	// ---------------------------------------------
 	if (radiusList.empty()) return 0.0f;
-	float sum = std::accumulate(radiusList.begin(), radiusList.end(), 0.0f);
-	// ŒvŽZŒ‹‰Ê‚ð•Ô‚·
-	return sum / radiusList.size();
+	// ’†‰›’l‚ðŒvŽZ
+	size_t size = radiusList.size();
+	std::nth_element(radiusList.begin(), radiusList.begin() + size / 2, radiusList.end());
+	float median = radiusList[size / 2];
+
+	return median;
 
 }
 

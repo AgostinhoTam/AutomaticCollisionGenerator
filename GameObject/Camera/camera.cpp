@@ -39,6 +39,7 @@ void Camera::Update(const float& DeltaTime)
 {
 	if (!m_Player)return;
 
+
 	XMFLOAT3 targetPos = m_Player->GetPosition();
 	POINT mouseDeltaPos = InputManager::GetMouseDelta();
 	

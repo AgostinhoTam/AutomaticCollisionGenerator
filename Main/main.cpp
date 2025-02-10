@@ -69,11 +69,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	if (!SceneManager)return 0;
 	SceneManager->Init();
-#ifdef _DEBUG
+
 	SceneManager->SetIsDebugMode(true);
-#else
-	SceneManager->SetIsDebugMode(false);
-#endif // _DEBUG
+
 
 
 	while(1)

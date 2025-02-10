@@ -35,7 +35,7 @@ Enemy::Enemy(ENEMY_TYPE EnemyType)
 		attackNode->AddChildNode(new BehaviorAttack(this));
 		m_BehaviorRoot->AddChildNode(attackNode);
 
-		CreateCharacterBoneCollision();
+		CreateCharacterBoneCollision(CHARACTER_BONE_TYPE::HUMANOID);
 
 		break;
 	}
@@ -76,13 +76,13 @@ void Enemy::Draw()
 {
 	if (!m_AnimationModel)return;
 	m_AnimationModel->Draw(this);
-#ifdef _DEBUG
+
 	if (m_Collision)m_Collision->Draw();
 	for (auto& capsule : m_Collisions)
 	{
 		capsule.second->Draw();
 	}
-#endif // _DEBUG
+
 }
 
 void Enemy::CollisionCheck()

@@ -4,6 +4,14 @@
 class Enemy;
 class Player;
 class AnimationModel;
+enum class CURRENT_BEHAVIOR
+{
+	NEXT,
+	IDLE,
+	WALK,
+	ATTACK,
+	MAX_BEHAVIOR
+};
 enum class BEHAVIOR_RESULT
 {
 	SUCCESS,
@@ -18,12 +26,13 @@ public:
 	virtual BEHAVIOR_RESULT Update() = 0;
 	BehaviorNode() = delete;
 	BehaviorNode(Enemy* Enemy);
-	void AddChildNode(BehaviorNode* Node) { m_Child.emplace_back(Node); }
+	void AddChildNode(BehaviorNode* Node);
 protected:
 	std::vector<BehaviorNode*> m_Child;
-	Enemy* m_Enemy;
-	Player* m_Player;
-	AnimationModel* m_AnimationModel;
+	BehaviorNode* m_Parent;
+	Enemy* m_Enemy{};
+	Player* m_Player{};
+	AnimationModel* m_AnimationModel{};
 };
 
 // BehaviorTreeSequence

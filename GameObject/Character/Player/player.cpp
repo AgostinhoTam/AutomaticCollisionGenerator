@@ -16,7 +16,7 @@
 constexpr float PLAYER_MAX_SPEED = 20.0f;
 constexpr float PLAYER_MAX_ACCL_SPEED = 50.0f;
 constexpr float PLAYER_MAX_JUMP_SPEED = 100.0f;
-constexpr float PLAYER_SCALE = 0.03f;
+constexpr float PLAYER_SCALE = 0.01f;
 void Player::Init()
 {
 	m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::PLAYER);
@@ -48,7 +48,7 @@ void Player::Init()
 	m_Position.y = 0.0f;
 	//m_Collision = new SphereCollision(m_Position, { 0.0f,1.0f,0.0f }, 1.0f);
 	m_IsGround = true;
-	CreateCharacterBoneCollision();
+	CreateCharacterBoneCollision(CHARACTER_BONE_TYPE::HUMANOID);
 
 }
 
@@ -90,13 +90,14 @@ void Player::Draw()
 	if (!m_CurrentState)return;
 	if (!m_AnimationModel)return;
 
-#ifdef _DEBUG
+
 	if (m_Collision)m_Collision->Draw();
 	for (auto& capsule : m_Collisions)
 	{
+		if (!capsule.second)continue;
 		capsule.second->Draw();
 	}
-#endif // _DEBUG
+
 	m_AnimationModel->Draw(this);
 
 
@@ -150,6 +151,7 @@ void Player::CollisionCheck()
 {
 	for (const auto& playerPair : m_Collisions)
 	{
+		if (!playerPair.second)continue;
 		playerPair.second->SetIsHit(false);
 	}
 }

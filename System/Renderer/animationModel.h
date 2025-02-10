@@ -37,13 +37,13 @@ private:
 	const aiScene* m_AiScene = nullptr;
 	std::unordered_map<std::string, const aiScene*> m_Animation;
 
-	ID3D11Buffer**	m_VertexBuffer;
-	ID3D11Buffer**	m_IndexBuffer;
+	ID3D11Buffer** m_VertexBuffer{};
+	ID3D11Buffer** m_IndexBuffer{};
 
 	std::unordered_map<std::string, ID3D11ShaderResourceView*> m_Texture;
 	std::unordered_map<std::string, BONE> m_Bone;//ボーンデータ（名前で参照）
 
-	std::vector<DEFORM_VERTEX>* m_DeformVertex;//変形後頂点データ
+	std::vector<DEFORM_VERTEX>* m_DeformVertex{};//変形後頂点データ
 	int m_CurrentFrame = 0;
 	int m_NextFrame = 0;
 	float m_BlendRatio = 0.0f;
@@ -78,7 +78,7 @@ public:
 	void AddCurrentAnimationFrame(const unsigned int frame = 1) { m_CurrentFrame += frame; }
 	void AddNextAnimationFrame(const unsigned int frame = 1) { m_NextFrame += frame; }
 	const std::unordered_map<std::string, BONE>& GetBoneMap() { return m_Bone; }
-	const XMFLOAT3& GetHeadPosition(const std::string& BoneName,const XMFLOAT3& Scale,const XMMATRIX& PlayerMatrix);
+	XMFLOAT3 GetHeadPosition(const std::string& BoneName,const XMFLOAT3& Scale,const XMMATRIX& PlayerMatrix);
 	void UpdateAnimationBlend();
 	const float CalculateCapsuleRadius(const std::string& HeadName,const std::string& TailName);
 	const float DistancePointLineSegment(const XMFLOAT3& Point, const XMFLOAT3& Start, const XMFLOAT3& End);

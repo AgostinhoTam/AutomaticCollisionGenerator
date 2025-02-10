@@ -1,6 +1,8 @@
 #include "Main\main.h"
 #include "System\Renderer\animationModel.h"
 #include "System\Collision\characterBoneCollision.h"
+#include <fstream>
+#include <sstream>
 #include "character.h"
 constexpr float FRICTION = 0.9f;
 constexpr float MAX_DROP_SPEED = -50.0f;
@@ -91,9 +93,11 @@ void Character::UpdateBoneCollision()
 	trans = XMMatrixTranslation(objPosition.x, objPosition.y, objPosition.z);
 	world = scale * rot * trans;
 
+	//	全ボーンのリスト
 	for (auto& bone : m_BoneMap)
 	{
 		std::string boneName = bone.first.c_str();
+		//	一致してるボーンの更新
 		for (auto& capsule : m_Collisions)
 		{
 			CharacterBoneCollision* boneCollision = dynamic_cast<CharacterBoneCollision*>(capsule.second);
@@ -106,11 +110,56 @@ void Character::UpdateBoneCollision()
 	}
 }
 
-void Character::CreateCharacterBoneCollision()
+void Character::CreateCharacterBoneCollision(const CHARACTER_BONE_TYPE& BoneType)
 {
 	if (!m_AnimationModel)return;
 	m_BoneMap = m_AnimationModel->GetBoneMap();
 	if (m_BoneMap.empty())return;
+	if (!m_Collisions.empty())
+	{
+		for (auto& pair : m_Collisions)
+		{
+			if (!pair.second)continue;
+			delete pair.second;
+		}
+	}
+	m_Collisions.clear();
+	std::ifstream file;
+	switch (BoneType)
+	{
+	case CHARACTER_BONE_TYPE::HUMANOID:
+		file.open("asset\\boneProfile\\humanoidBone.csv");
+		break;
+	case CHARACTER_BONE_TYPE::MONSTER:
+		file.open("asset\\boneProfile\\monsterBone.csv");
+	default:
+		file.open("asset\\boneProfile\\humanoidBone.csv");
+		break;
+	}
+	if (!file.is_open())
+	{
+		return;
+	}
+
+	std::string line;
+	std::getline(file, line);	//	最初の一列スキップ
+
+	while (std::getline(file, line))
+	{
+		std::istringstream ss(line);
+		std::string partName, headBone, tailBone;
+		std::getline(ss, partName, ',');
+		//	データがなければ
+		if (partName == "0")
+		{
+			break;
+		}
+		std::getline(ss, headBone, ',');
+		std::getline(ss, tailBone, ',');
+
+		CreateSingleBoneCollision(headBone, tailBone);
+	}
+	return;
 	//　上半身
 	//CreateSingleBoneCollision("mixamorig:Hips", "mixamorig:Spine",XMFLOAT3(0,0,0));
 	//CreateSingleBoneCollision("mixamorig:Spine", "mixamorig:Spine1", XMFLOAT3(0, 0, 0));
@@ -159,7 +208,7 @@ void Character::CreateSingleBoneCollision(const std::string& Head, const std::st
 	auto tailBone = m_BoneMap.find(Tail);
 	if (headBone != m_BoneMap.end() && tailBone != m_BoneMap.end())
 	{
-		std::string keyName = Head + Tail;
+		std::string keyName = Head + " -> " + Tail;
 		if (Radius == 0)	//　メッシュ計算する時
 		{
 			float radius = m_AnimationModel->CalculateCapsuleRadius(Head, Tail);
@@ -171,4 +220,14 @@ void Character::CreateSingleBoneCollision(const std::string& Head, const std::st
 			m_Collisions.emplace(keyName, new CharacterBoneCollision(Head, Tail, headBone->second.HeadPosition, tailBone->second.HeadPosition, Offset, Radius));
 		}
 	}
+}
+
+std::vector<std::string> Character::GetBoneMap()
+{
+	std::vector<std::string> boneMap;
+	for (const auto& key : m_BoneMap)
+	{
+		boneMap.emplace_back(key.first);
+	}
+	return boneMap;
 }

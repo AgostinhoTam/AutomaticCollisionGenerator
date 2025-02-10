@@ -2,16 +2,13 @@
 #include "GameObject/gameobject.h"
 #include "System\Enum/moveDirection.h"
 #include "System\Renderer\animationModel.h"
-//struct AnimationState
-//{
-//	std::string CurrentAniamtion;
-//	std::string NextAnimation;
-//	int CurrentFrame = 0;
-//	int NextFrame = 0;
-//	float BlendRatio = 0.0f;
-//	bool IsTransitioning = false;
-//};
 
+enum class CHARACTER_BONE_TYPE
+{
+	HUMANOID,
+	MONSTER,
+	MAX_CHARACTER_TYPES
+};
 struct MODEL;
 class Collision;
 class AnimationModel;
@@ -33,9 +30,11 @@ public:
 	void UpdateHorizontalVelocity(XMVECTOR& Velocity, const float& DeltaTime);
 	void UpdateBoneCollision();
 	AnimationModel* GetAnimationModel() const{ return m_AnimationModel; }
-	void CreateCharacterBoneCollision();
-	void CreateSingleBoneCollision(const std::string& Head,const std::string& Tail,const XMFLOAT3& Offset, const float Radius =0.0f);
-	const std::unordered_map<std::string, Collision*>& GetCollisionList() { return m_Collisions; }
+	void CreateCharacterBoneCollision(const CHARACTER_BONE_TYPE& BoneType);
+	void CreateSingleBoneCollision(const std::string& Head,const std::string& Tail,const XMFLOAT3& Offset={0.0f,0.0f,0.0f}, const float Radius = 0.0f);
+	std::unordered_map<std::string, Collision*>& GetCollisionList() { return m_Collisions; }
+	std::vector<std::string> GetBoneMap();
+	Collision* GetSelectedCollision(const std::string& KeyName) { return m_Collisions[KeyName]; }
 protected:
 	XMFLOAT3 m_Velocity{};
 	XMFLOAT3 m_Accl{};
