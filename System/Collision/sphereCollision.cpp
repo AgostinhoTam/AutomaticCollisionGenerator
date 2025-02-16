@@ -26,7 +26,6 @@ bool SphereCollision::IsCollisionOverlapping(const Collision* Collision)
 	const CapsuleCollision* capsule = dynamic_cast<const CapsuleCollision*>(Collision);
 	if (capsule)
 	{
-		// TODO CapsuleïœçX
 		return IsCollisionOverlapping(capsule);
 	}
 	return false;

@@ -100,10 +100,6 @@ void Player::Draw()
 
 	m_AnimationModel->Draw(this);
 
-
-
-
-
 }
 
 void Player::ChangeState(PLAYER_STATE State)

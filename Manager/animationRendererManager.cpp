@@ -20,10 +20,6 @@ void AnimationRendererManager::UnloadAll()
 	m_AnimationModelPool.clear();
 }
 
-
-
-//	TODO Ä—˜—po—ˆ‚Ä‚È‚¢
-
 AnimationModel* AnimationRendererManager::LoadAnimationModel(const MODEL_NAME& Model)
 {
 	if (m_AnimationModelPool.find(Model) != m_AnimationModelPool.end())
@@ -45,7 +41,15 @@ AnimationModel* AnimationRendererManager::LoadAnimationModel(const MODEL_NAME& M
 		animationModel->Load("asset\\model\\enemy.fbx");
 		animationModel->LoadAnimation("asset\\model\\enemy_Idle.fbx","Idle");
 		animationModel->LoadAnimation("asset\\model\\enemy_Run.fbx","Run");
+
 		animationModel->LoadAnimation("asset\\model\\enemy_Kick.fbx","Kick");
+		m_AnimationModelPool.try_emplace(Model, animationModel);
+		break;
+	case MODEL_NAME::MONSTER:
+		animationModel->Load("asset\\model\\monster.fbx");
+		animationModel->LoadAnimation("asset\\model\\monster_Idle.fbx", "Idle");
+		animationModel->LoadAnimation("asset\\model\\monster_Run.fbx", "Run");
+		animationModel->LoadAnimation("asset\\model\\monster_Attack.fbx", "Attack");
 		m_AnimationModelPool.try_emplace(Model, animationModel);
 		break;
 	default:

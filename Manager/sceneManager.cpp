@@ -11,6 +11,7 @@ SceneManager* SceneManager::m_Instance = nullptr;
 Scene* SceneManager::m_CurrentScene = nullptr;
 bool	SceneManager::m_IsDebugMode = false;
 SceneManager* SceneManager::GetInstance()
+
 {
 	if (!m_Instance) {
 		m_Instance = new SceneManager();

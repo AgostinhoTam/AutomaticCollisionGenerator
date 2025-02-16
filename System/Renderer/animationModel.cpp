@@ -265,16 +265,7 @@ void AnimationModel::Draw(GameObject* Object)
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
 	material.Ambient = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	
-	//if (!m_IsDebugMode)
-	//{
-	//}
-	//else
-	//{
-	//	Renderer::SetDepthEnable(false);
-	//	Renderer::SetBlendState(BLEND_MODE::BLEND_MODE_ATC);
-	//	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.5f);
-	//}
+	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	material.TextureEnable = true;
 	Renderer::SetMaterial(material);
 
@@ -444,13 +435,11 @@ void AnimationModel::Load(const char* FileName)
 				m_DeformVertex[m][weight.mVertexId].BoneName[num] = bone->mName.C_Str();	//　関連する頂点にボーン名前入れる
 				m_DeformVertex[m][weight.mVertexId].BoneNum++;
 
-				assert(m_DeformVertex[m][weight.mVertexId].BoneNum <= 4);	
+				assert(m_DeformVertex[m][weight.mVertexId].BoneNum <= 4);
 			}
 		}
 	}
 
-
-	// TODO Textureを再利用できるように
 	//テクスチャ読み込み
 	for (unsigned int i = 0; i < m_AiScene->mNumTextures; i++)
 	{
@@ -463,7 +452,20 @@ void AnimationModel::Load(const char* FileName)
 			// テクスチャ読み込み
 			TexMetadata metadata;
 			ScratchImage image;
-			LoadFromWICMemory(aitexture->pcData, aitexture->mWidth, WIC_FLAGS_NONE, &metadata, image);	//	メモリに保存できる
+			std::string filename(aitexture->mFilename.C_Str());
+			std::string extension = filename.substr(filename.find_last_of('.') + 1);
+			if (extension == "tga" || extension == "TGA")
+			{
+				LoadFromTGAMemory(aitexture->pcData, aitexture->mWidth, &metadata, image);
+			}
+			else if (extension == "dds" || extension == "DDS")
+			{
+				LoadFromDDSMemory(aitexture->pcData, aitexture->mWidth, DDS_FLAGS_NONE, &metadata, image);
+			}
+			else
+			{
+				LoadFromWICMemory(aitexture->pcData, aitexture->mWidth, WIC_FLAGS_NONE, &metadata, image);
+			}
 			CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &texture);
 			assert(texture);
 			m_Texture[aitexture->mFilename.data] = texture;
@@ -513,6 +515,7 @@ void AnimationModel::LoadAnimation(const char* FileName, const char* Name)
 
 void AnimationModel::CreateBone(aiNode* node)
 {
+
 	if (std::string(node->mName.C_Str()).find("$AssimpFbx$") != std::string::npos)
 	{
 		return; // 補助ボーンスキップ
@@ -537,7 +540,7 @@ void AnimationModel::UpdateBoneMatrix(aiNode* node, aiMatrix4x4 matrix)
 
 	// **スキニング用の最終行列 (ワールド行列 × オフセット行列)**
 	bone->Matrix = worldMatrix * bone->OffsetMatrix;
-	
+
 	// **DirectX用の行列に変換**
 	bone->worldMatrix = TransformToXMMATRIX(bone->Matrix);
 
@@ -586,24 +589,24 @@ XMFLOAT3 AnimationModel::GetHeadPosition(const std::string& BoneName, const XMFL
 
 		XMMATRIX& headMatrix = it->second.localMatrix;
 
-		XMMATRIX scale = XMMatrixScaling(1.0f/Scale.x, 1.0f/Scale.y, 1.0f/Scale.z);	//　OwnerのScaleに合わせる
-		
+		XMMATRIX scale = XMMatrixScaling(1.0f / Scale.x, 1.0f / Scale.y, 1.0f / Scale.z);	//　OwnerのScaleに合わせる
+
 		XMMATRIX rotMatrix = XMMatrixRotationRollPitchYaw(0, 0, 0);
-		
+
 		XMMATRIX transMatrix = XMMatrixTranslation(0, 0, 0);
 
 		XMMATRIX worldMatrix = XMMatrixMultiply(rotMatrix, transMatrix);
 		worldMatrix = XMMatrixMultiply(worldMatrix, scale);
 		worldMatrix = XMMatrixMultiply(worldMatrix, headMatrix);
 		worldMatrix = XMMatrixMultiply(worldMatrix, PlayerMatrix);
-		
-		
+
+
 		XMVECTOR trans, rot, scaleVec;
 		XMMatrixDecompose(&scaleVec, &rot, &trans, worldMatrix);
 
-		return XMFLOAT3(XMVectorGetX(trans),XMVectorGetY(trans),XMVectorGetZ(trans));
+		return XMFLOAT3(XMVectorGetX(trans), XMVectorGetY(trans), XMVectorGetZ(trans));
 	}
-	return XMFLOAT3(0,0,0);
+	return XMFLOAT3(0, 0, 0);
 }
 
 void AnimationModel::UpdateAnimationBlend()
@@ -635,71 +638,54 @@ void AnimationModel::UpdateAnimationBlend()
 
 const float AnimationModel::CalculateCapsuleRadius(const std::string& HeadName, const std::string& TailName)
 {
-	// 1-1) Tailボーンの "OffsetMatrix" を逆行列化 → Tailボーン空間原点を "メッシュ空間" へ
+	// HeadとTailの位置をメッシュ空間で取得
+	aiMatrix4x4 offsetHeadInv = m_Bone[HeadName].OffsetMatrix;
+	offsetHeadInv.Inverse();
+	aiVector3D headPosMesh = offsetHeadInv * aiVector3D(0.0f, 0.0f, 0.0f);
+
 	aiMatrix4x4 offsetTailInv = m_Bone[TailName].OffsetMatrix;
 	offsetTailInv.Inverse();
-	// メッシュ空間における "Tailボーン原点"
-	aiVector3D tailPosMesh = offsetTailInv * aiVector3D(0.f, 0.f, 0.f);
+	aiVector3D tailPosMesh = offsetTailInv * aiVector3D(0.0f, 0.0f, 0.0f);
 
-	// 1-2) Headボーンの "OffsetMatrix" を使って メッシュ空間 → Headボーン空間 へ変換
-	aiMatrix4x4 offsetHead = m_Bone[HeadName].OffsetMatrix;
-	aiVector3D tailPosHead = offsetHead * tailPosMesh;
+	// 線分 [S, E] をメッシュ空間で定義
+	XMFLOAT3 S(headPosMesh.x, headPosMesh.y, headPosMesh.z);
+	XMFLOAT3 E(tailPosMesh.x, tailPosMesh.y, tailPosMesh.z);
 
-	// 1-3) 線分 [S, E] を定義
-	//     S = (0,0,0) in HeadNameボーン空間
-	//     E = tailPosHead
-	XMFLOAT3 S(0.f, 0.f, 0.f);
-	XMFLOAT3 E(tailPosHead.x, tailPosHead.y, tailPosHead.z);
-
-	// ---------------------------------------------
-	// 2) 頂点を HeadNameボーン空間へ変換 → 線分との最短距離
-	// ---------------------------------------------
-	float maxDistSq = 0.0f;  // 距離^2 の最大値
+	// 2) 頂点をメッシュ空間で直接計算
+	float maxDistSq = 0.0f;
 	std::vector<float> radiusList;
 
-	// メッシュごと
 	for (unsigned int m = 0; m < m_AiScene->mNumMeshes; ++m)
 	{
 		aiMesh* mesh = m_AiScene->mMeshes[m];
-		// 頂点ごと
 		for (unsigned int v = 0; v < mesh->mNumVertices; ++v)
 		{
-			aiVector3D bindPos = mesh->mVertices[v]; // バインドポーズ時点(メッシュ空間)
-			DEFORM_VERTEX& deformVertex = m_DeformVertex[m][v];
+			aiVector3D bindPos = mesh->mVertices[v]; // メッシュ空間の頂点
 
-			// この頂点が影響を受けるボーンの数 (最大4)
+			DEFORM_VERTEX& deformVertex = m_DeformVertex[m][v];
 			int boneCount = deformVertex.BoneNum;
 
-			// 影響ボーンをチェック
 			for (int i = 0; i < boneCount; i++)
 			{
 				const std::string& boneName = deformVertex.BoneName[i];
 
-				// "HeadName" ボーンだけを対象に計算 (TailName は単に軸の終点)
-				if (boneName != HeadName)
-				{
+				// 頂点がHeadまたはTailボーンの影響を受けている場合のみ計算
+				if (boneName != HeadName && boneName != TailName)
 					continue;
-				}
 
-				// 頂点を "HeadName" ボーン空間へ変換
-				aiMatrix4x4 offsetHeadMat = m_Bone[HeadName].OffsetMatrix;
-				aiVector3D localPos = offsetHeadMat * bindPos; // メッシュ空間→Headボーン空間
+				// メッシュ空間の頂点位置を使用
+				XMFLOAT3 p(bindPos.x, bindPos.y, bindPos.z);
 
 				// 点と線分の最短距離
-				XMFLOAT3 p(localPos.x, localPos.y, localPos.z);
 				float dist = DistancePointLineSegment(p, S, E);
-
 				radiusList.emplace_back(dist);
-
 			}
 		}
 	}
 
-	// ---------------------------------------------
-	// 3) 半径 
-	// ---------------------------------------------
 	if (radiusList.empty()) return 0.0f;
-	// 中央値を計算
+
+	// 中央値を半径として使用
 	size_t size = radiusList.size();
 	std::nth_element(radiusList.begin(), radiusList.begin() + size / 2, radiusList.end());
 	float median = radiusList[size / 2];

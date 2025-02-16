@@ -14,6 +14,17 @@ class Collision;
 class AnimationModel;
 class Character :public GameObject
 {
+protected:
+	XMFLOAT3 m_Velocity{};
+	XMFLOAT3 m_Accl{};
+	AnimationModel* m_AnimationModel{};
+	XMFLOAT3 m_MoveDirection{};
+	float	m_MaxMovementSpeed = 0;
+	float	m_MaxHorizontalAcclSpeed = 0;
+	float	m_MaxJumpSpeed = 0;
+	bool	m_IsGround = false;
+	std::unordered_map<std::string, Collision*> m_Collisions;
+	std::unordered_map<std::string, BONE> m_BoneMap;
 public:
 	virtual void Init()override{}
 	virtual void Update(const float& DeltaTime)override;
@@ -31,19 +42,9 @@ public:
 	void UpdateBoneCollision();
 	AnimationModel* GetAnimationModel() const{ return m_AnimationModel; }
 	void CreateCharacterBoneCollision(const CHARACTER_BONE_TYPE& BoneType);
+	void CreateCharacterBoneCollision(const std::string& FilePath);
 	void CreateSingleBoneCollision(const std::string& Head,const std::string& Tail,const XMFLOAT3& Offset={0.0f,0.0f,0.0f}, const float Radius = 0.0f);
 	std::unordered_map<std::string, Collision*>& GetCollisionList() { return m_Collisions; }
 	std::vector<std::string> GetBoneMap();
 	Collision* GetSelectedCollision(const std::string& KeyName) { return m_Collisions[KeyName]; }
-protected:
-	XMFLOAT3 m_Velocity{};
-	XMFLOAT3 m_Accl{};
-	AnimationModel* m_AnimationModel{};
-	XMFLOAT3 m_MoveDirection{};
-	float	m_MaxMovementSpeed = 0;
-	float	m_MaxHorizontalAcclSpeed = 0;
-	float	m_MaxJumpSpeed = 0;
-	bool	m_IsGround = false;
-	std::unordered_map<std::string, Collision*> m_Collisions;
-	std::unordered_map<std::string, BONE> m_BoneMap;
 };

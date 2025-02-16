@@ -17,42 +17,57 @@ enum class BEHAVIOR_RESULT
 	SUCCESS,
 	CONTINUE,
 	FAILURE,
+	CANNOT_EXCUTE,
 	MAX_RESULT
 };
 class BehaviorNode
 {
-public:
-	virtual void Init(){}
-	virtual BEHAVIOR_RESULT Update() = 0;
-	BehaviorNode() = delete;
-	BehaviorNode(Enemy* Enemy);
-	void AddChildNode(BehaviorNode* Node);
 protected:
 	std::vector<BehaviorNode*> m_Child;
-	BehaviorNode* m_Parent;
+	BehaviorNode* m_Parent{};
 	Enemy* m_Enemy{};
 	Player* m_Player{};
 	AnimationModel* m_AnimationModel{};
+public:
+	virtual void Init() {}
+	virtual BEHAVIOR_RESULT Update(const float DeltaTime) = 0;
+	BehaviorNode() = delete;
+	BehaviorNode(Enemy* Enemy);
+	virtual ~BehaviorNode(){}
+	void AddChildNode(BehaviorNode* Node);
 };
 
 // BehaviorTreeSequence
 class BehaviorSequence :public BehaviorNode
 {
-public:
-	using BehaviorNode::BehaviorNode;
-	virtual BEHAVIOR_RESULT Update()override;
-
 private:
 	int m_Index = 0;
+public:
+	using BehaviorNode::BehaviorNode;
+	virtual BEHAVIOR_RESULT Update(const float DeltaTime)override;
 };
 
 class BehaviorSelector :public BehaviorNode
 {
-public:
-	using BehaviorNode::BehaviorNode;
-	virtual BEHAVIOR_RESULT Update()override;
 private:
 	int m_Index = 0;
+public:
+	using BehaviorNode::BehaviorNode;
+	virtual BEHAVIOR_RESULT Update(const float DeltaTime)override;
+};
+
+class BehaviorCoolDown :public BehaviorNode
+{
+private:
+	float m_ElapsedTime{};
+	bool m_IsCoolDownActive = false;
+public:
+	using BehaviorNode::BehaviorNode;
+	virtual BEHAVIOR_RESULT Update(const float DeltaTime)override;
+	float GetElaspedTime() const { return m_ElapsedTime; }
+	bool GetIsCoolDownActive()const { return m_IsCoolDownActive; }
+	void StartCoolDown();
+	void ResetCoolDown();
 };
 
 class BehaviorIdle :public BehaviorNode
@@ -60,7 +75,7 @@ class BehaviorIdle :public BehaviorNode
 public:
 	virtual void Init()override;
 	using BehaviorNode::BehaviorNode;
-	virtual BEHAVIOR_RESULT Update()override;
+	virtual BEHAVIOR_RESULT Update(const float DeltaTime)override;
 };
 
 class BehaviorMove :public BehaviorNode
@@ -68,13 +83,30 @@ class BehaviorMove :public BehaviorNode
 public:
 	virtual void Init()override;
 	using BehaviorNode::BehaviorNode;
-	virtual BEHAVIOR_RESULT Update()override;
+	virtual BEHAVIOR_RESULT Update(const float DeltaTime)override;
 };
 
-class BehaviorAttack : public BehaviorNode
+class BehaviorStandByAttack : public BehaviorNode
 {
 public:
 	virtual void Init()override;
 	using BehaviorNode::BehaviorNode;
-	virtual BEHAVIOR_RESULT Update()override;
+	virtual BEHAVIOR_RESULT Update(const float DeltaTime)override;
+
 };
+
+class BehaviorAttack : public BehaviorNode
+{
+private:
+	std::string m_AnimationName{};
+	BehaviorCoolDown* m_BehaviorCoolDown{};
+	bool m_IsAttackStart = false;
+	float m_AttackDistance = 0.0f;
+public:
+	virtual void Init()override;
+	BehaviorAttack(Enemy* Enemy, const std::string& Type,const float AttackDistance);
+	~BehaviorAttack();
+	using BehaviorNode::BehaviorNode;
+	virtual BEHAVIOR_RESULT Update(const float DeltaTime)override;
+};
+
