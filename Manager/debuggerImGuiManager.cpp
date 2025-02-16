@@ -1,3 +1,4 @@
+#include <filesystem>
 #include "Manager\debuggerImGuiManager.h"
 #include "Main\main.h"
 #include "System\Renderer\renderer.h"
@@ -13,6 +14,7 @@
 
 GameObject* DebuggerImGuiManager::m_TargetObject;
 std::vector<GameObject*> DebuggerImGuiManager::m_GameObjectList;
+std::vector<std::string> DebuggerImGuiManager::m_FileList;
 
 void DebuggerImGuiManager::SetGameObject(GameObject* object)
 {
@@ -30,13 +32,15 @@ void DebuggerImGuiManager::Init()
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 	ImGui_ImplWin32_Init(GetWindow());
 	ImGui_ImplDX11_Init(Renderer::GetDevice(), Renderer::GetDeviceContext());
 	ImGui::StyleColorsDark();
 
 }
 
-void DebuggerImGuiManager::Render(const std::vector<GameObject*>(&ObjectList)[static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE)])
+void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE)])
 {
 
 	ImGui_ImplDX11_NewFrame();
@@ -46,7 +50,7 @@ void DebuggerImGuiManager::Render(const std::vector<GameObject*>(&ObjectList)[st
 	ImGui::Begin("GameObject List");
 	for (int type = 0; type < static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE); ++type)
 	{
-		for (GameObject* gameObject : ObjectList[type])
+		for (GameObject*& gameObject : ObjectList[type])
 		{
 			if (!gameObject)continue;
 			if (ImGui::Selectable(gameObject->GetName().c_str(), m_TargetObject == gameObject))
@@ -67,8 +71,10 @@ void DebuggerImGuiManager::Render(const std::vector<GameObject*>(&ObjectList)[st
 		{
 			const XMFLOAT3& position = m_TargetObject->GetPosition();
 			const XMFLOAT3& rotation = m_TargetObject->GetRotation();
+			const XMFLOAT3& scale = m_TargetObject->GetScale();
 			ImGui::Text("Position: %.2f, %.2f, %.2f", position.x, position.y, position.z);
 			ImGui::Text("Rotation: %.2f, %.2f, %.2f", rotation.x, rotation.y, rotation.z);
+			ImGui::Text("Rotation: %.2f, %.2f, %.2f", scale.x, scale.y, scale.z);
 		}
 
 		//　キャラクターが選択された時に表示される情報
@@ -108,15 +114,17 @@ void DebuggerImGuiManager::Render(const std::vector<GameObject*>(&ObjectList)[st
 				//	==============現在コリジョンリスト作成=====================
 				std::unordered_map<std::string, Collision*>& collisionList = characterObject->GetCollisionList();
 				{
+					
 					static int item_current = 0;
 					static std::string previousKey{};
 					std::string selectedKey{};
 
 					for (const auto& pair : collisionList)
 					{
+						if (!pair.second)continue;
 						collisionKeys.emplace_back(pair.first);
 					}
-					//	const char*配列作成　
+					//	const char*配列作成　Imgui display
 					for (const auto& key : collisionKeys)
 					{
 						collisionKeyPointers.emplace_back(key.c_str());
@@ -143,6 +151,33 @@ void DebuggerImGuiManager::Render(const std::vector<GameObject*>(&ObjectList)[st
 						{
 							selectedCollision->SetIsSelected(true);
 						}
+						static float offset[3]{};
+						static float radius[1]{};
+						offset[0] = selectedCollision->GetOffset().x;
+						offset[1] = selectedCollision->GetOffset().y;
+						offset[2] = selectedCollision->GetOffset().z;
+						
+						if (ImGui::DragFloat3("Offset Slider", offset, 0.01f,-10, 10))
+						{
+							selectedCollision->SetOffset(XMFLOAT3(offset[0],offset[1],offset[2]));
+						}
+						//if (ImGui::InputFloat3("Offset Input", offset))
+						//{
+						//	selectedCollision->SetOffset(XMFLOAT3(offset[0], offset[1], offset[2]));
+						//}
+						CharacterBoneCollision* boneCollision = dynamic_cast<CharacterBoneCollision*>(selectedCollision);
+						if (boneCollision)
+						{
+							radius[0] = boneCollision->GetRadius();
+							if (ImGui::DragFloat("Radius Slider", radius,0.01f, -10, 10))
+							{
+								boneCollision->SetRadius(radius[0]);
+							}
+	/*						if (ImGui::InputFloat("Radius Input", radius, -10, 10))
+							{
+								boneCollision->SetRadius(radius[0]);
+							}*/
+						}
 						previousKey = selectedKey;
 					}
 					else
@@ -168,6 +203,34 @@ void DebuggerImGuiManager::Render(const std::vector<GameObject*>(&ObjectList)[st
 					ImGui::PopStyleColor(3);
 				}
 
+				//	ボーンプロファイル選択
+				{
+					static std::string directoryPath = "asset\\boneProfile";
+					static int selectedBoneProfile = 0;
+					static std::string selectedFilePath = "";
+					static std::vector<const char*> csvFilesName;
+					ImGui::Text("Directory:%s", directoryPath.c_str());
+					if (csvFilesName.empty())
+					{
+						LoadCSVFiles(directoryPath, csvFilesName);
+					}
+					if (ImGui::Button("Reload CSV Files"))
+					{
+						LoadCSVFiles(directoryPath,csvFilesName);
+					}
+					if (!m_FileList.empty())
+					{
+						if (ImGui::ListBox("Character Bone Profile", &selectedBoneProfile, csvFilesName.data(), static_cast<int>(csvFilesName.size()), 4))
+						{
+							selectedFilePath = directoryPath + "\\" + m_FileList[selectedBoneProfile];
+						}
+					}
+					if (ImGui::Button("Deploy Bone Profile"))
+					{
+						characterObject->CreateCharacterBoneCollision(selectedFilePath);
+					}
+;					
+				}
 				//==================作成可能ボーンリスト===================
 				{
 					ImGui::Text("Create Bone Collision");
@@ -211,4 +274,28 @@ void DebuggerImGuiManager::Uninit()
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
+}
+
+void DebuggerImGuiManager::LoadCSVFiles(const std::string& Path, std::vector<const char*>& CSVFileName)
+{
+	m_FileList.clear();
+	CSVFileName.clear();
+
+	if (!std::filesystem::exists(Path) || !std::filesystem::is_directory(Path))
+	{
+		return;
+	}
+
+	for (const auto& entry : std::filesystem::directory_iterator(Path))
+	{
+		if (entry.is_regular_file() && entry.path().extension() == ".csv")
+		{
+			m_FileList.push_back(entry.path().filename().string());  // ファイル名のみ取得
+		}
+	}
+	
+	for (const auto& file : m_FileList)
+	{
+		CSVFileName.emplace_back(file.c_str());
+	}
 }

@@ -53,8 +53,8 @@ void GameObjectManager::Draw()
 			object->Draw();
 		}
 	}
-
 	DebuggerImGuiManager::Render(m_GameObjectList);
+
 
 
 

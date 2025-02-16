@@ -6,6 +6,17 @@
 class Collision;
 class GameObject 
 {
+protected:
+	std::string m_Name;
+	XMFLOAT3 m_Position = {0.0f,0.0f,0.0f};
+	XMFLOAT3 m_Scale = { 1.0f,1.0f,1.0f };
+	XMFLOAT3 m_Rotation = { 0.0f,0.0f,0.0f };
+	GAMEOBJECT_TYPE m_ObjectType = GAMEOBJECT_TYPE::NONE;
+	Shader* m_Shader{};
+	ID3D11Buffer* m_VertexBuffer = NULL;
+	ID3D11ShaderResourceView* m_Texture = NULL;
+	Collision* m_Collision{};
+	bool	m_IsUsed = false;
 public:
 	GameObject(){}
 	virtual ~GameObject(){}
@@ -24,16 +35,6 @@ public:
 	const std::string GetName() const{ return m_Name; }
 	XMFLOAT3 XMQuaternionToEulerAngle(XMVECTOR Quat);
 	void	SetRotation(const XMFLOAT3& Rotation) { m_Rotation = Rotation; }
+	void	SetRotationY(const float Rotation) { m_Rotation.y = Rotation; }
 	void	SetPosition(const XMFLOAT3& Position) { m_Position = Position; }
-protected:
-	std::string m_Name;
-	XMFLOAT3 m_Position = {0.0f,0.0f,0.0f};
-	XMFLOAT3 m_Scale = { 1.0f,1.0f,1.0f };
-	XMFLOAT3 m_Rotation = { 0.0f,0.0f,0.0f };
-	GAMEOBJECT_TYPE m_ObjectType = GAMEOBJECT_TYPE::NONE;
-	Shader* m_Shader{};
-	ID3D11Buffer* m_VertexBuffer = NULL;
-	ID3D11ShaderResourceView* m_Texture = NULL;
-	Collision* m_Collision{};
-	bool	m_IsUsed = false;
 };

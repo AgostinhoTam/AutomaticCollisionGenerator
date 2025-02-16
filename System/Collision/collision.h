@@ -10,6 +10,17 @@ class GameObject;
 
 class Collision
 {
+protected:
+	Shader* m_Shader{};
+	XMFLOAT3 m_Position{};
+	XMFLOAT3 m_Rotation{};
+	XMFLOAT3 m_Offset{};
+	XMFLOAT3 m_Scale = {1.0f,1.0f,1.0f};
+	ID3D11Buffer* m_VertexBuffer{};
+	ID3D11Buffer* m_IndexBuffer{};
+	bool m_IsEnable = true;
+	bool m_IsHit = false;
+	bool m_IsSelected = false;
 public:
 	Collision(const XMFLOAT3& Position, const XMFLOAT3& Offset);	// 引数（Ownerポインタ、Offset値）
 	virtual ~Collision() {}
@@ -23,21 +34,11 @@ public:
 	const XMFLOAT3& GetRotation() { return m_Rotation; }
 	const XMFLOAT3& GetPosition() { return m_Position; }
 	bool GetEnable() const { return m_IsEnable; }
-	void SetEnable(const bool Flag) { m_IsEnable = Flag; }
 	bool GetIsHit()const { return m_IsHit; }
-	void SetIsHit(const bool Flag) { m_IsHit = Flag; }
 	bool GetIsSelected()const { return m_IsSelected; }
+	void SetOffset(const XMFLOAT3& Offset) { m_Offset = Offset; }
+	void SetEnable(const bool Flag) { m_IsEnable = Flag; }
+	void SetIsHit(const bool Flag) { m_IsHit = Flag; }
 	void SetIsSelected(const bool Flag) { m_IsSelected = Flag; }
 	void ResetAllCollisionFlag();
-protected:
-	Shader* m_Shader{};
-	XMFLOAT3 m_Position{};
-	XMFLOAT3 m_Rotation{};
-	XMFLOAT3 m_Offset{};
-	XMFLOAT3 m_Scale = {1.0f,1.0f,1.0f};
-	ID3D11Buffer* m_VertexBuffer{};
-	ID3D11Buffer* m_IndexBuffer{};
-	bool m_IsEnable = true;
-	bool m_IsHit = false;
-	bool m_IsSelected = false;
 };

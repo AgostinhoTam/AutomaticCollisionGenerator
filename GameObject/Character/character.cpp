@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include "character.h"
-constexpr float FRICTION = 0.9f;
+constexpr float FRICTION = 0.8f;
 constexpr float MAX_DROP_SPEED = -50.0f;
 constexpr float GRAVITY = -9.8f;
 void Character::Update(const float& DeltaTime)
@@ -132,6 +132,7 @@ void Character::CreateCharacterBoneCollision(const CHARACTER_BONE_TYPE& BoneType
 		break;
 	case CHARACTER_BONE_TYPE::MONSTER:
 		file.open("asset\\boneProfile\\monsterBone.csv");
+		break;
 	default:
 		file.open("asset\\boneProfile\\humanoidBone.csv");
 		break;
@@ -160,45 +161,50 @@ void Character::CreateCharacterBoneCollision(const CHARACTER_BONE_TYPE& BoneType
 		CreateSingleBoneCollision(headBone, tailBone);
 	}
 	return;
-	//　上半身
-	//CreateSingleBoneCollision("mixamorig:Hips", "mixamorig:Spine",XMFLOAT3(0,0,0));
-	//CreateSingleBoneCollision("mixamorig:Spine", "mixamorig:Spine1", XMFLOAT3(0, 0, 0));
-	//CreateSingleBoneCollision("mixamorig:Spine1", "mixamorig:Spine2", XMFLOAT3(0, 0, 0));
-	//CreateSingleBoneCollision("mixamorig:Spine2", "mixamorig:Neck", XMFLOAT3(0, 0, 0));
-	CreateSingleBoneCollision("mixamorig:Hips", "mixamorig:Neck",XMFLOAT3(0,0,0));
+}
 
-	//	頭
-	//CreateSingleBoneCollision("mixamorig:Neck","mixamorig:Head", XMFLOAT3(0, 0, 0));
-	//CreateSingleBoneCollision("mixamorig:Head", "mixamorig:HeadTop_End", XMFLOAT3(0, 0, 0));
-	CreateSingleBoneCollision("mixamorig:Neck", "mixamorig:HeadTop_End", XMFLOAT3(0, 0, 0));
+void Character::CreateCharacterBoneCollision(const std::string& FilePath)
+{
+	if (!m_AnimationModel)return;
+	m_BoneMap = m_AnimationModel->GetBoneMap();
+	if (m_BoneMap.empty())return;
+	if (!m_Collisions.empty())
+	{
+		for (auto& pair : m_Collisions)
+		{
+			if (!pair.second)continue;
+			delete pair.second;
+		}
+	}
+	m_Collisions.clear();
+	std::ifstream file;
 
-	//　左手
-	//CreateSingleBoneCollision("mixamorig:Spine2", "mixamorig:LeftShoulder", XMFLOAT3(0, 0, 0));
-	CreateSingleBoneCollision("mixamorig:LeftShoulder", "mixamorig:LeftArm", XMFLOAT3(0, 0, 0));
-	CreateSingleBoneCollision("mixamorig:LeftArm", "mixamorig:LeftForeArm", XMFLOAT3(0, 0, 0));
-	CreateSingleBoneCollision("mixamorig:LeftForeArm", "mixamorig:LeftHand", XMFLOAT3(0, 0, 0));
+	file.open(FilePath);
 
-	//　右手
-	//CreateSingleBoneCollision("mixamorig:Spine2", "mixamorig:RightShoulder", XMFLOAT3(0, 0, 0));
-	CreateSingleBoneCollision("mixamorig:RightShoulder", "mixamorig:RightArm", XMFLOAT3(0, 0, 0));
-	CreateSingleBoneCollision("mixamorig:RightArm", "mixamorig:RightForeArm", XMFLOAT3(0, 0, 0));
-	CreateSingleBoneCollision("mixamorig:RightForeArm", "mixamorig:RightHand", XMFLOAT3(0, 0, 0));
-	
-	//　左足
-	CreateSingleBoneCollision("mixamorig:Hips", "mixamorig:LeftUpLeg", XMFLOAT3(0, 0, 0));
-	CreateSingleBoneCollision("mixamorig:LeftUpLeg", "mixamorig:LeftLeg", XMFLOAT3(0, 0, 0));
-	CreateSingleBoneCollision("mixamorig:LeftLeg", "mixamorig:LeftFoot", XMFLOAT3(0, 0, 0));
-	CreateSingleBoneCollision("mixamorig:LeftFoot", "mixamorig:LeftToeBase", XMFLOAT3(0, 0, 0));
-	CreateSingleBoneCollision("mixamorig:LeftToeBase", "mixamorig:LeftToe_End", XMFLOAT3(0, 0, 0));
+	if (!file.is_open())
+	{
+		return;
+	}
 
-	//	右足
-	CreateSingleBoneCollision("mixamorig:Hips", "mixamorig:RightUpLeg", XMFLOAT3(0, 0, 0));
-	CreateSingleBoneCollision("mixamorig:RightUpLeg", "mixamorig:RightLeg", XMFLOAT3(0, 0, 0));
-	CreateSingleBoneCollision("mixamorig:RightLeg", "mixamorig:RightFoot", XMFLOAT3(0, 0, 0));
-	CreateSingleBoneCollision("mixamorig:RightFoot", "mixamorig:RightToeBase", XMFLOAT3(0, 0, 0));
-	CreateSingleBoneCollision("mixamorig:RightToeBase", "mixamorig:RightToe_End", XMFLOAT3(0, 0, 0));
+	std::string line;
+	std::getline(file, line);	//	最初の一列スキップ
 
+	while (std::getline(file, line))
+	{
+		std::istringstream ss(line);
+		std::string partName, headBone, tailBone;
+		std::getline(ss, partName, ',');
+		//	データがなければ
+		if (partName == "0")
+		{
+			break;
+		}
+		std::getline(ss, headBone, ',');
+		std::getline(ss, tailBone, ',');
 
+		CreateSingleBoneCollision(headBone, tailBone);
+	}
+	return;
 }
 
 void Character::CreateSingleBoneCollision(const std::string& Head, const std::string& Tail, const XMFLOAT3& Offset, const float Radius)

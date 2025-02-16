@@ -13,9 +13,7 @@ constexpr XMFLOAT4 DEBUG_LINE_COLOR = XMFLOAT4(0.1f, 1.0f, 0.1f, 1.0f);
 constexpr XMFLOAT4 DEBUG_HITTED_LINE_COLOR = XMFLOAT4(1.0f, 0.1f, 0.1f, 1.0f);
 constexpr XMFLOAT4 DEBUG_SELECTED_LINE_COLOR = XMFLOAT4(0.5f, 0.5f, 0.1f, 1.0f);
 
-
-
-CharacterBoneCollision::CharacterBoneCollision(const std::string& HeadBoneName, const std::string& TailBoneName, const XMFLOAT3& Start, const XMFLOAT3& End, const XMFLOAT3& Offset, float Radius) :Collision(Start, Offset), m_Radius(Radius),m_StartPosition(Start),m_EndPosition(End),m_HeadBoneName(HeadBoneName),m_TailBoneName(TailBoneName) // 引数（Ownerポインタ、Offset値、半径）
+CharacterBoneCollision::CharacterBoneCollision(const std::string& HeadBoneName, const std::string& TailBoneName, const XMFLOAT3& Start, const XMFLOAT3& End, const XMFLOAT3& Offset, float Radius) :Collision(Start, Offset), m_Radius(Radius),m_StartPosition(Start),m_EndPosition(End),m_HeadBoneName(HeadBoneName),m_TailBoneName(TailBoneName) 
 {
 	Init();
 }
@@ -46,6 +44,8 @@ bool CharacterBoneCollision::CheckCapsuleToCapsule(const CharacterBoneCollision*
 
 float CharacterBoneCollision::CheckDistanceSegmentToSegment(const XMVECTOR& Start1, const XMVECTOR& End1, const XMVECTOR& Start2, const XMVECTOR& End2)
 {
+	//	最短距離公式	s = S1 + s(E1-S1)   t = S2 + t(E2-S2)
+
 	//	線分の方向ベクトルを計算
 	XMVECTOR vSE1 = XMVectorSubtract(End1, Start1);
 	XMVECTOR vSE2 = XMVectorSubtract(End2, Start2);
@@ -61,6 +61,7 @@ float CharacterBoneCollision::CheckDistanceSegmentToSegment(const XMVECTOR& Star
 	float denom = lengthSE1 * lengthSE2 - dSE12 * dSE12;
 	float s, t;
 
+	//	0に近い
 	if (denom < 1e-6f)
 	{
 		s = 0.0f;
@@ -72,6 +73,7 @@ float CharacterBoneCollision::CheckDistanceSegmentToSegment(const XMVECTOR& Star
 		t = (lengthSE1 * eSS2 - dSE12 * dSS1) / denom;
 	}
 
+	//	範囲外にならないように
 	s = std::clamp(s, 0.0f, 1.0f);
 	t = std::clamp(t, 0.0f, 1.0f);
 
@@ -86,15 +88,6 @@ bool CharacterBoneCollision::CheckSphereToSphere(const SphereCollision* Collisio
 {
 	if (!Collision)return false;
 	return false;
-	//XMVECTOR ownerPosition = XMLoadFloat3(&m_Position);
-	//XMVECTOR otherPosition = XMLoadFloat3(&Collision->m_Position);
-	//float radiusSum = m_Radius + Collision->m_Radius;
-
-	//XMVECTOR positionSubtract = XMVectorSubtract(ownerPosition, otherPosition);
-	//float distance = XMVectorGetX(XMVector3LengthSq(positionSubtract));
-
-	//return (distance <= (radiusSum * radiusSum));
-
 }
 
 void CharacterBoneCollision::UpdateCollision(const XMFLOAT3& Position)
@@ -103,13 +96,18 @@ void CharacterBoneCollision::UpdateCollision(const XMFLOAT3& Position)
 
 void CharacterBoneCollision::UpdateBonePosition(const std::string& BoneName,const XMFLOAT3& Position)
 {
+	//	コリジョンの位置を変える
+	XMVECTOR pos = XMLoadFloat3(&Position);
+	XMVECTOR offset = XMLoadFloat3(&m_Offset);
+	XMVECTOR startPos = XMVectorAdd(pos , offset);
 	if (m_HeadBoneName == BoneName)
 	{
-		m_StartPosition = Position;
+		XMStoreFloat3(&m_StartPosition,startPos);
+	
 	}
 	else if (m_TailBoneName == BoneName)
 	{
-		m_EndPosition = Position;
+		XMStoreFloat3(&m_EndPosition, startPos);
 	}
 }
 void CharacterBoneCollision::Init()
@@ -132,17 +130,18 @@ void CharacterBoneCollision::Draw()
 	Renderer::GetDeviceContext()->PSSetShader(m_Shader->m_PixelShader, NULL, 0);
 
 	XMFLOAT4 color;
-	if (m_IsHit)
+	//	描画用色
+	if (m_IsSelected)
+	{
+		color = DEBUG_SELECTED_LINE_COLOR;
+	}
+	else if (m_IsHit)
 	{
 		color = DEBUG_HITTED_LINE_COLOR;
 	}
 	else
 	{
 		color = DEBUG_LINE_COLOR;
-	}
-	if (m_IsSelected)
-	{
-		color = DEBUG_SELECTED_LINE_COLOR;
 	}
 
 	Renderer::SetColor(color);
@@ -166,6 +165,7 @@ void CharacterBoneCollision::Draw()
 
 }
 
+//	球体の描画
 void CharacterBoneCollision::CreateSphereLine(const XMFLOAT4& Color, std::vector<LINE_VERTEX>& SphereVertices)
 {
 	XMFLOAT4 color = Color;
@@ -243,7 +243,7 @@ void CharacterBoneCollision::CreateSphereLine(const XMFLOAT4& Color, std::vector
 }
 
 
-
+//	円柱の描画
 void CharacterBoneCollision::CreateCylinderLine(const XMFLOAT4& Color, std::vector<LINE_VERTEX>& CylinderVertices)
 {
 

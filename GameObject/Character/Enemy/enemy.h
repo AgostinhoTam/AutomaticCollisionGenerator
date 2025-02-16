@@ -14,6 +14,6 @@ public:
 	void CollisionCheck();
 private:
 	BehaviorNode* m_BehaviorRoot{};
-	Player* m_Player;
+	Player* m_Player{};
 };
 

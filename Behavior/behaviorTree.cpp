@@ -9,58 +9,72 @@
 constexpr float SENSE_DISTANCE = 10.0f;
 constexpr float FOLLOW_DISTANCE = 25.0f;
 constexpr float ATTACK_DISTANCE = 5.0f;
+constexpr float ATTACK_COOLDOWN = 3.0f;
 
-BEHAVIOR_RESULT BehaviorSequence::Update()
+//	===========================制御ノード===============================
+BEHAVIOR_RESULT BehaviorSequence::Update(const float DeltaTime)
 {
-	BEHAVIOR_RESULT result = m_Child[m_Index]->Update();
-	switch (result)
+	while (m_Index < m_Child.size())
 	{
-	case BEHAVIOR_RESULT::SUCCESS:
-		++m_Index;
-		if (m_Index < m_Child.size())
+		BEHAVIOR_RESULT result = m_Child[m_Index]->Update(DeltaTime);
+
+		switch (result)
 		{
-			m_Child[m_Index]->Init();
+		case BEHAVIOR_RESULT::SUCCESS:		//	成功したら次のノード
+			++m_Index;
+			if (m_Index >= m_Child.size())
+			{
+				m_Index = 0;
+				return BEHAVIOR_RESULT::SUCCESS;
+			}
+			break;
+
+		case BEHAVIOR_RESULT::CONTINUE:		//	続く
 			return BEHAVIOR_RESULT::CONTINUE;
-		}
-		if (m_Index >= m_Child.size())
-		{
+			break;
+
+		case BEHAVIOR_RESULT::FAILURE:		//　最初のノードでやり直す
 			m_Index = 0;
-			return BEHAVIOR_RESULT::SUCCESS;
+			return BEHAVIOR_RESULT::FAILURE;
 		}
-
-	case BEHAVIOR_RESULT::CONTINUE:
-		return BEHAVIOR_RESULT::CONTINUE;
-
-	case BEHAVIOR_RESULT::FAILURE:
-		m_Index = 0;
-		return BEHAVIOR_RESULT::FAILURE;
 	}
+	
 	return BEHAVIOR_RESULT::FAILURE;
 }
 
-BEHAVIOR_RESULT BehaviorSelector::Update()
+BEHAVIOR_RESULT BehaviorSelector::Update(const float DeltaTime)
 {
-	BEHAVIOR_RESULT result = m_Child[m_Index]->Update();
-	switch (result)
+	bool hasSelection = true;
+	while (hasSelection)
 	{
-	case BEHAVIOR_RESULT::SUCCESS:
-		m_Index = 0;
-		return BEHAVIOR_RESULT::SUCCESS;
-	case BEHAVIOR_RESULT::CONTINUE:
-
-		return BEHAVIOR_RESULT::CONTINUE;
-	case BEHAVIOR_RESULT::FAILURE:
-		++m_Index;
-		if (m_Index < m_Child.size())
+		BEHAVIOR_RESULT result = m_Child[m_Index]->Update(DeltaTime);
+		switch (result)
 		{
-			m_Child[m_Index]->Init();
-			return BEHAVIOR_RESULT::CONTINUE;
-		}
-		return BEHAVIOR_RESULT::FAILURE;
-	}
-	return BEHAVIOR_RESULT::SUCCESS;
-}
+		case BEHAVIOR_RESULT::SUCCESS:	//	成功したらすぐ抜ける、その後もノード持続
+			hasSelection = false;
+			break;
 
+		case BEHAVIOR_RESULT::CONTINUE:	//　ノード持続
+			return BEHAVIOR_RESULT::CONTINUE;
+			break;
+
+		case BEHAVIOR_RESULT::FAILURE:	//	ノード実行失敗だったら次へ
+			++m_Index;
+			if (m_Index >= m_Child.size())
+			{
+				m_Index = 0;
+				hasSelection = false;
+			}
+			break;
+		}
+	}
+	m_Index = 0;
+	return BEHAVIOR_RESULT::FAILURE;
+}
+//====================================================================
+
+
+//=========================ステート==========================
 void BehaviorIdle::Init()
 {
 	if (!m_AnimationModel)return;
@@ -72,14 +86,9 @@ void BehaviorIdle::Init()
 
 }
 
-BEHAVIOR_RESULT BehaviorIdle::Update()
+BEHAVIOR_RESULT BehaviorIdle::Update(const float DeltaTime)
 {
 	if (!m_AnimationModel)return BEHAVIOR_RESULT::FAILURE;
-	if (m_AnimationModel->GetNextAnimationName() != "Idle")
-	{
-		Init();
-	}
-	m_AnimationModel->UpdateAnimationBlend();
 	XMVECTOR playerPosition = XMLoadFloat3(&m_Player->GetPosition());
 	XMVECTOR enemyPosition = XMLoadFloat3(&m_Enemy->GetPosition());
 	XMVECTOR direction = XMVectorSubtract(playerPosition, enemyPosition);
@@ -89,6 +98,11 @@ BEHAVIOR_RESULT BehaviorIdle::Update()
 		// 次の状態へ
 		return BEHAVIOR_RESULT::SUCCESS;
 	}
+	if (m_AnimationModel->GetNextAnimationName() != "Idle")
+	{
+		Init();
+	}
+	m_AnimationModel->UpdateAnimationBlend();
 	return BEHAVIOR_RESULT::CONTINUE;
 }
 
@@ -117,22 +131,18 @@ void BehaviorMove::Init()
 	if (m_AnimationModel->GetCurrentAnimationName() != "Run")
 	{
 		m_AnimationModel->SetNextAnimation("Run");
-
 	}
 }
 
-BEHAVIOR_RESULT BehaviorMove::Update()
+BEHAVIOR_RESULT BehaviorMove::Update(const float DeltaTime)
 {
 	if (!m_AnimationModel)return BEHAVIOR_RESULT::FAILURE;
-	if (m_AnimationModel->GetNextAnimationName() != "Run")
-	{
-		Init();
-	}
-	m_AnimationModel->UpdateAnimationBlend();
 	XMVECTOR playerPosition = XMLoadFloat3(&m_Player->GetPosition());
 	XMVECTOR enemyPosition = XMLoadFloat3(&m_Enemy->GetPosition());
 	XMVECTOR vector = XMVectorSubtract(playerPosition, enemyPosition);
 	float length = XMVectorGetX(XMVector3Length(vector));
+	
+	//	一定距離で停止
 	if (length < ATTACK_DISTANCE)
 	{
 		m_Enemy->SetMoveDirection(XMFLOAT3(0, 0, 0));
@@ -141,40 +151,175 @@ BEHAVIOR_RESULT BehaviorMove::Update()
 	else if (length > FOLLOW_DISTANCE)
 	{
 		m_Enemy->SetMoveDirection(XMFLOAT3(0, 0, 0));
-		return BEHAVIOR_RESULT::SUCCESS;
+		return BEHAVIOR_RESULT::FAILURE;
+	}
+
+	if (m_AnimationModel->GetNextAnimationName() != "Run")
+	{
+		Init();
 	}
 	XMVECTOR normalizeDirection = XMVector3Normalize(vector);
 	XMFLOAT3 direction;
 	XMStoreFloat3(&direction, normalizeDirection);
 	float yaw = atan2f(direction.x, direction.z);
-	m_Enemy->SetRotation(XMFLOAT3(0, yaw, 0)); // この関数は敵のワールド行列や向きを更新するものとする
+	m_Enemy->SetRotationY(yaw); // 向き更新
 	m_Enemy->SetMoveDirection(direction);
+	m_AnimationModel->UpdateAnimationBlend();
 	return BEHAVIOR_RESULT::CONTINUE;
 }
 
 void BehaviorAttack::Init()
 {
 	if (!m_AnimationModel)return;
-	if (m_AnimationModel->GetCurrentAnimationName() != "Kick")
+	//	現在と同じならスキップ
+	if (m_AnimationModel->GetCurrentAnimationName() != m_AnimationName)
 	{
-		m_AnimationModel->SetNextAnimation("Kick");
+		m_AnimationModel->SetNextAnimation(m_AnimationName);
 	}
+
+	m_IsAttackStart = true;
+	m_BehaviorCoolDown->StartCoolDown();
+	
 }
 
-BEHAVIOR_RESULT BehaviorAttack::Update()
+BehaviorAttack::BehaviorAttack(Enemy* Enemy, const std::string& Type,const float AttackDistance):BehaviorNode(Enemy),m_AttackDistance(AttackDistance)
+{
+	m_AnimationName = Type;
+	m_BehaviorCoolDown = new BehaviorCoolDown(m_Enemy);	// CoolDown実装
+
+}
+
+BehaviorAttack::~BehaviorAttack()
+{
+	delete m_BehaviorCoolDown;
+}
+
+BEHAVIOR_RESULT BehaviorAttack::Update(const float DeltaTime)
 {
 	if (!m_AnimationModel)return BEHAVIOR_RESULT::FAILURE;
-	if (m_AnimationModel->GetNextAnimationName() != "Kick")
+	if (!m_BehaviorCoolDown)return BEHAVIOR_RESULT::FAILURE;
+	
+	//	攻撃初期化
+	if (!m_IsAttackStart)
 	{
 		Init();
 	}
-	if (m_AnimationModel->GetIsTransitioning())
+
+	XMVECTOR playerPosition = XMLoadFloat3(&m_Player->GetPosition());
+	XMVECTOR enemyPosition = XMLoadFloat3(&m_Enemy->GetPosition());
+	XMVECTOR vector = XMVectorSubtract(playerPosition, enemyPosition);
+	float length = XMVectorGetX(XMVector3Length(vector));
+
+	if (length > SENSE_DISTANCE)
 	{
+		return BEHAVIOR_RESULT::FAILURE;
+	}
+	if (length >= m_AttackDistance)
+	{
+		XMVECTOR normalizeDirection = XMVector3Normalize(vector);
+		XMFLOAT3 direction;
+		XMStoreFloat3(&direction, normalizeDirection);
+		m_Enemy->SetMoveDirection(direction);
+		float yaw = atan2f(direction.x, direction.z);
+		m_Enemy->SetRotationY(yaw); 
 		return BEHAVIOR_RESULT::CONTINUE;
 	}
 	else
 	{
+		m_Enemy->SetMoveDirection(XMFLOAT3(0, 0, 0));
+	}
+
+	//	遷移中の時の処理
+	if (m_AnimationModel->GetIsTransitioning())
+	{
+		m_AnimationModel->UpdateAnimationBlend();
+		return BEHAVIOR_RESULT::CONTINUE;
+	}
+	//	遷移が終わった時、まだアニメーションの再生中だったら
+	else if (m_AnimationModel->GetCurrentAnimationFrame() <= m_AnimationModel->GetAnimationDuration("Attack"))
+	{
+		m_AnimationModel->UpdateAnimationBlend();
+		return BEHAVIOR_RESULT::CONTINUE;
+	}
+
+	//======アニメーション再生終わった後の処理=======
+
+	//	クールダウン中だったら次のアタックへ
+	if (m_BehaviorCoolDown->Update(DeltaTime) == BEHAVIOR_RESULT::FAILURE)
+	{
+		return BEHAVIOR_RESULT::FAILURE;
+	}
+	//	クールダウン終わったら
+	else
+	{
+		m_IsAttackStart = false;
+		m_BehaviorCoolDown->ResetCoolDown();
 		return BEHAVIOR_RESULT::SUCCESS;
 	}
-	return BEHAVIOR_RESULT();
+
+
 }
+
+BEHAVIOR_RESULT BehaviorCoolDown::Update(const float DeltaTime)
+{
+	if (!m_IsCoolDownActive)return BEHAVIOR_RESULT::SUCCESS;
+
+	m_ElapsedTime += DeltaTime;
+	if (m_ElapsedTime >= ATTACK_COOLDOWN)
+	{
+		m_IsCoolDownActive = false;
+		return BEHAVIOR_RESULT::SUCCESS;	// クールダウン終了
+	}
+	return BEHAVIOR_RESULT::FAILURE;		//　クールダウン中
+}
+
+void BehaviorCoolDown::StartCoolDown()
+{
+	m_ElapsedTime = 0;
+	m_IsCoolDownActive = true;
+}
+void BehaviorCoolDown::ResetCoolDown()
+{
+	m_IsCoolDownActive = false;
+}
+//===================================================================
+
+void BehaviorStandByAttack::Init()
+{
+	if (!m_AnimationModel)return;
+	//	現在と同じならスキップ
+	if (m_AnimationModel->GetCurrentAnimationName() != "Idle")
+	{
+		m_AnimationModel->SetNextAnimation("Idle");
+	}
+}
+
+BEHAVIOR_RESULT BehaviorStandByAttack::Update(const float DeltaTime)
+{
+	if (!m_AnimationModel)return BEHAVIOR_RESULT::FAILURE;
+
+	//	初期化
+	if (m_AnimationModel->GetCurrentAnimationName() != "Idle")
+	{
+		Init();
+	}
+
+	//	向き更新
+	XMVECTOR playerPosition = XMLoadFloat3(&m_Player->GetPosition());
+	XMVECTOR enemyPosition = XMLoadFloat3(&m_Enemy->GetPosition());
+	XMVECTOR vector = XMVectorSubtract(playerPosition, enemyPosition);
+	float length = XMVectorGetX(XMVector3Length(vector));
+	XMVECTOR normalizeDirection = XMVector3Normalize(vector);
+	XMFLOAT3 direction;
+	XMStoreFloat3(&direction, normalizeDirection);
+	float yaw = atan2f(direction.x, direction.z);
+	m_Enemy->SetRotationY(yaw); //	向きは1回だけ更新する
+
+	m_AnimationModel->UpdateAnimationBlend();
+	
+	//　一番手前の状態に返す
+	return BEHAVIOR_RESULT::SUCCESS;
+}
+
+
+

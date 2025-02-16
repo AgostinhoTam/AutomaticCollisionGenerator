@@ -3,6 +3,8 @@ class SceneManager;
 class GameObjectManager;
 class Scene
 {
+protected:
+	GameObjectManager* m_GameObjectManager{};
 public:
 	Scene(){}
 	virtual ~Scene(){}
@@ -11,7 +13,5 @@ public:
 	virtual void Draw(){}
 	virtual void Uninit(){}
 	GameObjectManager* GetGameObjectManager() const { return m_GameObjectManager; }
-protected:
-	GameObjectManager* m_GameObjectManager{};
 
 };
