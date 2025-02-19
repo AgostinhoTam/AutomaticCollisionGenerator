@@ -20,9 +20,8 @@ constexpr float PLAYER_SCALE = 0.01f;
 void Player::Init()
 {
 	m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::PLAYER);
-	
 
-	m_Shader = ShaderManager::LoadShader(SHADER_NAME::UNLIT_TEXTURE);
+	m_Shader = ShaderManager::LoadShader(SHADER_NAME::UNLIT_SKINNING_TEXTURE);
 
 	m_MaxMovementSpeed = PLAYER_MAX_SPEED;
 	m_MaxHorizontalAcclSpeed = PLAYER_MAX_ACCL_SPEED;

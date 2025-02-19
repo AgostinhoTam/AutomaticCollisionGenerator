@@ -1,5 +1,5 @@
 
-
+#define MAX_BONES (256)
 
 cbuffer WorldBuffer : register(b0)
 {
@@ -55,6 +55,10 @@ cbuffer ColorBuffer : register(b5)
     float4 Color;
 }
 
+cbuffer cbBones : register(b6)
+{
+    float4x4 boneMatrices[MAX_BONES];
+}
 
 struct VS_IN
 {
@@ -81,4 +85,21 @@ struct DEBUG_PS_IN
 {
     float4 Position : SV_POSITION;
     float4 Diffuse : COLOR0;
+};
+
+struct SKINNING_VS_IN
+{
+    float3 Position : POSITION0;
+    float3 Normal : NORMAL0;
+    float2 TexCoord : TEXCOORD0;
+    float4 Diffuse : COLOR0;
+    uint4 BoneIndex : BLENDINDICES0;
+    float4 BoneWeight : BLENDWEIGHT0;
+};
+
+struct SKINNING_PS_IN
+{
+    float4 Position : SV_POSITION;
+    float4 Diffuse : COLOR0;
+    float2 TexCoord : TEXCOORD0;
 };

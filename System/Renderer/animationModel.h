@@ -7,6 +7,8 @@
 #include "assimp/postprocess.h"
 #include "assimp/matrix4x4.h"
 #pragma comment (lib, "assimp-vc143-mt.lib")
+
+constexpr int MAX_BONES = 256;
 //変形後頂点構造体
 struct DEFORM_VERTEX
 {
@@ -28,6 +30,10 @@ struct BONE
 	XMFLOAT3	HeadPosition{};
 	float		Radius{};
 };
+struct CB_BONES
+{
+	XMMATRIX BoneMatrices[MAX_BONES];
+};
 
 class GameObject;
 
@@ -39,9 +45,11 @@ private:
 
 	ID3D11Buffer** m_VertexBuffer{};
 	ID3D11Buffer** m_IndexBuffer{};
+	ID3D11Buffer*  m_BoneMatricesBuffer{};
 
 	std::unordered_map<std::string, ID3D11ShaderResourceView*> m_Texture;
-	std::unordered_map<std::string, BONE> m_Bone;//ボーンデータ（名前で参照）
+	std::vector<BONE> m_Bones;
+	std::unordered_map<std::string, int> m_BoneIndexMap;	//ボーンデータ
 
 	std::vector<DEFORM_VERTEX>* m_DeformVertex{};//変形後頂点データ
 	int m_CurrentFrame = 0;
@@ -56,30 +64,37 @@ public:
 	void Uninit();
 	void Draw(GameObject* Object);
 	void Update();
-	void LoadAnimation(const char* FileName, const char* Name);
-	void CreateBone(aiNode* node);
-	void UpdateBoneMatrix(aiNode* node, aiMatrix4x4 matrix);
 	XMMATRIX TransformToXMMATRIX(aiMatrix4x4&);
+
+	//	アニメーション関連
+	void LoadAnimation(const char* FileName, const char* Name);
+	void UpdateAnimationBlend();
 	void SetNextAnimation(const std::string& AnimationName);
 	void SetCurrentAnimation(const std::string& AnimationName) { m_CurrentAnimation = AnimationName; }
 	void SetIsTransitioning(const bool flag) { m_IsTransitioning = flag; }
 	void SetBlendRatio(const float BlendRatio) { m_BlendRatio = BlendRatio; }
 	void SetCurrentAnimationFrame(const unsigned int frame) { m_CurrentFrame = frame; }
 	void SetNextAnimationFrame(const unsigned int frame) { m_NextFrame = frame; }
-	XMMATRIX GetBoneMatrix(std::string);
 	double GetAnimationDuration(const std::string& AnimationName);
 	const std::string& GetCurrentAnimationName() { return m_CurrentAnimation; }
 	const std::string& GetNextAnimationName() { return m_NextAnimation; }
 	int GetCurrentAnimationFrame() const{ return m_CurrentFrame; }
 	int GetNextAnimationFrame() const{ return m_NextFrame; }
-	bool GetIsTransitioning()const { return m_IsTransitioning; }
+	XMMATRIX GetBoneMatrix(std::string);
 	const float GetBlendRatio() const{ return m_BlendRatio; }
+	bool GetIsTransitioning()const { return m_IsTransitioning; }
+	int GetBoneIndexByName(const std::string& BoneName);
 	void AddBlendRatio(const float BlendRatio = 0.1f){ m_BlendRatio += BlendRatio; }
 	void AddCurrentAnimationFrame(const unsigned int frame = 1) { m_CurrentFrame += frame; }
 	void AddNextAnimationFrame(const unsigned int frame = 1) { m_NextFrame += frame; }
-	const std::unordered_map<std::string, BONE>& GetBoneMap() { return m_Bone; }
+	
+	//	ボーン関連
+	const std::unordered_map<std::string, int>& GetBoneIndexMap() const{ return m_BoneIndexMap; }
+	const std::vector<BONE>& GetBones()const { return m_Bones; }
 	XMFLOAT3 GetHeadPosition(const std::string& BoneName,const XMFLOAT3& Scale,const XMMATRIX& PlayerMatrix);
-	void UpdateAnimationBlend();
 	const float CalculateCapsuleRadius(const std::string& HeadName,const std::string& TailName);
 	const float DistancePointLineSegment(const XMFLOAT3& Point, const XMFLOAT3& Start, const XMFLOAT3& End);
+	void UpdateBoneMatrixToGPU();
+	void CreateBone(aiNode* node);
+	void UpdateBoneMatrix(aiNode* node, aiMatrix4x4 matrix);
 };

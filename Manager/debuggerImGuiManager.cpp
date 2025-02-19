@@ -47,6 +47,21 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
+	ImGui::Begin("Renderer");
+	ImGui::SetWindowSize(ImVec2(200, 200));
+	ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
+	ImGui::Text("%.1f ms", ImGui::GetIO().DeltaTime);
+	static float value[180];
+	for (int i = 0; i < 179; ++i)
+	{
+		value[i] = value[i + 1];
+	}
+	value[179] = ImGui::GetIO().DeltaTime * 1000.0f;
+	ImGui::PlotLines("FPS Average", value, sizeof(value) / sizeof(float), 0, NULL, 0,100.0f, ImVec2(0, 50));
+
+
+	ImGui::End();
+
 	ImGui::Begin("GameObject List");
 	for (int type = 0; type < static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE); ++type)
 	{
@@ -157,26 +172,18 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 						offset[1] = selectedCollision->GetOffset().y;
 						offset[2] = selectedCollision->GetOffset().z;
 						
-						if (ImGui::DragFloat3("Offset Slider", offset, 0.01f,-10, 10))
+						if (ImGui::DragFloat3("Offset", offset, 0.01f,-10, 10))
 						{
 							selectedCollision->SetOffset(XMFLOAT3(offset[0],offset[1],offset[2]));
 						}
-						//if (ImGui::InputFloat3("Offset Input", offset))
-						//{
-						//	selectedCollision->SetOffset(XMFLOAT3(offset[0], offset[1], offset[2]));
-						//}
 						CharacterBoneCollision* boneCollision = dynamic_cast<CharacterBoneCollision*>(selectedCollision);
 						if (boneCollision)
 						{
 							radius[0] = boneCollision->GetRadius();
-							if (ImGui::DragFloat("Radius Slider", radius,0.01f, -10, 10))
+							if (ImGui::DragFloat("Radius", radius,0.01f, -10, 10))
 							{
 								boneCollision->SetRadius(radius[0]);
 							}
-	/*						if (ImGui::InputFloat("Radius Input", radius, -10, 10))
-							{
-								boneCollision->SetRadius(radius[0]);
-							}*/
 						}
 						previousKey = selectedKey;
 					}

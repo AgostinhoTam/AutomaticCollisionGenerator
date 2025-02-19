@@ -80,7 +80,7 @@ Enemy::Enemy(ENEMY_TYPE EnemyType)
 void Enemy::Init()
 {
 
-	m_Shader = ShaderManager::LoadShader(SHADER_NAME::UNLIT_TEXTURE);
+	m_Shader = ShaderManager::LoadShader(SHADER_NAME::UNLIT_SKINNING_TEXTURE);
 
 	//	Ç∆ÇËÇ†Ç¶Ç∏ê⁄ín
 	m_Position.y = 0;

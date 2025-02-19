@@ -9,6 +9,15 @@ struct VERTEX_3D
 	XMFLOAT2 TexCoord;
 };
 
+struct VERTEX_3D_SKIN
+{
+	XMFLOAT3 Position;
+	XMFLOAT3 Normal;
+	XMFLOAT2 TexCoord;
+	XMFLOAT4 Diffuse;
+	UINT BoneIndex[4];
+	float BoneWeight[4];
+};
 
 
 struct MATERIAL
@@ -67,6 +76,7 @@ private:
 	static ID3D11Buffer*			m_MaterialBuffer;
 	static ID3D11Buffer*			m_LightBuffer;
 	static ID3D11Buffer*			m_ColorBuffer;
+	static ID3D11Buffer*			m_BoneMatricesBuffer;
 
 	static ID3D11DepthStencilState* m_DepthStateEnable;
 	static ID3D11DepthStencilState* m_DepthStateDisable;
@@ -91,18 +101,20 @@ public:
 	static void SetATCEnable(bool Enable);
 	static void SetBlendState(const BLEND_MODE& BlendMode);
 	static void SetWorldViewProjection2D();
-	static void SetWorldMatrix(XMMATRIX WorldMatrix);
-	static void SetViewMatrix(XMMATRIX ViewMatrix);
-	static void SetProjectionMatrix(XMMATRIX ProjectionMatrix);
-	static void SetMaterial(MATERIAL Material);
-	static void SetLight(LIGHT Light);
-	static void SetColor(XMFLOAT4 Color);
+	static void SetWorldMatrix(const XMMATRIX& WorldMatrix);
+	static void SetViewMatrix(const XMMATRIX& ViewMatrix);
+	static void SetProjectionMatrix(const XMMATRIX& ProjectionMatrix);
+	static void SetMaterial(const MATERIAL& Material);
+	static void SetLight(const LIGHT& Light);
+	static void SetColor(const XMFLOAT4& Color);
+	static void SetBoneMatrices(const XMMATRIX& BoneMatrices);
 
 	static ID3D11Device* GetDevice( void ){ return m_Device; }
 	static ID3D11DeviceContext* GetDeviceContext( void ){ return m_DeviceContext; }
 
 	static void CreateVertexShader(ID3D11VertexShader** VertexShader, ID3D11InputLayout** VertexLayout, const char* FileName);
 	static void CreateDebugVertexShader(ID3D11VertexShader** VertexShader, ID3D11InputLayout** VertexLayout, const char* FileName);
+	static void CreateSkinningVertexShader(ID3D11VertexShader** VertexShader, ID3D11InputLayout** VertexLayout, const char* FileName);
 	static void CreatePixelShader(ID3D11PixelShader** PixelShader, const char* FileName);
 
 
