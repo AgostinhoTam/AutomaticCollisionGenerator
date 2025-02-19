@@ -18,55 +18,49 @@ BEHAVIOR_RESULT BehaviorSequence::Update(const float DeltaTime)
 	{
 		BEHAVIOR_RESULT result = m_Child[m_Index]->Update(DeltaTime);
 
-		switch (result)
+		if (result == BEHAVIOR_RESULT::SUCCESS)
 		{
-		case BEHAVIOR_RESULT::SUCCESS:		//	成功したら次のノード
 			++m_Index;
 			if (m_Index >= m_Child.size())
 			{
 				m_Index = 0;
 				return BEHAVIOR_RESULT::SUCCESS;
 			}
-			break;
-
-		case BEHAVIOR_RESULT::CONTINUE:		//	続く
+		}
+		else if (result == BEHAVIOR_RESULT::CONTINUE)
+		{
 			return BEHAVIOR_RESULT::CONTINUE;
-			break;
-
-		case BEHAVIOR_RESULT::FAILURE:		//　最初のノードでやり直す
+		}
+		else
+		{
 			m_Index = 0;
 			return BEHAVIOR_RESULT::FAILURE;
 		}
 	}
-	
+
 	return BEHAVIOR_RESULT::FAILURE;
 }
 
 BEHAVIOR_RESULT BehaviorSelector::Update(const float DeltaTime)
 {
-	bool hasSelection = true;
-	while (hasSelection)
+	while (m_Index < m_Child.size())
 	{
 		BEHAVIOR_RESULT result = m_Child[m_Index]->Update(DeltaTime);
-		switch (result)
+		if (result == BEHAVIOR_RESULT::SUCCESS)
 		{
-		case BEHAVIOR_RESULT::SUCCESS:	//	成功したらすぐ抜ける、その後もノード持続
-			hasSelection = false;
-			break;
-
-		case BEHAVIOR_RESULT::CONTINUE:	//　ノード持続
-			return BEHAVIOR_RESULT::CONTINUE;
-			break;
-
-		case BEHAVIOR_RESULT::FAILURE:	//	ノード実行失敗だったら次へ
-			++m_Index;
-			if (m_Index >= m_Child.size())
-			{
-				m_Index = 0;
-				hasSelection = false;
-			}
+			m_Index = 0;
+			return BEHAVIOR_RESULT::SUCCESS;
 			break;
 		}
+		else if (result == BEHAVIOR_RESULT::CONTINUE)
+		{
+			return BEHAVIOR_RESULT::CONTINUE;
+		}
+		else
+		{
+			++m_Index;
+		}
+
 	}
 	m_Index = 0;
 	return BEHAVIOR_RESULT::FAILURE;
@@ -119,7 +113,7 @@ BehaviorNode::BehaviorNode(Enemy* Enemy)
 }
 
 void BehaviorNode::AddChildNode(BehaviorNode* Node)
-{	
+{
 	//	ツリー追加の時参照追加
 	Node->m_Parent = this;
 	m_Child.emplace_back(Node);
@@ -141,7 +135,7 @@ BEHAVIOR_RESULT BehaviorMove::Update(const float DeltaTime)
 	XMVECTOR enemyPosition = XMLoadFloat3(&m_Enemy->GetPosition());
 	XMVECTOR vector = XMVectorSubtract(playerPosition, enemyPosition);
 	float length = XMVectorGetX(XMVector3Length(vector));
-	
+
 	//	一定距離で停止
 	if (length < ATTACK_DISTANCE)
 	{
@@ -179,10 +173,10 @@ void BehaviorAttack::Init()
 
 	m_IsAttackStart = true;
 	m_BehaviorCoolDown->StartCoolDown();
-	
+
 }
 
-BehaviorAttack::BehaviorAttack(Enemy* Enemy, const std::string& Type,const float AttackDistance):BehaviorNode(Enemy),m_AttackDistance(AttackDistance)
+BehaviorAttack::BehaviorAttack(Enemy* Enemy, const std::string& Type, const float AttackDistance) :BehaviorNode(Enemy), m_AttackDistance(AttackDistance)
 {
 	m_AnimationName = Type;
 	m_BehaviorCoolDown = new BehaviorCoolDown(m_Enemy);	// CoolDown実装
@@ -198,7 +192,7 @@ BEHAVIOR_RESULT BehaviorAttack::Update(const float DeltaTime)
 {
 	if (!m_AnimationModel)return BEHAVIOR_RESULT::FAILURE;
 	if (!m_BehaviorCoolDown)return BEHAVIOR_RESULT::FAILURE;
-	
+
 	//	攻撃初期化
 	if (!m_IsAttackStart)
 	{
@@ -210,10 +204,12 @@ BEHAVIOR_RESULT BehaviorAttack::Update(const float DeltaTime)
 	XMVECTOR vector = XMVectorSubtract(playerPosition, enemyPosition);
 	float length = XMVectorGetX(XMVector3Length(vector));
 
+	//	追いかける距離外だったら
 	if (length > SENSE_DISTANCE)
 	{
 		return BEHAVIOR_RESULT::FAILURE;
 	}
+	//	攻撃範囲内じゃない時
 	if (length >= m_AttackDistance)
 	{
 		XMVECTOR normalizeDirection = XMVector3Normalize(vector);
@@ -221,22 +217,18 @@ BEHAVIOR_RESULT BehaviorAttack::Update(const float DeltaTime)
 		XMStoreFloat3(&direction, normalizeDirection);
 		m_Enemy->SetMoveDirection(direction);
 		float yaw = atan2f(direction.x, direction.z);
-		m_Enemy->SetRotationY(yaw); 
+		m_Enemy->SetRotationY(yaw);
 		return BEHAVIOR_RESULT::CONTINUE;
 	}
 	else
 	{
+		//範囲内だったら止まる
 		m_Enemy->SetMoveDirection(XMFLOAT3(0, 0, 0));
 	}
 
-	//	遷移中の時の処理
-	if (m_AnimationModel->GetIsTransitioning())
-	{
-		m_AnimationModel->UpdateAnimationBlend();
-		return BEHAVIOR_RESULT::CONTINUE;
-	}
-	//	遷移が終わった時、まだアニメーションの再生中だったら
-	else if (m_AnimationModel->GetCurrentAnimationFrame() <= m_AnimationModel->GetAnimationDuration("Attack"))
+
+	//	遷移中、またはアニメーションの再生中だったら
+	if (m_AnimationModel->GetIsTransitioning() || m_AnimationModel->GetCurrentAnimationFrame() <= m_AnimationModel->GetAnimationDuration("Attack"))
 	{
 		m_AnimationModel->UpdateAnimationBlend();
 		return BEHAVIOR_RESULT::CONTINUE;
@@ -281,6 +273,7 @@ void BehaviorCoolDown::StartCoolDown()
 void BehaviorCoolDown::ResetCoolDown()
 {
 	m_IsCoolDownActive = false;
+
 }
 //===================================================================
 
@@ -316,7 +309,7 @@ BEHAVIOR_RESULT BehaviorStandByAttack::Update(const float DeltaTime)
 	m_Enemy->SetRotationY(yaw); //	向きは1回だけ更新する
 
 	m_AnimationModel->UpdateAnimationBlend();
-	
+
 	//　一番手前の状態に返す
 	return BEHAVIOR_RESULT::SUCCESS;
 }
