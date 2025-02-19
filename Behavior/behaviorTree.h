@@ -33,7 +33,7 @@ public:
 	virtual BEHAVIOR_RESULT Update(const float DeltaTime) = 0;
 	BehaviorNode() = delete;
 	BehaviorNode(Enemy* Enemy);
-	virtual ~BehaviorNode(){}
+	virtual ~BehaviorNode() {}
 	void AddChildNode(BehaviorNode* Node);
 };
 
@@ -104,7 +104,7 @@ private:
 	float m_AttackDistance = 0.0f;
 public:
 	virtual void Init()override;
-	BehaviorAttack(Enemy* Enemy, const std::string& Type,const float AttackDistance);
+	BehaviorAttack(Enemy* Enemy, const std::string& Type, const float AttackDistance);
 	~BehaviorAttack();
 	using BehaviorNode::BehaviorNode;
 	virtual BEHAVIOR_RESULT Update(const float DeltaTime)override;
