@@ -13,6 +13,6 @@ public:
 	~ShaderManager(){}
 	static void Init();
 	static void Uninit();
-	static Shader* CreateShader(const SHADER_NAME& ShaderName,const char* PSFileName,const char* VSFileName);
+	static Shader* CreateShader(const SHADER_NAME& ShaderName);
 	static Shader* LoadShader(const SHADER_NAME& ShaderName);
 };

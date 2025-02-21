@@ -14,11 +14,11 @@ void Character::Update(const float& DeltaTime)
 
 	UpdateHorizontalVelocity(velocity, DeltaTime);
 
-	UpdateVerticalVelocity(velocity,DeltaTime);
+	UpdateVerticalVelocity(velocity, DeltaTime);
 
 	position = XMVectorMultiplyAdd(velocity, XMVectorReplicate(DeltaTime), position);
-	
-	XMStoreFloat3(&m_Position,position);
+
+	XMStoreFloat3(&m_Position, position);
 	XMStoreFloat3(&m_Velocity, velocity);
 
 	m_MoveDirection = { 0,0,0 };
@@ -42,10 +42,10 @@ void Character::UpdateVerticalVelocity(XMVECTOR& Velocity, const float& DeltaTim
 			velocityY = MAX_DROP_SPEED;
 		}
 	}
-	Velocity = XMVectorSetY(Velocity,velocityY);
+	Velocity = XMVectorSetY(Velocity, velocityY);
 }
 
-void Character::UpdateHorizontalVelocity(XMVECTOR& Velocity,const float& DeltaTime)
+void Character::UpdateHorizontalVelocity(XMVECTOR& Velocity, const float& DeltaTime)
 {
 	//	平面方向正規化
 	XMVECTOR dirNormalize = XMVectorSet(m_MoveDirection.x, 0.0f, m_MoveDirection.z, 0.0f); //xz移動
@@ -93,28 +93,32 @@ void Character::UpdateBoneCollision()
 	trans = XMMatrixTranslation(objPosition.x, objPosition.y, objPosition.z);
 	world = scale * rot * trans;
 
-	//	全ボーンのリスト
-	for (auto& bone : m_BoneMap)
+	for (auto& pair : m_Collisions)
 	{
-		std::string boneName = bone.first.c_str();
-		//	一致してるボーンの更新
-		for (auto& capsule : m_Collisions)
+		if (!pair.second)continue;
+		const std::string& boneKey = pair.first;
+		XMFLOAT3 headPos = m_AnimationModel->GetHeadPosition(boneKey, m_Scale, world);
+		CharacterBoneCollision* boneCharacter = dynamic_cast<CharacterBoneCollision*>(pair.second);
+		if (boneCharacter)
 		{
-			CharacterBoneCollision* boneCollision = dynamic_cast<CharacterBoneCollision*>(capsule.second);
-			if (boneCollision)
-			{
-				XMFLOAT3 headPos = m_AnimationModel->GetHeadPosition(boneName, m_Scale, world);
-				boneCollision->UpdateBonePosition(boneName, headPos);
-			}
+			boneCharacter->UpdateBonePosition(boneKey, headPos);
 		}
-	}
-}
+		else
+		{
+			pair.second->UpdateCollision(m_Position);
+		}
 
+	}
+
+}
+//	初期プロフィール読み込み
 void Character::CreateCharacterBoneCollision(const CHARACTER_BONE_TYPE& BoneType)
 {
 	if (!m_AnimationModel)return;
 	m_BoneMap = m_AnimationModel->GetBoneMap();
 	if (m_BoneMap.empty())return;
+
+	//	最初全部消す
 	if (!m_Collisions.empty())
 	{
 		for (auto& pair : m_Collisions)
@@ -124,6 +128,7 @@ void Character::CreateCharacterBoneCollision(const CHARACTER_BONE_TYPE& BoneType
 		}
 	}
 	m_Collisions.clear();
+
 	std::ifstream file;
 	switch (BoneType)
 	{
@@ -163,11 +168,14 @@ void Character::CreateCharacterBoneCollision(const CHARACTER_BONE_TYPE& BoneType
 	return;
 }
 
+//	実行中プロフィール読み込み
 void Character::CreateCharacterBoneCollision(const std::string& FilePath)
 {
 	if (!m_AnimationModel)return;
 	m_BoneMap = m_AnimationModel->GetBoneMap();
 	if (m_BoneMap.empty())return;
+
+	//	最初全部消す
 	if (!m_Collisions.empty())
 	{
 		for (auto& pair : m_Collisions)
@@ -209,31 +217,36 @@ void Character::CreateCharacterBoneCollision(const std::string& FilePath)
 
 void Character::CreateSingleBoneCollision(const std::string& Head, const std::string& Tail, const XMFLOAT3& Offset, const float Radius)
 {
+	if (!m_AnimationModel)return;
 	if (m_BoneMap.empty())return;
-	auto headBone = m_BoneMap.find(Head);
-	auto tailBone = m_BoneMap.find(Tail);
-	if (headBone != m_BoneMap.end() && tailBone != m_BoneMap.end())
+
+	// ワールド行列作成（更新前の初期状態として）
+	XMMATRIX scale = XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z);
+	XMVECTOR quat = XMQuaternionRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z);
+	quat = XMQuaternionNormalize(quat);
+	XMMATRIX rot = XMMatrixRotationQuaternion(quat);
+	XMMATRIX trans = XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z);
+	XMMATRIX world = scale * rot * trans;
+
+	const XMFLOAT3& headPos = m_AnimationModel->GetHeadPosition(Head, m_Scale, world);
+	const XMFLOAT3& tailPos = m_AnimationModel->GetHeadPosition(Tail, m_Scale, world);
+
+	std::string keyName = Head + " -> " + Tail;
+	if (Radius == 0)	//　メッシュ計算する時
 	{
-		std::string keyName = Head + " -> " + Tail;
-		if (Radius == 0)	//　メッシュ計算する時
-		{
-			float radius = m_AnimationModel->CalculateCapsuleRadius(Head, Tail);
-			radius *= m_Scale.x;
-			m_Collisions.emplace(keyName,new CharacterBoneCollision(Head,Tail,headBone->second.HeadPosition, tailBone->second.HeadPosition, Offset, radius));
-		}
-		else //　計算しない時は指定
-		{
-			m_Collisions.emplace(keyName, new CharacterBoneCollision(Head, Tail, headBone->second.HeadPosition, tailBone->second.HeadPosition, Offset, Radius));
-		}
+		float radius = m_AnimationModel->CalculateCapsuleRadius(Head, Tail);
+		radius *= m_Scale.x;
+		m_Collisions.emplace(keyName, new CharacterBoneCollision(Head, Tail, headPos, tailPos, Offset, radius));
+	}
+	else //　計算しない時は指定
+	{
+		m_Collisions.emplace(keyName, new CharacterBoneCollision(Head, Tail, headPos, tailPos, Offset, Radius));
 	}
 }
 
-std::vector<std::string> Character::GetBoneMap()
+
+std::vector<std::string> Character::GetBoneMap() const
 {
-	std::vector<std::string> boneMap;
-	for (const auto& key : m_BoneMap)
-	{
-		boneMap.emplace_back(key.first);
-	}
-	return boneMap;
+	return std::vector<std::string>();
 }
+

@@ -24,7 +24,7 @@ protected:
 	float	m_MaxJumpSpeed = 0;
 	bool	m_IsGround = false;
 	std::unordered_map<std::string, Collision*> m_Collisions;
-	std::unordered_map<std::string, BONE> m_BoneMap;
+	std::unordered_map<std::string, int> m_BoneMap;
 public:
 	virtual void Init()override{}
 	virtual void Update(const float& DeltaTime)override;
@@ -44,7 +44,7 @@ public:
 	void CreateCharacterBoneCollision(const CHARACTER_BONE_TYPE& BoneType);
 	void CreateCharacterBoneCollision(const std::string& FilePath);
 	void CreateSingleBoneCollision(const std::string& Head,const std::string& Tail,const XMFLOAT3& Offset={0.0f,0.0f,0.0f}, const float Radius = 0.0f);
+	std::vector<std::string> GetBoneMap()const;
 	std::unordered_map<std::string, Collision*>& GetCollisionList() { return m_Collisions; }
-	std::vector<std::string> GetBoneMap();
 	Collision* GetSelectedCollision(const std::string& KeyName) { return m_Collisions[KeyName]; }
 };

@@ -8,6 +8,15 @@ struct VERTEX_3D
 	XMFLOAT4 Diffuse;
 	XMFLOAT2 TexCoord;
 };
+struct VERTEX_3D_SKINNING
+{
+	XMFLOAT3 Position;
+	XMFLOAT3 Normal;
+	XMFLOAT4 Diffuse;
+	XMFLOAT2 TexCoord;
+	UINT	BoneIndex[4];
+	float	BoneWeight[4];
+};
 
 
 
@@ -67,6 +76,7 @@ private:
 	static ID3D11Buffer*			m_MaterialBuffer;
 	static ID3D11Buffer*			m_LightBuffer;
 	static ID3D11Buffer*			m_ColorBuffer;
+	static ID3D11Buffer*			m_BoneMatrix;
 
 	static ID3D11DepthStencilState* m_DepthStateEnable;
 	static ID3D11DepthStencilState* m_DepthStateDisable;
@@ -103,6 +113,7 @@ public:
 
 	static void CreateVertexShader(ID3D11VertexShader** VertexShader, ID3D11InputLayout** VertexLayout, const char* FileName);
 	static void CreateDebugVertexShader(ID3D11VertexShader** VertexShader, ID3D11InputLayout** VertexLayout, const char* FileName);
+	static void CreateSkinningVertexShader(ID3D11VertexShader** VertexShader, ID3D11InputLayout** VertexLayout, const char* FileName);
 	static void CreatePixelShader(ID3D11PixelShader** PixelShader, const char* FileName);
 
 
