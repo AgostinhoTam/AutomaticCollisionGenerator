@@ -57,7 +57,7 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 		value[i] = value[i + 1];
 	}
 	value[179] = ImGui::GetIO().DeltaTime * 1000.0f;
-	ImGui::PlotLines("FPS Average", value, sizeof(value) / sizeof(float), 0, NULL, 0,100.0f, ImVec2(0, 50));
+	ImGui::PlotLines("FPS Average", value, sizeof(value) / sizeof(float), 0, NULL, 0, 100.0f, ImVec2(0, 50));
 
 
 	ImGui::End();
@@ -129,7 +129,7 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 				//	==============現在コリジョンリスト作成=====================
 				std::unordered_map<std::string, Collision*>& collisionList = characterObject->GetCollisionList();
 				{
-					
+
 					static int item_current = 0;
 					static std::string previousKey{};
 					std::string selectedKey{};
@@ -149,7 +149,7 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 					{
 						int previousItemCurrent = item_current;
 
-						ImGui::ListBox(" ", &item_current, collisionKeyPointers.data(), static_cast<int>(collisionKeyPointers.size()),4);
+						ImGui::ListBox(" ", &item_current, collisionKeyPointers.data(), static_cast<int>(collisionKeyPointers.size()), 4);
 
 						//	選択中のコリジョンを変色
 						selectedKey = collisionKeys[item_current];
@@ -171,16 +171,16 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 						offset[0] = selectedCollision->GetOffset().x;
 						offset[1] = selectedCollision->GetOffset().y;
 						offset[2] = selectedCollision->GetOffset().z;
-						
-						if (ImGui::DragFloat3("Offset", offset, 0.01f,-10, 10))
+
+						if (ImGui::DragFloat3("Offset", offset, 0.01f, -10, 10))
 						{
-							selectedCollision->SetOffset(XMFLOAT3(offset[0],offset[1],offset[2]));
+							selectedCollision->SetOffset(XMFLOAT3(offset[0], offset[1], offset[2]));
 						}
 						CharacterBoneCollision* boneCollision = dynamic_cast<CharacterBoneCollision*>(selectedCollision);
 						if (boneCollision)
 						{
 							radius[0] = boneCollision->GetRadius();
-							if (ImGui::DragFloat("Radius", radius,0.01f, -10, 10))
+							if (ImGui::DragFloat("Radius", radius, 0.01f, -10, 10))
 							{
 								boneCollision->SetRadius(radius[0]);
 							}
@@ -197,15 +197,10 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 					ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(1 / 7.0f, 0.8f, 0.8f));
 					if (ImGui::Button("Delete Bone Collision"))
 					{
-						auto it = collisionList.find(selectedKey);
-						if (it != collisionList.end())
-						{
-							delete it->second;
-							collisionList.erase(it);
-							selectedKey.clear();
-							previousKey.clear();
-							item_current = 0;
-						}
+						characterObject->DeleteCollision(selectedKey);
+						selectedKey.clear();
+						previousKey.clear();
+						item_current = 0;
 					}
 					ImGui::PopStyleColor(3);
 				}
@@ -223,7 +218,7 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 					}
 					if (ImGui::Button("Reload CSV Files"))
 					{
-						LoadCSVFiles(directoryPath,csvFilesName);
+						LoadCSVFiles(directoryPath, csvFilesName);
 					}
 					if (!m_FileList.empty())
 					{
@@ -236,7 +231,7 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 					{
 						characterObject->CreateCharacterBoneCollision(selectedFilePath);
 					}
-;					
+					;
 				}
 				//==================作成可能ボーンリスト===================
 				{
@@ -251,8 +246,8 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 					}
 					if (!allBoneKeyPointers.empty())
 					{
-						ImGui::Combo("HeadBone", &head_bone, allBoneKeyPointers.data(),  static_cast<int>(allBoneKeyPointers.size()), 4);
-						ImGui::Combo("TailBone", &tail_bone, allBoneKeyPointers.data(),  static_cast<int>(allBoneKeyPointers.size()), 4);
+						ImGui::Combo("HeadBone", &head_bone, allBoneKeyPointers.data(), static_cast<int>(allBoneKeyPointers.size()), 4);
+						ImGui::Combo("TailBone", &tail_bone, allBoneKeyPointers.data(), static_cast<int>(allBoneKeyPointers.size()), 4);
 					}
 
 					ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(1 / 7.0f, 0.6f, 0.6f));
@@ -300,7 +295,7 @@ void DebuggerImGuiManager::LoadCSVFiles(const std::string& Path, std::vector<con
 			m_FileList.push_back(entry.path().filename().string());  // ファイル名のみ取得
 		}
 	}
-	
+
 	for (const auto& file : m_FileList)
 	{
 		CSVFileName.emplace_back(file.c_str());

@@ -261,11 +261,22 @@ void Character::CreateSingleBoneCollision(const std::string& Head, const std::st
 std::vector<std::string> Character::GetBoneMap()
 {
 	std::vector<std::string> boneMap;
-	for (const auto& pair : m_Collisions)
+	const std::unordered_map<std::string, int>& boneIndexMap = m_AnimationModel->GetBoneIndexMap();
+	for (const auto& pair : boneIndexMap)
 	{
-		if (!pair.second)continue;
+		if (pair.first.empty())continue;
 		boneMap.emplace_back(pair.first);
 	}
 	return boneMap;
+}
+
+void Character::DeleteCollision(const std::string& CollisionName)
+{
+	auto it = m_Collisions.find(CollisionName);
+	if (it != m_Collisions.end())
+	{
+		delete it->second;
+		m_Collisions.erase(it);
+	}
 }
 

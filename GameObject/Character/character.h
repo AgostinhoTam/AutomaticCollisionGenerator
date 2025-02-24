@@ -46,4 +46,5 @@ public:
 	std::unordered_map<std::string, Collision*>& GetCollisionList() { return m_Collisions; }
 	Collision* GetSelectedCollision(const std::string& KeyName) { return m_Collisions[KeyName]; }
 	std::vector<std::string> GetBoneMap();
+	void DeleteCollision(const std::string& CollisionName);
 };
