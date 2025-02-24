@@ -6,7 +6,7 @@ class Player;
 class Enemy : public Character
 {
 public:
-	Enemy(ENEMY_TYPE EnemyType);
+	Enemy(ENEMY_TYPE EnemyType) :m_EnemyType(EnemyType){}
 	virtual void Init()override;
 	virtual void Uninit()override;
 	virtual void Update(const float& DeltaTime)override;
@@ -15,5 +15,6 @@ public:
 private:
 	BehaviorNode* m_BehaviorRoot{};
 	Player* m_Player{};
+	ENEMY_TYPE m_EnemyType;
 };
 

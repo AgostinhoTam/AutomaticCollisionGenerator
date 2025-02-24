@@ -7,6 +7,7 @@ void ShaderManager::Init()
 {
 	CreateShader(SHADER_NAME::UNLIT_TEXTURE, "shader\\unlitTexturePS.cso", "shader\\unlitTextureVS.cso");
 	CreateShader(SHADER_NAME::DEBUG_LINE, "shader\\debugLinePS.cso", "shader\\debugLineVS.cso");
+	CreateShader(SHADER_NAME::UNLIT_SKINNING_TEXTURE, "shader\\unlitTextureSkinningPS.cso", "shader\\unlitTextureSkinningVS.cso");
 }
 
 void ShaderManager::Uninit()
@@ -36,14 +37,19 @@ Shader* ShaderManager::CreateShader(const SHADER_NAME& ShaderName,const char* PS
 	if (ShaderName == SHADER_NAME::DEBUG_LINE)
 	{
 		Renderer::CreateDebugVertexShader(&shader->m_VertexShader, &shader->m_VertexLayout, VSFileName);
+		Renderer::CreatePixelShader(&shader->m_PixelShader,PSFileName);		// PSŒ»Ý‚Í‚PŽí—Þ‚¾‚¯‚È‚Ì‚Å‘S•”“¯‚¶
+	}
+	else if (ShaderName == SHADER_NAME::UNLIT_SKINNING_TEXTURE)
+	{
+		Renderer::CreateSkinningVertexShader(&shader->m_VertexShader, &shader->m_VertexLayout, VSFileName);
+		Renderer::CreatePixelShader(&shader->m_PixelShader,PSFileName);
 	}
 	else
 	{
 		Renderer::CreateVertexShader(&shader->m_VertexShader, &shader->m_VertexLayout, VSFileName);
+		Renderer::CreatePixelShader(&shader->m_PixelShader,PSFileName);
 	}
 
-	Renderer::CreatePixelShader(&shader->m_PixelShader,
-	PSFileName);
 
 	m_ShaderList.try_emplace(ShaderName, std::move(shader));
 

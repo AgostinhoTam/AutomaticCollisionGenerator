@@ -16,6 +16,12 @@
     <FxCompile Include="shader\debugLinePS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
+    <FxCompile Include="shader\unlitTextureSkinningVS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\unlitTextureSkinningPS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject\Field\field.cpp">

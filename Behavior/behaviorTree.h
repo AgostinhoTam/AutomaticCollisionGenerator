@@ -72,25 +72,34 @@ public:
 
 class BehaviorIdle :public BehaviorNode
 {
+private:
+	std::string m_AnimationName{};
 public:
 	virtual void Init()override;
 	using BehaviorNode::BehaviorNode;
+	BehaviorIdle(Enemy* Enemy, const std::string& Type);
 	virtual BEHAVIOR_RESULT Update(const float DeltaTime)override;
 };
 
 class BehaviorMove :public BehaviorNode
 {
+private:
+	std::string m_AnimationName{};
 public:
 	virtual void Init()override;
 	using BehaviorNode::BehaviorNode;
+	BehaviorMove(Enemy* Enemy, const std::string& Type);
 	virtual BEHAVIOR_RESULT Update(const float DeltaTime)override;
 };
 
 class BehaviorStandByAttack : public BehaviorNode
 {
+private:
+	std::string m_AnimationName{};
 public:
 	virtual void Init()override;
 	using BehaviorNode::BehaviorNode;
+	BehaviorStandByAttack(Enemy* Enemy, const std::string& Type);
 	virtual BEHAVIOR_RESULT Update(const float DeltaTime)override;
 
 };

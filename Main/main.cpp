@@ -4,7 +4,7 @@
 #include "Manager/sceneManager.h"
 #include "Manager\debuggerImGuiManager.h"
 const char* CLASS_NAME = "AppClass";
-const char* WINDOW_NAME = "DX11ゲーム";
+const char* WINDOW_NAME = "コリジョン自動設置ツール";
 
 constexpr float FPS = 60.0f;
 constexpr float FRAME_PER_SEC = 1 / FPS;

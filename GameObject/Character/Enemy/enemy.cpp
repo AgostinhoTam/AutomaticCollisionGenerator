@@ -23,64 +23,59 @@ namespace EnemyTypeMonster
 	constexpr float SCALE = 0.01f;
 }
 
-Enemy::Enemy(ENEMY_TYPE EnemyType)
+void Enemy::Init()
 {
-
-	if (EnemyType == ENEMY_TYPE::ENEMY)
+	if (m_EnemyType == ENEMY_TYPE::ENEMY)
 	{
 		m_Name = "EnemyHuman";
-		m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::ENEMY);
+		m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::ENEMY, this);
 		m_MaxMovementSpeed = EnemyTypeHuman::MAX_ENEMY_SPEED;
 		m_MaxHorizontalAcclSpeed = EnemyTypeHuman::ENEMY_MAX_ACCL_SPEED;
 		m_Scale = { EnemyTypeHuman::ENEMY_SCALE,EnemyTypeHuman::ENEMY_SCALE,EnemyTypeHuman::ENEMY_SCALE };
 		m_BehaviorRoot = new BehaviorSequence(this);
-		m_BehaviorRoot->AddChildNode(new BehaviorIdle(this));
-		m_BehaviorRoot->AddChildNode(new BehaviorMove(this));
+		m_BehaviorRoot->AddChildNode(new BehaviorIdle(this, "Enemy_Idle"));
+		m_BehaviorRoot->AddChildNode(new BehaviorMove(this, "Enemy_Run"));
 		BehaviorNode* attackNode = new BehaviorSelector(this);
-		attackNode->AddChildNode(new BehaviorAttack(this,"Kick",1.5f));
-		attackNode->AddChildNode(new BehaviorStandByAttack(this));
+		attackNode->AddChildNode(new BehaviorAttack(this, "Enemy_Kick", 1.5f));
+		attackNode->AddChildNode(new BehaviorStandByAttack(this, "Enemy_Idle"));
 		m_BehaviorRoot->AddChildNode(attackNode);
 		CreateCharacterBoneCollision(CHARACTER_BONE_TYPE::HUMANOID);
 	}
-	else if (EnemyType == ENEMY_TYPE::MONSTER)
+	else if (m_EnemyType == ENEMY_TYPE::MONSTER)
 	{
 		m_Name = "EnemyMonster";
-		m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::MONSTER);
+		m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::MONSTER, this);
 		m_MaxMovementSpeed = EnemyTypeMonster::MAX_SPEED;
 		m_MaxHorizontalAcclSpeed = EnemyTypeMonster::MAX_ACCL_SPEED;
 		m_Scale = { EnemyTypeMonster::SCALE,EnemyTypeMonster::SCALE,EnemyTypeMonster::SCALE };
 		m_Rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
 		m_BehaviorRoot = new BehaviorSequence(this);
-		m_BehaviorRoot->AddChildNode(new BehaviorIdle(this));
-		m_BehaviorRoot->AddChildNode(new BehaviorMove(this));
+		m_BehaviorRoot->AddChildNode(new BehaviorIdle(this, "Monster_Idle"));
+		m_BehaviorRoot->AddChildNode(new BehaviorMove(this, "Monster_Run"));
 		BehaviorNode* attackNode = new BehaviorSelector(this);
-		attackNode->AddChildNode(new BehaviorAttack(this,"Attack",1.0f));
-		attackNode->AddChildNode(new BehaviorStandByAttack(this));
+		attackNode->AddChildNode(new BehaviorAttack(this, "Monster_Attack", 1.0f));
+		attackNode->AddChildNode(new BehaviorStandByAttack(this, "Monster_Idle"));
 		m_BehaviorRoot->AddChildNode(attackNode);
 		CreateCharacterBoneCollision(CHARACTER_BONE_TYPE::MONSTER);
 	}
 	else
 	{
 		m_Name = "EnemyHuman";
-		m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::ENEMY);
+		m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::ENEMY, this);
 		m_MaxMovementSpeed = EnemyTypeHuman::MAX_ENEMY_SPEED;
 		m_MaxHorizontalAcclSpeed = EnemyTypeHuman::ENEMY_MAX_ACCL_SPEED;
 		m_Scale = { EnemyTypeHuman::ENEMY_SCALE,EnemyTypeHuman::ENEMY_SCALE,EnemyTypeHuman::ENEMY_SCALE };
 		m_BehaviorRoot = new BehaviorSequence(this);
-		m_BehaviorRoot->AddChildNode(new BehaviorIdle(this));
-		m_BehaviorRoot->AddChildNode(new BehaviorMove(this));
+		m_BehaviorRoot->AddChildNode(new BehaviorIdle(this, "Enemy_Idle"));
+		m_BehaviorRoot->AddChildNode(new BehaviorMove(this, "Enemy_Run"));
 		BehaviorNode* attackNode = new BehaviorSelector(this);
-		attackNode->AddChildNode(new BehaviorAttack(this,"Kick",1.0f));
-		attackNode->AddChildNode(new BehaviorStandByAttack(this));
+		attackNode->AddChildNode(new BehaviorAttack(this, "Enemy_Kick", 1.0f));
+		attackNode->AddChildNode(new BehaviorStandByAttack(this, "Enemy_Idle"));
 		m_BehaviorRoot->AddChildNode(attackNode);
 		CreateCharacterBoneCollision(CHARACTER_BONE_TYPE::HUMANOID);
 	}
 
-}
-void Enemy::Init()
-{
-
-	m_Shader = ShaderManager::LoadShader(SHADER_NAME::UNLIT_TEXTURE);
+	m_Shader = ShaderManager::LoadShader(SHADER_NAME::UNLIT_SKINNING_TEXTURE);
 
 	//	とりあえず接地
 	m_Position.y = 0;
@@ -113,13 +108,12 @@ void Enemy::Update(const float& DeltaTime)
 void Enemy::Draw()
 {
 	if (!m_AnimationModel)return;
-	m_AnimationModel->Draw(this);
+	m_AnimationModel->Draw();
 
-	if (m_Collision)m_Collision->Draw();
-	for (auto& capsule : m_Collisions)
+	for (auto& pair : m_Collisions)
 	{
-		if (!capsule.second)continue;
-		capsule.second->Draw();
+		if (!pair.second)continue;
+		pair.second->Draw();
 	}
 
 }
@@ -127,7 +121,8 @@ void Enemy::Draw()
 void Enemy::CollisionCheck()
 {
 
-	const std::unordered_map<std::string, Collision*>& playerCollisonList = m_Player->GetCollisionList();
+	//	キャッシュ
+	std::unordered_map<std::string, Collision*>& playerCollisonList = m_Player->GetCollisionList();
 
 	for (const auto& enemyPair : m_Collisions)
 	{
@@ -138,14 +133,14 @@ void Enemy::CollisionCheck()
 			continue;
 		}
 
-		for (const auto& playerPair : playerCollisonList)
+		for (auto& playerPair : playerCollisonList)
 		{
-			Collision* playerCollision = playerPair.second;
+			if (!playerPair.second)continue;
 
-			if (enemyPair.second->IsCollisionOverlapping(playerCollision))
+			if (enemyPair.second->IsCollisionOverlapping(playerPair.second))
 			{
 				isHit = true;
-				playerCollision->SetIsHit(isHit);
+				playerPair.second->SetIsHit(isHit);
 				break;
 			}
 

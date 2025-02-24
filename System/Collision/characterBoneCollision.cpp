@@ -13,7 +13,7 @@ constexpr XMFLOAT4 DEBUG_LINE_COLOR = XMFLOAT4(0.1f, 1.0f, 0.1f, 1.0f);
 constexpr XMFLOAT4 DEBUG_HITTED_LINE_COLOR = XMFLOAT4(1.0f, 0.1f, 0.1f, 1.0f);
 constexpr XMFLOAT4 DEBUG_SELECTED_LINE_COLOR = XMFLOAT4(0.5f, 0.5f, 0.1f, 1.0f);
 
-CharacterBoneCollision::CharacterBoneCollision(const std::string& HeadBoneName, const std::string& TailBoneName, const XMFLOAT3& Start, const XMFLOAT3& End, const XMFLOAT3& Offset, float Radius) :Collision(Start, Offset), m_Radius(Radius),m_StartPosition(Start),m_EndPosition(End),m_HeadBoneName(HeadBoneName),m_TailBoneName(TailBoneName) 
+CharacterBoneCollision::CharacterBoneCollision(const int HeadBoneIndex, const int TailBoneIndex, const XMFLOAT3& Start, const XMFLOAT3& End, const XMFLOAT3& Offset, float Radius) :Collision(Start, Offset), m_Radius(Radius),m_StartPosition(Start),m_EndPosition(End),m_HeadBoneIndex(HeadBoneIndex),m_TailBoneIndex(TailBoneIndex)
 {
 	Init();
 }
@@ -94,20 +94,23 @@ void CharacterBoneCollision::UpdateCollision(const XMFLOAT3& Position)
 {
 }
 
-void CharacterBoneCollision::UpdateBonePosition(const std::string& BoneName,const XMFLOAT3& Position)
+void CharacterBoneCollision::UpdateBonePosition(const int FirstIndex, const int SecondIndex, const XMFLOAT3& HeadPos,const XMFLOAT3& TailPos)
 {
 	//	ƒRƒŠƒWƒ‡ƒ“‚ÌˆÊ’u‚ð•Ï‚¦‚é
-	XMVECTOR pos = XMLoadFloat3(&Position);
+	XMVECTOR headPos = XMLoadFloat3(&HeadPos);
+	XMVECTOR tailPos = XMLoadFloat3(&TailPos);
 	XMVECTOR offset = XMLoadFloat3(&m_Offset);
-	XMVECTOR startPos = XMVectorAdd(pos , offset);
-	if (m_HeadBoneName == BoneName)
+
+	XMVECTOR startPos = XMVectorAdd(headPos, offset);
+	XMVECTOR endPos = XMVectorAdd(tailPos, offset);
+
+	if (m_HeadBoneIndex == FirstIndex)
 	{
 		XMStoreFloat3(&m_StartPosition,startPos);
-	
 	}
-	else if (m_TailBoneName == BoneName)
+	if (m_TailBoneIndex == SecondIndex)
 	{
-		XMStoreFloat3(&m_EndPosition, startPos);
+		XMStoreFloat3(&m_EndPosition, endPos);
 	}
 }
 void CharacterBoneCollision::Init()

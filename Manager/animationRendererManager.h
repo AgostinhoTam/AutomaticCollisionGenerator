@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 
+class GameObject;
 class AnimationModel;
 class AnimationRendererManager
 {
@@ -14,6 +15,6 @@ public:
 
 	static void UnloadAll();
 
-	static AnimationModel* LoadAnimationModel(const MODEL_NAME& Model);
+	static AnimationModel* LoadAnimationModel(const MODEL_NAME& Model, GameObject* Owner);
 
 };
