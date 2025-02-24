@@ -19,7 +19,7 @@ constexpr float PLAYER_MAX_JUMP_SPEED = 100.0f;
 constexpr float PLAYER_SCALE = 0.01f;
 void Player::Init()
 {
-	m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::PLAYER);
+	m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::PLAYER,this);
 
 	m_Shader = ShaderManager::LoadShader(SHADER_NAME::UNLIT_SKINNING_TEXTURE);
 
@@ -97,7 +97,7 @@ void Player::Draw()
 		capsule.second->Draw();
 	}
 
-	m_AnimationModel->Draw(this);
+	m_AnimationModel->Draw();
 
 }
 

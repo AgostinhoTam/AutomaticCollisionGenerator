@@ -29,7 +29,7 @@ Enemy::Enemy(ENEMY_TYPE EnemyType)
 	if (EnemyType == ENEMY_TYPE::ENEMY)
 	{
 		m_Name = "EnemyHuman";
-		m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::ENEMY);
+		m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::ENEMY, this);
 		m_MaxMovementSpeed = EnemyTypeHuman::MAX_ENEMY_SPEED;
 		m_MaxHorizontalAcclSpeed = EnemyTypeHuman::ENEMY_MAX_ACCL_SPEED;
 		m_Scale = { EnemyTypeHuman::ENEMY_SCALE,EnemyTypeHuman::ENEMY_SCALE,EnemyTypeHuman::ENEMY_SCALE };
@@ -37,7 +37,7 @@ Enemy::Enemy(ENEMY_TYPE EnemyType)
 		m_BehaviorRoot->AddChildNode(new BehaviorIdle(this));
 		m_BehaviorRoot->AddChildNode(new BehaviorMove(this));
 		BehaviorNode* attackNode = new BehaviorSelector(this);
-		attackNode->AddChildNode(new BehaviorAttack(this,"Kick",1.5f));
+		attackNode->AddChildNode(new BehaviorAttack(this, "Kick", 1.5f));
 		attackNode->AddChildNode(new BehaviorStandByAttack(this));
 		m_BehaviorRoot->AddChildNode(attackNode);
 		CreateCharacterBoneCollision(CHARACTER_BONE_TYPE::HUMANOID);
@@ -45,7 +45,7 @@ Enemy::Enemy(ENEMY_TYPE EnemyType)
 	else if (EnemyType == ENEMY_TYPE::MONSTER)
 	{
 		m_Name = "EnemyMonster";
-		m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::MONSTER);
+		m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::MONSTER, this);
 		m_MaxMovementSpeed = EnemyTypeMonster::MAX_SPEED;
 		m_MaxHorizontalAcclSpeed = EnemyTypeMonster::MAX_ACCL_SPEED;
 		m_Scale = { EnemyTypeMonster::SCALE,EnemyTypeMonster::SCALE,EnemyTypeMonster::SCALE };
@@ -54,7 +54,7 @@ Enemy::Enemy(ENEMY_TYPE EnemyType)
 		m_BehaviorRoot->AddChildNode(new BehaviorIdle(this));
 		m_BehaviorRoot->AddChildNode(new BehaviorMove(this));
 		BehaviorNode* attackNode = new BehaviorSelector(this);
-		attackNode->AddChildNode(new BehaviorAttack(this,"Attack",1.0f));
+		attackNode->AddChildNode(new BehaviorAttack(this, "Attack", 1.0f));
 		attackNode->AddChildNode(new BehaviorStandByAttack(this));
 		m_BehaviorRoot->AddChildNode(attackNode);
 		CreateCharacterBoneCollision(CHARACTER_BONE_TYPE::MONSTER);
@@ -62,7 +62,7 @@ Enemy::Enemy(ENEMY_TYPE EnemyType)
 	else
 	{
 		m_Name = "EnemyHuman";
-		m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::ENEMY);
+		m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::ENEMY, this);
 		m_MaxMovementSpeed = EnemyTypeHuman::MAX_ENEMY_SPEED;
 		m_MaxHorizontalAcclSpeed = EnemyTypeHuman::ENEMY_MAX_ACCL_SPEED;
 		m_Scale = { EnemyTypeHuman::ENEMY_SCALE,EnemyTypeHuman::ENEMY_SCALE,EnemyTypeHuman::ENEMY_SCALE };
@@ -70,7 +70,7 @@ Enemy::Enemy(ENEMY_TYPE EnemyType)
 		m_BehaviorRoot->AddChildNode(new BehaviorIdle(this));
 		m_BehaviorRoot->AddChildNode(new BehaviorMove(this));
 		BehaviorNode* attackNode = new BehaviorSelector(this);
-		attackNode->AddChildNode(new BehaviorAttack(this,"Kick",1.0f));
+		attackNode->AddChildNode(new BehaviorAttack(this, "Kick", 1.0f));
 		attackNode->AddChildNode(new BehaviorStandByAttack(this));
 		m_BehaviorRoot->AddChildNode(attackNode);
 		CreateCharacterBoneCollision(CHARACTER_BONE_TYPE::HUMANOID);
@@ -113,13 +113,12 @@ void Enemy::Update(const float& DeltaTime)
 void Enemy::Draw()
 {
 	if (!m_AnimationModel)return;
-	m_AnimationModel->Draw(this);
+	m_AnimationModel->Draw();
 
-	if (m_Collision)m_Collision->Draw();
-	for (auto& capsule : m_Collisions)
+	for (auto& pair : m_Collisions)
 	{
-		if (!capsule.second)continue;
-		capsule.second->Draw();
+		if (!pair.second)continue;
+		pair.second->Draw();
 	}
 
 }
@@ -127,7 +126,8 @@ void Enemy::Draw()
 void Enemy::CollisionCheck()
 {
 
-	const std::unordered_map<std::string, Collision*>& playerCollisonList = m_Player->GetCollisionList();
+	//	ƒLƒƒƒbƒVƒ…
+	std::unordered_map<std::string, Collision*>& playerCollisonList = m_Player->GetCollisionList();
 
 	for (const auto& enemyPair : m_Collisions)
 	{
@@ -138,14 +138,14 @@ void Enemy::CollisionCheck()
 			continue;
 		}
 
-		for (const auto& playerPair : playerCollisonList)
+		for (auto& playerPair : playerCollisonList)
 		{
-			Collision* playerCollision = playerPair.second;
+			if (!playerPair.second)continue;
 
-			if (enemyPair.second->IsCollisionOverlapping(playerCollision))
+			if (enemyPair.second->IsCollisionOverlapping(playerPair.second))
 			{
 				isHit = true;
-				playerCollision->SetIsHit(isHit);
+				playerPair.second->SetIsHit(isHit);
 				break;
 			}
 

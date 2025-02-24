@@ -222,6 +222,7 @@
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Main\main.cpp" />
     <ClCompile Include="Manager\animationRendererManager.cpp" />
+    <ClCompile Include="Manager\animationModelsResource.cpp" />
     <ClCompile Include="Manager\debuggerImGuiManager.cpp" />
     <ClCompile Include="Manager\gameObjectManager.cpp" />
     <ClCompile Include="Manager\inputManager.cpp" />
@@ -259,6 +260,7 @@
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="Main\main.h" />
     <ClInclude Include="Manager\animationRendererManager.h" />
+    <ClInclude Include="Manager\animationModelsResource.h" />
     <ClInclude Include="Manager\debuggerImGuiManager.h" />
     <ClInclude Include="Manager\gameObjectManager.h" />
     <ClInclude Include="Manager\inputManager.h" />

@@ -57,7 +57,7 @@ cbuffer ColorBuffer : register(b5)
 
 cbuffer cbBones : register(b6)
 {
-    float4x4 boneMatrices[MAX_BONES];
+    matrix boneMatrices[MAX_BONES];
 }
 
 struct VS_IN

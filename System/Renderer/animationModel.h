@@ -6,6 +6,7 @@
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 #include "assimp/matrix4x4.h"
+#include "assimp/Importer.hpp"
 #pragma comment (lib, "assimp-vc143-mt.lib")
 
 constexpr int MAX_BONES = 256;
@@ -24,7 +25,7 @@ struct BONE
 {
 	XMMATRIX	worldMatrix{};
 	XMMATRIX	localMatrix{};
-	aiMatrix4x4 Matrix;
+	aiMatrix4x4 Matrix;		//	assimp用matrix
 	aiMatrix4x4 AnimationMatrix;
 	aiMatrix4x4 OffsetMatrix;
 	XMFLOAT3	HeadPosition{};
@@ -41,6 +42,8 @@ class AnimationModel
 {
 private:
 	const aiScene* m_AiScene = nullptr;
+
+	Assimp::Importer* m_Importer{};
 	std::unordered_map<std::string, const aiScene*> m_Animation;
 
 	ID3D11Buffer** m_VertexBuffer{};
@@ -51,7 +54,7 @@ private:
 	std::vector<BONE> m_Bones;
 	std::unordered_map<std::string, int> m_BoneIndexMap;	//ボーンデータ
 
-	std::vector<DEFORM_VERTEX>* m_DeformVertex{};//変形後頂点データ
+	std::vector<DEFORM_VERTEX>* m_DeformVertex{};//変形後頂点データ	todo
 	int m_CurrentFrame = 0;
 	int m_NextFrame = 0;
 	float m_BlendRatio = 0.0f;
@@ -59,10 +62,11 @@ private:
 	std::string m_NextAnimation = "Idle";
 	bool m_IsTransitioning = false;
 	bool m_IsDebugMode = false;
+	GameObject* m_Owner{};
 public:
-	void Load( const char *FileName);
+	void Load( const char *FileName,GameObject* Owner);
 	void Uninit();
-	void Draw(GameObject* Object);
+	void Draw();
 	void Update();
 	XMMATRIX TransformToXMMATRIX(aiMatrix4x4&);
 
@@ -80,7 +84,7 @@ public:
 	const std::string& GetNextAnimationName() { return m_NextAnimation; }
 	int GetCurrentAnimationFrame() const{ return m_CurrentFrame; }
 	int GetNextAnimationFrame() const{ return m_NextFrame; }
-	XMMATRIX GetBoneMatrix(std::string);
+	XMMATRIX GetBoneMatrix(const std::string& BoneName);
 	const float GetBlendRatio() const{ return m_BlendRatio; }
 	bool GetIsTransitioning()const { return m_IsTransitioning; }
 	int GetBoneIndexByName(const std::string& BoneName);
@@ -91,7 +95,8 @@ public:
 	//	ボーン関連
 	const std::unordered_map<std::string, int>& GetBoneIndexMap() const{ return m_BoneIndexMap; }
 	const std::vector<BONE>& GetBones()const { return m_Bones; }
-	XMFLOAT3 GetHeadPosition(const std::string& BoneName,const XMFLOAT3& Scale,const XMMATRIX& PlayerMatrix);
+	const BONE GetBone(int Index);
+	XMFLOAT3 GetBonePosition(const int BoneIndex,const XMMATRIX& PlayerMatrix);
 	const float CalculateCapsuleRadius(const std::string& HeadName,const std::string& TailName);
 	const float DistancePointLineSegment(const XMFLOAT3& Point, const XMFLOAT3& Start, const XMFLOAT3& End);
 	void UpdateBoneMatrixToGPU();

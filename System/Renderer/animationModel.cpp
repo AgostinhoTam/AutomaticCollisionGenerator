@@ -2,6 +2,7 @@
 #include "Main\main.h"
 #include "Manager\inputManager.h"
 #include "GameObject\gameobject.h"
+#include "assimp\Importer.hpp"
 //#include "System\Collision\sphereCollision.h"
 #include "System\Renderer\renderer.h"
 #include "System\Renderer\animationModel.h"
@@ -91,16 +92,16 @@ void AnimationModel::Update()
 
 }
 
-void AnimationModel::Draw(GameObject* Object)
+void AnimationModel::Draw()
 {
 
-	if (!Object)return;
+	if (!m_Owner)return;
 
 	XMMATRIX world, scale, rot, trans;
-	const XMFLOAT3& objPosition = Object->GetPosition();
-	const XMFLOAT3& objScale = Object->GetScale();
-	const XMFLOAT3& objRotation = Object->GetRotation();
-	const Shader* Shader = Object->GetShader();
+	const XMFLOAT3& objPosition = m_Owner->GetPosition();
+	const XMFLOAT3& objScale = m_Owner->GetScale();
+	const XMFLOAT3& objRotation = m_Owner->GetRotation();
+	const Shader* Shader = m_Owner->GetShader();
 
 	scale = XMMatrixScaling(objScale.x, objScale.y, objScale.z);
 
@@ -175,11 +176,17 @@ void AnimationModel::Draw(GameObject* Object)
 	Renderer::SetBlendState(BLEND_MODE::BLEND_MODE_NONE);
 }
 
-void AnimationModel::Load(const char* FileName)
+void AnimationModel::Load(const char* FileName, GameObject* Owner)
 {
-	const std::string modelPath(FileName);
+	if (!Owner)return;
+	m_Owner = Owner;
 
-	m_AiScene = aiImportFile(FileName, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_ConvertToLeftHanded);
+	const std::string modelPath(FileName);
+	m_Importer = new Assimp::Importer;
+
+	m_Importer->SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, false);
+
+	m_AiScene = m_Importer->ReadFile(FileName, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_ConvertToLeftHanded);
 	assert(m_AiScene);
 
 	m_VertexBuffer = new ID3D11Buffer * [m_AiScene->mNumMeshes];
@@ -200,6 +207,7 @@ void AnimationModel::Load(const char* FileName)
 
 		m_DeformVertex[m].resize(mesh->mNumVertices);
 
+		//	頂点情報だけ記録
 		for (unsigned int v = 0; v < mesh->mNumVertices; ++v)
 		{
 			DEFORM_VERTEX dv;
@@ -214,26 +222,37 @@ void AnimationModel::Load(const char* FileName)
 			m_DeformVertex[m][v] = dv;
 		}
 
+
 		//	メッシュに含めるボーン情報
 		for (unsigned int b = 0; b < mesh->mNumBones; ++b)
 		{
 			aiBone* bone = mesh->mBones[b];	//　ボーン取り出す
 			if (!bone)continue;
 			std::string boneName = bone->mName.C_Str();
+			if (boneName.length() == 0)continue;	//	名前が空っぽだったら次へ
 
-			if (m_BoneIndexMap.find(boneName) == m_BoneIndexMap.end())
+			int newIndex;
+
+			auto it = m_BoneIndexMap.find(boneName);
+
+			//	もしボーンがまだ存在しないなら作成
+			if (it == m_BoneIndexMap.end())
 			{
-				int newIndex = static_cast<int>(m_Bones.size());
+				newIndex = static_cast<int>(m_Bones.size());	//	ボーンにインデックス付ける
 
 				BONE newBone;
 				newBone.OffsetMatrix = bone->mOffsetMatrix;
 				m_Bones.emplace_back(newBone);
-				m_BoneIndexMap[boneName] = newIndex;
+				m_BoneIndexMap[boneName] = newIndex;				//	ボーン名前とインデックスのmap
+			}
+			else
+			{
+
+				m_Bones[it->second].OffsetMatrix = bone->mOffsetMatrix;
 			}
 
-			int boneIndex = m_BoneIndexMap[boneName];
 
-	
+			//	各頂点ごとのWeightを管理
 			for (unsigned int w = 0; w < bone->mNumWeights; ++w)
 			{
 				aiVertexWeight vw = bone->mWeights[w];	//	bone weight取り出す
@@ -241,13 +260,35 @@ void AnimationModel::Load(const char* FileName)
 				float wgt = vw.mWeight;
 
 				DEFORM_VERTEX& dv = m_DeformVertex[m][vID];		//　シーンの何番目頂点
-				int	idx = dv.BoneNum;
-				if (idx < 4)	//　4本だけ
+
+				//	ボーンの数が4以下だったら
+				if (dv.BoneNum < 4)
 				{
-					
-					dv.BoneName[idx] = boneName;
-					dv.BoneWeight[idx] = wgt;
+					dv.BoneName[dv.BoneNum] = boneName;
+					dv.BoneWeight[dv.BoneNum] = wgt;
 					++dv.BoneNum;
+				}
+				else
+				{
+					int minIndex = 0;
+					float minWeight = dv.BoneWeight[0];
+
+					//	4本のボーン走査
+					for (int i = 1; i < 4; ++i)
+					{
+						if (dv.BoneWeight[i] < minWeight)
+						{
+							minWeight = dv.BoneWeight[i];
+							minIndex = i;
+						}
+					}
+
+					//　情報入れる
+					if (wgt > minWeight)
+					{
+						dv.BoneName[minIndex] = boneName;
+						dv.BoneWeight[minIndex] = wgt;
+					}
 				}
 			}
 		}
@@ -288,7 +329,7 @@ void AnimationModel::Load(const char* FileName)
 					}
 					vs.BoneIndex[i] = (boneIndex >= 0) ? boneIndex : 0;
 					vs.BoneWeight[i] = dv.BoneWeight[i];
-					
+
 				}
 				vertexData[v] = vs;
 			}
@@ -297,7 +338,7 @@ void AnimationModel::Load(const char* FileName)
 			bd.Usage = D3D11_USAGE_DEFAULT;
 			bd.ByteWidth = sizeof(VERTEX_3D_SKIN) * mesh->mNumVertices;
 			bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-			bd.CPUAccessFlags = 0; 
+			bd.CPUAccessFlags = 0;
 
 			D3D11_SUBRESOURCE_DATA sd;
 			ZeroMemory(&sd, sizeof(sd));
@@ -401,7 +442,7 @@ void AnimationModel::Uninit()
 
 	for (std::pair<const std::string, ID3D11ShaderResourceView*> pair : m_Texture)
 	{
-		if(pair.second)pair.second->Release();
+		if (pair.second)pair.second->Release();
 	}
 
 	aiReleaseImport(m_AiScene);
@@ -413,7 +454,7 @@ void AnimationModel::Uninit()
 
 	if (m_BoneMatricesBuffer)m_BoneMatricesBuffer->Release();
 
-
+	if (m_Importer)delete m_Importer;
 }
 
 void AnimationModel::LoadAnimation(const char* FileName, const char* Name)
@@ -424,11 +465,6 @@ void AnimationModel::LoadAnimation(const char* FileName, const char* Name)
 
 void AnimationModel::CreateBone(aiNode* node)
 {
-
-	if (std::string(node->mName.C_Str()).find("$AssimpFbx$") != std::string::npos)
-	{
-		return; // 補助ボーンスキップ
-	}
 
 	std::string boneName = node->mName.C_Str();
 
@@ -452,29 +488,29 @@ void AnimationModel::UpdateBoneMatrix(aiNode* node, aiMatrix4x4 matrix)
 	if (it != m_BoneIndexMap.end())
 	{
 		int index = it->second;
-	
+
 		BONE* bone = &m_Bones[index];
 
-		aiMatrix4x4 worldMatrix = matrix * bone->AnimationMatrix;		//マトリクス
-		bone->localMatrix = TransformToXMMATRIX(worldMatrix);
+		aiMatrix4x4 worldMatrix = matrix * bone->AnimationMatrix;		//	親からのマトリクスと自信のアニメーション変換
+		bone->localMatrix = TransformToXMMATRIX(worldMatrix);		//	DX用ローカルマトリクス
 
 		// **スキニング用の最終行列 (ワールド行列 × オフセット行列)**
-		bone->Matrix = worldMatrix * bone->OffsetMatrix;
+		bone->Matrix = worldMatrix * bone->OffsetMatrix;			//	各頂点に適用するマトリクス
 
 		// **DirectX用の行列に変換**
-		bone->worldMatrix = TransformToXMMATRIX(bone->Matrix);
+		bone->worldMatrix = TransformToXMMATRIX(bone->Matrix);		//	DX用に変換
 
-		localMatrix = worldMatrix;
+		localMatrix = worldMatrix;									//	アニメーション適用後のマトリクスを次に渡す準備
 
 	}
 	else
 	{
 		localMatrix = matrix;
 	}
-		for (unsigned int n = 0; n < node->mNumChildren; ++n)
-		{
-			UpdateBoneMatrix(node->mChildren[n], localMatrix);
-		}
+	for (unsigned int n = 0; n < node->mNumChildren; ++n)
+	{
+		UpdateBoneMatrix(node->mChildren[n], localMatrix);
+	}
 
 
 }
@@ -489,9 +525,9 @@ XMMATRIX AnimationModel::TransformToXMMATRIX(aiMatrix4x4& world)
 	);
 }
 
-XMMATRIX AnimationModel::GetBoneMatrix(std::string name)
+XMMATRIX AnimationModel::GetBoneMatrix(const std::string& BoneName)
 {
-	auto it = m_BoneIndexMap.find(name);
+	auto it = m_BoneIndexMap.find(BoneName);
 	if (it != m_BoneIndexMap.end())
 	{
 		int index = it->second;
@@ -517,35 +553,32 @@ double AnimationModel::GetAnimationDuration(const std::string& AnimationName)
 	return (m_Animation[AnimationName]->mAnimations[0]->mDuration);
 }
 
-XMFLOAT3 AnimationModel::GetHeadPosition(const std::string& BoneName, const XMFLOAT3& Scale, const XMMATRIX& PlayerMatrix)
+const BONE AnimationModel::GetBone(int Index)
 {
-
-	auto it = m_BoneIndexMap.find(BoneName);
-	if (it != m_BoneIndexMap.end())
+	if (Index <= m_Bones.size())
 	{
-
-		int index = it->second;
-
-		XMMATRIX& headMatrix = m_Bones[index].localMatrix;
-
-		XMMATRIX scale = XMMatrixScaling(1.0f / Scale.x, 1.0f / Scale.y, 1.0f / Scale.z);	//　OwnerのScaleに合わせる
-
-		XMMATRIX rotMatrix = XMMatrixRotationRollPitchYaw(0, 0, 0);
-
-		XMMATRIX transMatrix = XMMatrixTranslation(0, 0, 0);
-
-		XMMATRIX worldMatrix = XMMatrixMultiply(rotMatrix, transMatrix);
-		worldMatrix = XMMatrixMultiply(worldMatrix, scale);
-		worldMatrix = XMMatrixMultiply(worldMatrix, headMatrix);
-		worldMatrix = XMMatrixMultiply(worldMatrix, PlayerMatrix);
-
-
-		XMVECTOR trans, rot, scaleVec;
-		XMMatrixDecompose(&scaleVec, &rot, &trans, worldMatrix);
-
-		return XMFLOAT3(XMVectorGetX(trans), XMVectorGetY(trans), XMVectorGetZ(trans));
+		return m_Bones[Index];
 	}
-	return XMFLOAT3(0, 0, 0);
+	else
+	{
+		return m_Bones[0];
+	}
+}
+
+XMFLOAT3 AnimationModel::GetBonePosition(const int BoneIndex, const XMMATRIX& PlayerMatrix)
+{
+	//	範囲外早期リターン
+	if (BoneIndex < 0 || BoneIndex >= m_Bones.size())return XMFLOAT3{};
+
+	XMMATRIX& headMatrix = m_Bones[BoneIndex].localMatrix;
+
+	XMMATRIX worldMatrix = XMMatrixMultiply(headMatrix, PlayerMatrix);
+
+	XMVECTOR trans, rot, scaleVec;
+	XMMatrixDecompose(&scaleVec, &rot, &trans, worldMatrix);
+
+	return XMFLOAT3(XMVectorGetX(trans), XMVectorGetY(trans), XMVectorGetZ(trans));
+
 }
 
 void AnimationModel::UpdateAnimationBlend()
@@ -688,6 +721,8 @@ void AnimationModel::UpdateBoneMatrixToGPU()
 	for (int i = 0; i < boneCount; ++i)
 	{
 		cbBones.BoneMatrices[i] = m_Bones[i].worldMatrix;
+		cbBones.BoneMatrices[i] = XMMatrixTranspose(cbBones.BoneMatrices[i]);
+
 	}
 	//	残りはリセット
 	for (int i = boneCount; i < MAX_BONES; ++i)
@@ -695,7 +730,6 @@ void AnimationModel::UpdateBoneMatrixToGPU()
 		cbBones.BoneMatrices[i] = XMMatrixIdentity();
 	}
 
-	//	TODO 転置
 	// 定数バッファ更新
 	D3D11_MAPPED_SUBRESOURCE ms;
 	Renderer::GetDeviceContext()->Map(m_BoneMatricesBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms);
