@@ -117,5 +117,6 @@ public:
 	~BehaviorAttack();
 	using BehaviorNode::BehaviorNode;
 	virtual BEHAVIOR_RESULT Update(const float DeltaTime)override;
+	float GetAttackDistance()const { return m_AttackDistance; }
 };
 

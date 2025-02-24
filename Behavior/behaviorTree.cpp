@@ -145,7 +145,6 @@ BEHAVIOR_RESULT BehaviorMove::Update(const float DeltaTime)
 	XMVECTOR enemyPosition = XMLoadFloat3(&m_Enemy->GetPosition());
 	XMVECTOR vector = XMVectorSubtract(playerPosition, enemyPosition);
 	float length = XMVectorGetX(XMVector3Length(vector));
-	
 	//	一定距離で停止
 	if (length < ATTACK_DISTANCE)
 	{
@@ -214,12 +213,7 @@ BEHAVIOR_RESULT BehaviorAttack::Update(const float DeltaTime)
 	XMVECTOR vector = XMVectorSubtract(playerPosition, enemyPosition);
 	float length = XMVectorGetX(XMVector3Length(vector));
 
-	//	追いかける距離外だったら
-	if (length > SENSE_DISTANCE)
-	{
-		return BEHAVIOR_RESULT::FAILURE;
-	}
-	//	攻撃範囲内じゃない時
+	//攻撃範囲内じゃない時
 	if (length >= m_AttackDistance)
 	{
 		XMVECTOR normalizeDirection = XMVector3Normalize(vector);
@@ -228,7 +222,6 @@ BEHAVIOR_RESULT BehaviorAttack::Update(const float DeltaTime)
 		m_Enemy->SetMoveDirection(direction);
 		float yaw = atan2f(direction.x, direction.z);
 		m_Enemy->SetRotationY(yaw); 
-		return BEHAVIOR_RESULT::CONTINUE;
 	}
 	else
 	{	
@@ -236,13 +229,14 @@ BEHAVIOR_RESULT BehaviorAttack::Update(const float DeltaTime)
 		m_Enemy->SetMoveDirection(XMFLOAT3(0, 0, 0));
 	}
 
-
 	//	遷移中、またはアニメーションの再生中だったら
 	if (m_AnimationModel->GetIsTransitioning() || m_AnimationModel->GetCurrentAnimationFrame() <= m_AnimationModel->GetAnimationDuration(m_AnimationName))
 	{
 		m_AnimationModel->UpdateAnimationBlend();
 		return BEHAVIOR_RESULT::CONTINUE;
 	}
+
+
 
 	//======アニメーション再生終わった後の処理=======
 
@@ -254,6 +248,11 @@ BEHAVIOR_RESULT BehaviorAttack::Update(const float DeltaTime)
 	//	クールダウン終わったら
 	else
 	{
+		//	追いかける距離外だったら
+		if (length > SENSE_DISTANCE)
+		{
+			return BEHAVIOR_RESULT::FAILURE;
+		}
 		m_IsAttackStart = false;
 		m_BehaviorCoolDown->ResetCoolDown();
 		return BEHAVIOR_RESULT::SUCCESS;

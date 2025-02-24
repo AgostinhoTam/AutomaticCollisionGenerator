@@ -134,17 +134,17 @@ void CharacterBoneCollision::Draw()
 
 	XMFLOAT4 color;
 	//	ï`âÊópêF
-	if (m_IsSelected)
-	{
-		color = DEBUG_SELECTED_LINE_COLOR;
-	}
-	else if (m_IsHit)
+	if (m_IsHit)
 	{
 		color = DEBUG_HITTED_LINE_COLOR;
 	}
 	else
 	{
 		color = DEBUG_LINE_COLOR;
+	}
+	if (m_IsSelected && !m_IsHit)
+	{
+		color = DEBUG_SELECTED_LINE_COLOR;
 	}
 
 	Renderer::SetColor(color);

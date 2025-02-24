@@ -12,12 +12,14 @@ enum class CHARACTER_BONE_TYPE
 struct MODEL;
 class Collision;
 class AnimationModel;
+class Animator;
 class Character :public GameObject
 {
 protected:
 	XMFLOAT3 m_Velocity{};
 	XMFLOAT3 m_Accl{};
 	AnimationModel* m_AnimationModel{};
+	Animator* m_Animator;
 	XMFLOAT3 m_MoveDirection{};
 	float	m_MaxMovementSpeed = 0;
 	float	m_MaxHorizontalAcclSpeed = 0;

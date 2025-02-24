@@ -123,6 +123,12 @@
     <ClCompile Include="Behavior\behaviorTree.cpp">
       <Filter>BehaviorTree</Filter>
     </ClCompile>
+    <ClCompile Include="System\Renderer\animator.cpp">
+      <Filter>System\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Renderer\animationModelResource.cpp">
+      <Filter>System\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject\Field\field.h">
@@ -259,6 +265,12 @@
     </ClInclude>
     <ClInclude Include="GameObject\Character\character.h">
       <Filter>GameObject\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Renderer\animator.h">
+      <Filter>System\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Renderer\animationModelResource.h">
+      <Filter>System\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

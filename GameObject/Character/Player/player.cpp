@@ -12,6 +12,7 @@
 #include "GameObject/Camera/camera.h"
 #include "GameObject\Character\Enemy\enemy.h"
 #include "System\Collision\characterBoneCollision.h"
+#include "System\Renderer\animator.h"
 #include "System\Collision\sphereCollision.h"
 constexpr float PLAYER_MAX_SPEED = 20.0f;
 constexpr float PLAYER_MAX_ACCL_SPEED = 50.0f;
@@ -20,7 +21,8 @@ constexpr float PLAYER_SCALE = 0.01f;
 void Player::Init()
 {
 	m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::PLAYER,this);
-
+	m_Animator = new Animator;
+	m_Animator->LoadAnimation()
 	m_Shader = ShaderManager::LoadShader(SHADER_NAME::UNLIT_SKINNING_TEXTURE);
 
 	m_MaxMovementSpeed = PLAYER_MAX_SPEED;

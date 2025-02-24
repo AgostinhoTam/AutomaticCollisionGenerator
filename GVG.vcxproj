@@ -237,6 +237,8 @@
     <ClCompile Include="System\Collision\collision.cpp" />
     <ClCompile Include="System\Collision\sphereCollision.cpp" />
     <ClCompile Include="System\Renderer\animationModel.cpp" />
+    <ClCompile Include="System\Renderer\animationModelResource.cpp" />
+    <ClCompile Include="System\Renderer\animator.cpp" />
     <ClCompile Include="System\Renderer\renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -283,6 +285,8 @@
     <ClInclude Include="System\Enum\projectionTypeEnum.h" />
     <ClInclude Include="System\Enum\shaderEnum.h" />
     <ClInclude Include="System\Renderer\animationModel.h" />
+    <ClInclude Include="System\Renderer\animationModelResource.h" />
+    <ClInclude Include="System\Renderer\animator.h" />
     <ClInclude Include="System\Renderer\renderer.h" />
     <ClInclude Include="System\Structure\shaderStructure.h" />
   </ItemGroup>

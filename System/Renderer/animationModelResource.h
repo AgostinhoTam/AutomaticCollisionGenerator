@@ -38,30 +38,23 @@ struct CB_BONES
 
 class GameObject;
 
-class AnimationModel
+class AnimationModelResource
 {
 private:
-	//	モデル
 	const aiScene* m_AiScene = nullptr;
+
 	Assimp::Importer* m_Importer{};
-	std::unordered_map<std::string, const aiScene*> m_Animation;
+
 	ID3D11Buffer** m_VertexBuffer{};
 	ID3D11Buffer** m_IndexBuffer{};
 	ID3D11Buffer*  m_BoneMatricesBuffer{};
+
 	std::unordered_map<std::string, ID3D11ShaderResourceView*> m_Texture;
 	std::vector<BONE> m_Bones;
 	std::unordered_map<std::string, int> m_BoneIndexMap;	//ボーンデータ
 	std::vector<DEFORM_VERTEX>* m_DeformVertex{};//変形後頂点データ
-	GameObject* m_Owner{};
 
-	//アニメーション
-	int m_CurrentFrame = 0;
-	int m_NextFrame = 0;
-	float m_BlendRatio = 0.0f;
-	std::string m_CurrentAnimation = "Idle";
-	std::string m_NextAnimation = "Idle";
-	bool m_IsTransitioning = false;
-	bool m_IsDebugMode = false;
+	GameObject* m_Owner{};
 public:
 	void Load( const char *FileName,GameObject* Owner);
 	void Uninit();
@@ -69,29 +62,10 @@ public:
 	void Update();
 	XMMATRIX TransformToXMMATRIX(aiMatrix4x4&);
 
-	//	アニメーション関連
-	void LoadAnimation(const char* FileName, const char* Name);
-	void UpdateAnimationBlend();
-	void SetNextAnimation(const std::string& AnimationName);
-	void SetCurrentAnimation(const std::string& AnimationName) { m_CurrentAnimation = AnimationName; }
-	void SetIsTransitioning(const bool flag) { m_IsTransitioning = flag; }
-	void SetBlendRatio(const float BlendRatio) { m_BlendRatio = BlendRatio; }
-	void SetCurrentAnimationFrame(const unsigned int frame) { m_CurrentFrame = frame; }
-	void SetNextAnimationFrame(const unsigned int frame) { m_NextFrame = frame; }
-	double GetAnimationDuration(const std::string& AnimationName);
-	const std::string& GetCurrentAnimationName() { return m_CurrentAnimation; }
-	const std::string& GetNextAnimationName() { return m_NextAnimation; }
-	int GetCurrentAnimationFrame() const{ return m_CurrentFrame; }
-	int GetNextAnimationFrame() const{ return m_NextFrame; }
-	XMMATRIX GetBoneMatrix(const std::string& BoneName);
-	const float GetBlendRatio() const{ return m_BlendRatio; }
-	bool GetIsTransitioning()const { return m_IsTransitioning; }
-	int GetBoneIndexByName(const std::string& BoneName);
-	void AddBlendRatio(const float BlendRatio = 0.1f){ m_BlendRatio += BlendRatio; }
-	void AddCurrentAnimationFrame(const unsigned int frame = 1) { m_CurrentFrame += frame; }
-	void AddNextAnimationFrame(const unsigned int frame = 1) { m_NextFrame += frame; }
 	
 	//	ボーン関連
+	int GetBoneIndexByName(const std::string& BoneName);
+	XMMATRIX GetBoneMatrix(const std::string& BoneName);
 	const std::unordered_map<std::string, int>& GetBoneIndexMap() const{ return m_BoneIndexMap; }
 	const std::vector<BONE>& GetBones()const { return m_Bones; }
 	const BONE GetBone(int Index);
