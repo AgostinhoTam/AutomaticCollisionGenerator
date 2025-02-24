@@ -129,7 +129,7 @@ void AnimationModel::Draw()
 	material.TextureEnable = true;
 	Renderer::SetMaterial(material);
 
-
+	UpdateBoneMatrixToGPU();
 	for (unsigned int m = 0; m < m_AiScene->mNumMeshes; m++)
 	{
 		aiMesh* mesh = m_AiScene->mMeshes[m];
@@ -713,7 +713,7 @@ const float AnimationModel::DistancePointLineSegment(const XMFLOAT3& Point, cons
 
 void AnimationModel::UpdateBoneMatrixToGPU()
 {
-	static CB_BONES cbBones;
+	CB_BONES cbBones;
 
 	int boneCount = static_cast<int>(m_Bones.size());
 

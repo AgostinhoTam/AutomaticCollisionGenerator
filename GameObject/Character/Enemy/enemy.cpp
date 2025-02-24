@@ -23,10 +23,9 @@ namespace EnemyTypeMonster
 	constexpr float SCALE = 0.01f;
 }
 
-Enemy::Enemy(ENEMY_TYPE EnemyType)
+void Enemy::Init()
 {
-
-	if (EnemyType == ENEMY_TYPE::ENEMY)
+	if (m_EnemyType == ENEMY_TYPE::ENEMY)
 	{
 		m_Name = "EnemyHuman";
 		m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::ENEMY, this);
@@ -34,15 +33,15 @@ Enemy::Enemy(ENEMY_TYPE EnemyType)
 		m_MaxHorizontalAcclSpeed = EnemyTypeHuman::ENEMY_MAX_ACCL_SPEED;
 		m_Scale = { EnemyTypeHuman::ENEMY_SCALE,EnemyTypeHuman::ENEMY_SCALE,EnemyTypeHuman::ENEMY_SCALE };
 		m_BehaviorRoot = new BehaviorSequence(this);
-		m_BehaviorRoot->AddChildNode(new BehaviorIdle(this));
-		m_BehaviorRoot->AddChildNode(new BehaviorMove(this));
+		m_BehaviorRoot->AddChildNode(new BehaviorIdle(this, "Enemy_Idle"));
+		m_BehaviorRoot->AddChildNode(new BehaviorMove(this, "Enemy_Run"));
 		BehaviorNode* attackNode = new BehaviorSelector(this);
-		attackNode->AddChildNode(new BehaviorAttack(this, "Kick", 1.5f));
-		attackNode->AddChildNode(new BehaviorStandByAttack(this));
+		attackNode->AddChildNode(new BehaviorAttack(this, "Enemy_Kick", 1.5f));
+		attackNode->AddChildNode(new BehaviorStandByAttack(this, "Enemy_Idle"));
 		m_BehaviorRoot->AddChildNode(attackNode);
 		CreateCharacterBoneCollision(CHARACTER_BONE_TYPE::HUMANOID);
 	}
-	else if (EnemyType == ENEMY_TYPE::MONSTER)
+	else if (m_EnemyType == ENEMY_TYPE::MONSTER)
 	{
 		m_Name = "EnemyMonster";
 		m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::MONSTER, this);
@@ -51,11 +50,11 @@ Enemy::Enemy(ENEMY_TYPE EnemyType)
 		m_Scale = { EnemyTypeMonster::SCALE,EnemyTypeMonster::SCALE,EnemyTypeMonster::SCALE };
 		m_Rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
 		m_BehaviorRoot = new BehaviorSequence(this);
-		m_BehaviorRoot->AddChildNode(new BehaviorIdle(this));
-		m_BehaviorRoot->AddChildNode(new BehaviorMove(this));
+		m_BehaviorRoot->AddChildNode(new BehaviorIdle(this, "Monster_Idle"));
+		m_BehaviorRoot->AddChildNode(new BehaviorMove(this, "Monster_Run"));
 		BehaviorNode* attackNode = new BehaviorSelector(this);
-		attackNode->AddChildNode(new BehaviorAttack(this, "Attack", 1.0f));
-		attackNode->AddChildNode(new BehaviorStandByAttack(this));
+		attackNode->AddChildNode(new BehaviorAttack(this, "Monster_Attack", 1.0f));
+		attackNode->AddChildNode(new BehaviorStandByAttack(this, "Monster_Idle"));
 		m_BehaviorRoot->AddChildNode(attackNode);
 		CreateCharacterBoneCollision(CHARACTER_BONE_TYPE::MONSTER);
 	}
@@ -67,18 +66,14 @@ Enemy::Enemy(ENEMY_TYPE EnemyType)
 		m_MaxHorizontalAcclSpeed = EnemyTypeHuman::ENEMY_MAX_ACCL_SPEED;
 		m_Scale = { EnemyTypeHuman::ENEMY_SCALE,EnemyTypeHuman::ENEMY_SCALE,EnemyTypeHuman::ENEMY_SCALE };
 		m_BehaviorRoot = new BehaviorSequence(this);
-		m_BehaviorRoot->AddChildNode(new BehaviorIdle(this));
-		m_BehaviorRoot->AddChildNode(new BehaviorMove(this));
+		m_BehaviorRoot->AddChildNode(new BehaviorIdle(this, "Enemy_Idle"));
+		m_BehaviorRoot->AddChildNode(new BehaviorMove(this, "Enemy_Run"));
 		BehaviorNode* attackNode = new BehaviorSelector(this);
-		attackNode->AddChildNode(new BehaviorAttack(this, "Kick", 1.0f));
-		attackNode->AddChildNode(new BehaviorStandByAttack(this));
+		attackNode->AddChildNode(new BehaviorAttack(this, "Enemy_Kick", 1.0f));
+		attackNode->AddChildNode(new BehaviorStandByAttack(this, "Enemy_Idle"));
 		m_BehaviorRoot->AddChildNode(attackNode);
 		CreateCharacterBoneCollision(CHARACTER_BONE_TYPE::HUMANOID);
 	}
-
-}
-void Enemy::Init()
-{
 
 	m_Shader = ShaderManager::LoadShader(SHADER_NAME::UNLIT_SKINNING_TEXTURE);
 

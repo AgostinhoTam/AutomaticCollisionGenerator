@@ -68,14 +68,19 @@ BEHAVIOR_RESULT BehaviorSelector::Update(const float DeltaTime)
 //====================================================================
 
 
+BehaviorIdle::BehaviorIdle(Enemy* Enemy, const std::string& Type):BehaviorNode(Enemy)
+{
+	m_AnimationName = Type;
+}
+
 //=========================ステート==========================
 void BehaviorIdle::Init()
 {
 	if (!m_AnimationModel)return;
 	//	再設定防止
-	if (m_AnimationModel->GetCurrentAnimationName() != "Idle")
+	if (m_AnimationModel->GetCurrentAnimationName() != m_AnimationName)
 	{
-		m_AnimationModel->SetNextAnimation("Idle");
+		m_AnimationModel->SetNextAnimation(m_AnimationName);
 	}
 
 }
@@ -92,7 +97,7 @@ BEHAVIOR_RESULT BehaviorIdle::Update(const float DeltaTime)
 		// 次の状態へ
 		return BEHAVIOR_RESULT::SUCCESS;
 	}
-	if (m_AnimationModel->GetNextAnimationName() != "Idle")
+	if (m_AnimationModel->GetNextAnimationName() != m_AnimationName)
 	{
 		Init();
 	}
@@ -119,12 +124,17 @@ void BehaviorNode::AddChildNode(BehaviorNode* Node)
 	m_Child.emplace_back(Node);
 }
 
+BehaviorMove::BehaviorMove(Enemy* Enemy, const std::string& Type) :BehaviorNode(Enemy)
+{
+	m_AnimationName = Type;
+}
+
 void BehaviorMove::Init()
 {
 	if (!m_AnimationModel)return;
-	if (m_AnimationModel->GetCurrentAnimationName() != "Run")
+	if (m_AnimationModel->GetCurrentAnimationName() != m_AnimationName)
 	{
-		m_AnimationModel->SetNextAnimation("Run");
+		m_AnimationModel->SetNextAnimation(m_AnimationName);
 	}
 }
 
@@ -148,7 +158,7 @@ BEHAVIOR_RESULT BehaviorMove::Update(const float DeltaTime)
 		return BEHAVIOR_RESULT::FAILURE;
 	}
 
-	if (m_AnimationModel->GetNextAnimationName() != "Run")
+	if (m_AnimationModel->GetNextAnimationName() != m_AnimationName)
 	{
 		Init();
 	}
@@ -228,7 +238,7 @@ BEHAVIOR_RESULT BehaviorAttack::Update(const float DeltaTime)
 
 
 	//	遷移中、またはアニメーションの再生中だったら
-	if (m_AnimationModel->GetIsTransitioning() || m_AnimationModel->GetCurrentAnimationFrame() <= m_AnimationModel->GetAnimationDuration("Attack"))
+	if (m_AnimationModel->GetIsTransitioning() || m_AnimationModel->GetCurrentAnimationFrame() <= m_AnimationModel->GetAnimationDuration(m_AnimationName))
 	{
 		m_AnimationModel->UpdateAnimationBlend();
 		return BEHAVIOR_RESULT::CONTINUE;
@@ -281,10 +291,15 @@ void BehaviorStandByAttack::Init()
 {
 	if (!m_AnimationModel)return;
 	//	現在と同じならスキップ
-	if (m_AnimationModel->GetCurrentAnimationName() != "Idle")
+	if (m_AnimationModel->GetCurrentAnimationName() != m_AnimationName)
 	{
-		m_AnimationModel->SetNextAnimation("Idle");
+		m_AnimationModel->SetNextAnimation(m_AnimationName);
 	}
+}
+
+BehaviorStandByAttack::BehaviorStandByAttack(Enemy* Enemy, const std::string& Type):BehaviorNode(Enemy)
+{
+	m_AnimationName = Type;
 }
 
 BEHAVIOR_RESULT BehaviorStandByAttack::Update(const float DeltaTime)
@@ -292,7 +307,7 @@ BEHAVIOR_RESULT BehaviorStandByAttack::Update(const float DeltaTime)
 	if (!m_AnimationModel)return BEHAVIOR_RESULT::FAILURE;
 
 	//	初期化
-	if (m_AnimationModel->GetCurrentAnimationName() != "Idle")
+	if (m_AnimationModel->GetCurrentAnimationName() != m_AnimationName)
 	{
 		Init();
 	}
