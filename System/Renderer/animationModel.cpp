@@ -713,31 +713,33 @@ const float AnimationModel::DistancePointLineSegment(const XMFLOAT3& Point, cons
 
 void AnimationModel::UpdateBoneMatrixToGPU()
 {
-	CB_BONES cbBones;
+	CB_BONES* cbBones = new CB_BONES;
 
 	int boneCount = static_cast<int>(m_Bones.size());
 
 	//	バッファに入れる
 	for (int i = 0; i < boneCount; ++i)
 	{
-		cbBones.BoneMatrices[i] = m_Bones[i].worldMatrix;
-		cbBones.BoneMatrices[i] = XMMatrixTranspose(cbBones.BoneMatrices[i]);
+		cbBones->BoneMatrices[i] = m_Bones[i].worldMatrix;
+		cbBones->BoneMatrices[i] = XMMatrixTranspose(cbBones->BoneMatrices[i]);
 
 	}
 	//	残りはリセット
 	for (int i = boneCount; i < MAX_BONES; ++i)
 	{
-		cbBones.BoneMatrices[i] = XMMatrixIdentity();
+		cbBones->BoneMatrices[i] = XMMatrixIdentity();
 	}
 
 	// 定数バッファ更新
 	D3D11_MAPPED_SUBRESOURCE ms;
 	Renderer::GetDeviceContext()->Map(m_BoneMatricesBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms);
-	memcpy(ms.pData, &cbBones, sizeof(CB_BONES));
+	memcpy(ms.pData, cbBones, sizeof(CB_BONES));
 	Renderer::GetDeviceContext()->Unmap(m_BoneMatricesBuffer, 0);
 
 	// VSにセット
 	Renderer::GetDeviceContext()->VSSetConstantBuffers(6, 1, &m_BoneMatricesBuffer);
+
+	if(cbBones)delete cbBones;
 }
 
 void AnimationModel::SetNextAnimation(const std::string& AnimationName)
