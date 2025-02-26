@@ -93,6 +93,7 @@ void Enemy::Uninit()
 {
 	if (!m_AnimationModel)return;
 	m_AnimationModel->Uninit();
+	m_BehaviorRoot->Uninit();
 }
 
 void Enemy::Update(const float& DeltaTime)

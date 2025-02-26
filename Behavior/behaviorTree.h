@@ -30,6 +30,7 @@ protected:
 	AnimationModel* m_AnimationModel{};
 public:
 	virtual void Init() {}
+	virtual void Uninit();
 	virtual BEHAVIOR_RESULT Update(const float DeltaTime) = 0;
 	BehaviorNode() = delete;
 	BehaviorNode(Enemy* Enemy);

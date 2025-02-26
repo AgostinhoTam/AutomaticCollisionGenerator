@@ -217,6 +217,7 @@ void AnimationModel::Load(const char* FileName, GameObject* Owner)
 			for (int i = 0; i < 4; ++i)
 			{
 				dv.BoneName[i] = "";
+				dv.BoneIndex[i] = -1;
 				dv.BoneWeight[i] = 0.0f;
 			}
 			m_DeformVertex[m][v] = dv;
@@ -258,15 +259,20 @@ void AnimationModel::Load(const char* FileName, GameObject* Owner)
 				aiVertexWeight vw = bone->mWeights[w];	//	bone weight取り出す
 				int vID = vw.mVertexId;
 				float wgt = vw.mWeight;
-
+				
 				DEFORM_VERTEX& dv = m_DeformVertex[m][vID];		//　シーンの何番目頂点
 
 				//	ボーンの数が4以下だったら
 				if (dv.BoneNum < 4)
 				{
+					if (dv.BoneNum == 3)
+					{
+						getchar();
+					}
 					dv.BoneName[dv.BoneNum] = boneName;
 					dv.BoneWeight[dv.BoneNum] = wgt;
 					++dv.BoneNum;
+
 				}
 				else
 				{
@@ -454,7 +460,6 @@ void AnimationModel::Uninit()
 
 	if (m_BoneMatricesBuffer)m_BoneMatricesBuffer->Release();
 
-	if (m_Importer)delete m_Importer;
 }
 
 void AnimationModel::LoadAnimation(const char* FileName, const char* Name)
@@ -651,7 +656,7 @@ const float AnimationModel::CalculateCapsuleRadius(const std::string& HeadName, 
 			for (int i = 0; i < boneCount; i++)
 			{
 				const std::string& boneName = deformVertex.BoneName[i];
-
+		
 				// 頂点がHeadまたはTailボーンの影響を受けている場合のみ計算
 				if (boneName != HeadName && boneName != TailName)
 					continue;

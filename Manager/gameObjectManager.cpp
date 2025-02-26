@@ -22,6 +22,7 @@ void GameObjectManager::Uninit()
 	{
 		for (GameObject* object : m_GameObjectList[type])
 		{
+			object->Uninit();
 			delete object;
 			object = nullptr;
 		}

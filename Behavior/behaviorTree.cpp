@@ -105,6 +105,16 @@ BEHAVIOR_RESULT BehaviorIdle::Update(const float DeltaTime)
 	return BEHAVIOR_RESULT::CONTINUE;
 }
 
+void BehaviorNode::Uninit()
+{
+	for (auto& pair : m_Child)
+	{
+		if (!pair)continue;
+		pair->Uninit();
+		delete pair;
+	}
+}
+
 BehaviorNode::BehaviorNode(Enemy* Enemy)
 {
 	m_Enemy = Enemy;
