@@ -221,6 +221,7 @@
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Main\main.cpp" />
+    <ClCompile Include="Manager\animationModelManager.cpp" />
     <ClCompile Include="Manager\animationRendererManager.cpp" />
     <ClCompile Include="Manager\debuggerImGuiManager.cpp" />
     <ClCompile Include="Manager\gameObjectManager.cpp" />
@@ -236,7 +237,7 @@
     <ClCompile Include="System\Collision\characterBoneCollision.cpp" />
     <ClCompile Include="System\Collision\collision.cpp" />
     <ClCompile Include="System\Collision\sphereCollision.cpp" />
-    <ClCompile Include="System\Renderer\animationModel.cpp" />
+    <ClCompile Include="System\Renderer\animationModelInstance.cpp" />
     <ClCompile Include="System\Renderer\animationModelResource.cpp" />
     <ClCompile Include="System\Renderer\animator.cpp" />
     <ClCompile Include="System\Renderer\renderer.cpp" />
@@ -260,6 +261,7 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="Main\main.h" />
+    <ClInclude Include="Manager\animationModelManager.h" />
     <ClInclude Include="Manager\animationRendererManager.h" />
     <ClInclude Include="Manager\debuggerImGuiManager.h" />
     <ClInclude Include="Manager\gameObjectManager.h" />
@@ -284,7 +286,7 @@
     <ClInclude Include="System\Enum\playerStateEnum.h" />
     <ClInclude Include="System\Enum\projectionTypeEnum.h" />
     <ClInclude Include="System\Enum\shaderEnum.h" />
-    <ClInclude Include="System\Renderer\animationModel.h" />
+    <ClInclude Include="System\Renderer\animationModelInstance.h" />
     <ClInclude Include="System\Renderer\animationModelResource.h" />
     <ClInclude Include="System\Renderer\animator.h" />
     <ClInclude Include="System\Renderer\renderer.h" />

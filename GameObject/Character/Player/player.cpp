@@ -5,14 +5,13 @@
 #include "Manager/gameObjectManager.h"
 #include "System\Enum\playerStateEnum.h"
 #include "Scene/scene.h"
-#include "System\Renderer/animationModel.h"
 #include "StateMachine/PlayerState/playerStateIdle.h"
 #include "StateMachine/PlayerState/playerStateWalk.h"
 #include "GameObject/Character/Player/playerh.h"
 #include "GameObject/Camera/camera.h"
 #include "GameObject\Character\Enemy\enemy.h"
 #include "System\Collision\characterBoneCollision.h"
-#include "System\Renderer\animator.h"
+#include "System\Renderer\animationModelInstance.h"
 #include "System\Collision\sphereCollision.h"
 constexpr float PLAYER_MAX_SPEED = 20.0f;
 constexpr float PLAYER_MAX_ACCL_SPEED = 50.0f;
@@ -20,9 +19,8 @@ constexpr float PLAYER_MAX_JUMP_SPEED = 100.0f;
 constexpr float PLAYER_SCALE = 0.01f;
 void Player::Init()
 {
-	m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::PLAYER,this);
-	m_Animator = new Animator;
-	m_Animator->LoadAnimation()
+	m_AnimationModel = new AnimationModelInstance(MODEL_NAME::PLAYER,this);
+
 	m_Shader = ShaderManager::LoadShader(SHADER_NAME::UNLIT_SKINNING_TEXTURE);
 
 	m_MaxMovementSpeed = PLAYER_MAX_SPEED;
@@ -41,8 +39,8 @@ void Player::Init()
 	}
 
 	m_PlayerState.reserve(static_cast<int>(PLAYER_STATE::MAX_STATE));
-	m_PlayerState.try_emplace(PLAYER_STATE::IDLE, new PlayerStateIdle(this, m_Camera, m_AnimationModel));
-	m_PlayerState.try_emplace(PLAYER_STATE::WALK, new PlayerStateWalk(this, m_Camera, m_AnimationModel));
+	m_PlayerState.try_emplace(PLAYER_STATE::IDLE, new PlayerStateIdle(this, m_Camera, "Player_Idle"));
+	m_PlayerState.try_emplace(PLAYER_STATE::WALK, new PlayerStateWalk(this, m_Camera, "Player_Run"));
 	m_CurrentState = m_PlayerState[PLAYER_STATE::IDLE];
 	m_CurrentState->Init();
 	m_Scale = { PLAYER_SCALE,PLAYER_SCALE,PLAYER_SCALE };
@@ -71,9 +69,7 @@ void Player::Update(const float& DeltaTime)
 
 
 	//	アニメーション更新
-	m_AnimationModel->UpdateAnimationBlend();
-
-	//if (m_Collision)m_Collision->UpdateCollision(m_Position);
+	m_AnimationModel->Update();
 
 
 	m_CurrentState->Update();

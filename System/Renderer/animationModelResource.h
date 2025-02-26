@@ -8,8 +8,8 @@
 #include "assimp/matrix4x4.h"
 #include "assimp/Importer.hpp"
 #pragma comment (lib, "assimp-vc143-mt.lib")
+#include "System\Renderer\renderer.h"
 
-constexpr int MAX_BONES = 256;
 //変形後頂点構造体
 struct DEFORM_VERTEX
 {
@@ -31,48 +31,38 @@ struct BONE
 	XMFLOAT3	HeadPosition{};
 	float		Radius{};
 };
-struct CB_BONES
-{
-	XMMATRIX BoneMatrices[MAX_BONES];
-};
 
-class GameObject;
 
 class AnimationModelResource
 {
 private:
 	const aiScene* m_AiScene = nullptr;
-
 	Assimp::Importer* m_Importer{};
-
-	ID3D11Buffer** m_VertexBuffer{};
-	ID3D11Buffer** m_IndexBuffer{};
-	ID3D11Buffer*  m_BoneMatricesBuffer{};
-
+	std::unordered_map<std::string, const aiScene*> m_Animation;
 	std::unordered_map<std::string, ID3D11ShaderResourceView*> m_Texture;
 	std::vector<BONE> m_Bones;
 	std::unordered_map<std::string, int> m_BoneIndexMap;	//ボーンデータ
 	std::vector<DEFORM_VERTEX>* m_DeformVertex{};//変形後頂点データ
+	ID3D11Buffer** m_VertexBuffer{};
+	ID3D11Buffer** m_IndexBuffer{};
 
-	GameObject* m_Owner{};
 public:
-	void Load( const char *FileName,GameObject* Owner);
+	void Load( const char *FileName);
+	void LoadAnimation(const char* FileName, const char* Name);
 	void Uninit();
-	void Draw();
-	void Update();
 	XMMATRIX TransformToXMMATRIX(aiMatrix4x4&);
 
-	
 	//	ボーン関連
+	const aiScene* GetAiScene() { return m_AiScene; }
 	int GetBoneIndexByName(const std::string& BoneName);
 	XMMATRIX GetBoneMatrix(const std::string& BoneName);
 	const std::unordered_map<std::string, int>& GetBoneIndexMap() const{ return m_BoneIndexMap; }
 	const std::vector<BONE>& GetBones()const { return m_Bones; }
 	const BONE GetBone(int Index);
 	XMFLOAT3 GetBonePosition(const int BoneIndex,const XMMATRIX& PlayerMatrix);
-	const float CalculateCapsuleRadius(const std::string& HeadName,const std::string& TailName);
-	const float DistancePointLineSegment(const XMFLOAT3& Point, const XMFLOAT3& Start, const XMFLOAT3& End);
-	void UpdateBoneMatrixToGPU();
+	ID3D11Buffer** GetVertexBUffer() { return m_VertexBuffer; }
+	ID3D11Buffer** GetIndexBUffer() { return m_VertexBuffer; }
+	const std::unordered_map<std::string, const aiScene*>& GetAnimationMap() { return m_Animation; }
 	void CreateBone(aiNode* node);
-	void UpdateBoneMatrix(aiNode* node, aiMatrix4x4 matrix);
+	const std::unordered_map<std::string, ID3D11ShaderResourceView*>& GetTexture() { return m_Texture; }
 };

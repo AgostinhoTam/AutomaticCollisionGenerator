@@ -3,7 +3,7 @@
 class PlayerStateIdle :public PlayerState
 {
 public:
-	PlayerStateIdle(Player* player, Camera* camera,AnimationModel* model) :PlayerState(player, camera,model) {}
+	PlayerStateIdle(Player* player, Camera* camera, const std::string& AnimationName);
 	virtual void Init() override;
 	virtual void Update() override;
 	virtual void Uninit() override {}

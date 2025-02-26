@@ -1,16 +1,22 @@
 #include "GameObject/Character/Player/playerh.h"
 #include "GameObject/Camera/camera.h"
 #include "Manager/inputManager.h"
-#include "System\Renderer\animationModel.h"
 #include "System\Enum\playerStateEnum.h"
+#include "System\Renderer\animationModelInstance.h"
 #include "playerStateWalk.h"
+
+PlayerStateWalk::PlayerStateWalk(Player* player, Camera* camera, const std::string& AnimationName) :PlayerState(player, camera, AnimationName)
+{
+	m_Animator = m_Player->GetAnimator();
+}
+
 
 void PlayerStateWalk::Init()
 {
 	if (!m_Player)return;
 	if (!m_Camera)return;
 	UserInputDection();
-	m_AnimationModel->SetNextAnimation("Player_Run");
+	m_Player->GetAnimationModel()->SetNextAnimation(m_AnimationName);
 }
 
 void PlayerStateWalk::Update()
@@ -51,10 +57,11 @@ void PlayerStateWalk::UserInputDection()
 	if (!hasInput)
 	{
 		m_Player->ChangeState(PLAYER_STATE::IDLE);
-		if (!m_AnimationModel->GetIsTransitioning())
-		{
-			m_AnimationModel->SetNextAnimationFrame(m_AnimationModel->GetNextAnimationFrame());
-		}
+		Animator* animator = m_Player.getanim
+			if (!m_Player->GetAnimationModel()->GetIsTransitioning())
+			{
+				m_Player->GetAnimationModel()->SetNextAnimationFrame(m_AnimationModel->GetNextAnimationFrame());
+			}
 	}
 
 }

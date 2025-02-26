@@ -58,6 +58,9 @@ enum class BLEND_MODE
 	BLEND_MODE_ADD,			//加算ブレンド
 	BLEND_MODE_ATC			//Alpha-To-Coverage、草なとの半透明表現
 };
+
+constexpr int MAX_BONES = 256;
+
 class Renderer
 {
 private:

@@ -3,7 +3,9 @@
 #include <vector>
 class Enemy;
 class Player;
-class AnimationModel;
+class AnimationModelInstance;
+class Animator;
+
 enum class CURRENT_BEHAVIOR
 {
 	NEXT,
@@ -27,7 +29,8 @@ protected:
 	BehaviorNode* m_Parent{};
 	Enemy* m_Enemy{};
 	Player* m_Player{};
-	AnimationModel* m_AnimationModel{};
+	AnimationModelInstance* m_AnimationModel{};
+	Animator* m_Animator;
 public:
 	virtual void Init() {}
 	virtual BEHAVIOR_RESULT Update(const float DeltaTime) = 0;

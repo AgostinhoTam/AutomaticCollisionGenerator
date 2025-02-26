@@ -1,15 +1,17 @@
 #pragma once
+#include <string>
 class Player;
 class Camera;
-class AnimationModel;
+class Animator;
 class PlayerState
 {
 protected:
 	Player* m_Player;
 	Camera* m_Camera;
-	AnimationModel* m_AnimationModel{};
+	std::string m_AnimationName;
+	Animator* m_Animator;
 public:
-	PlayerState(Player* player, Camera* camera,AnimationModel* model) : m_Player(player), m_Camera(camera),m_AnimationModel(model) {}
+	PlayerState(Player* Player, Camera* Camera,const std::string AnimationName) : m_Player(Player), m_Camera(Camera), m_AnimationName(AnimationName) {}
 	virtual ~PlayerState() = default;
 	virtual void Init() {}
 	virtual void Update() {}

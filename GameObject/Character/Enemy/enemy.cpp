@@ -3,10 +3,10 @@
 #include "Manager\shaderManager.h"
 #include "Manager\gameObjectManager.h"
 #include "Manager\sceneManager.h"
-#include "System\Renderer\animationModel.h"
 #include "System\Collision\characterBoneCollision.h"
 #include "Scene\scene.h"
 #include "Behavior\behaviorTree.h"
+#include "System\Renderer\animationModelInstance.h"
 #include "enemy.h"
 namespace EnemyTypeHuman
 {
@@ -28,7 +28,7 @@ void Enemy::Init()
 	if (m_EnemyType == ENEMY_TYPE::ENEMY)
 	{
 		m_Name = "EnemyHuman";
-		m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::ENEMY, this);
+		m_AnimationModel = new AnimationModelInstance(MODEL_NAME::ENEMY, this);
 		m_MaxMovementSpeed = EnemyTypeHuman::MAX_ENEMY_SPEED;
 		m_MaxHorizontalAcclSpeed = EnemyTypeHuman::ENEMY_MAX_ACCL_SPEED;
 		m_Scale = { EnemyTypeHuman::ENEMY_SCALE,EnemyTypeHuman::ENEMY_SCALE,EnemyTypeHuman::ENEMY_SCALE };
@@ -44,7 +44,7 @@ void Enemy::Init()
 	else if (m_EnemyType == ENEMY_TYPE::MONSTER)
 	{
 		m_Name = "EnemyMonster";
-		m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::MONSTER, this);
+		m_AnimationModel = new AnimationModelInstance(MODEL_NAME::MONSTER, this);
 		m_MaxMovementSpeed = EnemyTypeMonster::MAX_SPEED;
 		m_MaxHorizontalAcclSpeed = EnemyTypeMonster::MAX_ACCL_SPEED;
 		m_Scale = { EnemyTypeMonster::SCALE,EnemyTypeMonster::SCALE,EnemyTypeMonster::SCALE };
@@ -61,7 +61,7 @@ void Enemy::Init()
 	else
 	{
 		m_Name = "EnemyHuman";
-		m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::ENEMY, this);
+		m_AnimationModel = new AnimationModelInstance(MODEL_NAME::ENEMY, this);
 		m_MaxMovementSpeed = EnemyTypeHuman::MAX_ENEMY_SPEED;
 		m_MaxHorizontalAcclSpeed = EnemyTypeHuman::ENEMY_MAX_ACCL_SPEED;
 		m_Scale = { EnemyTypeHuman::ENEMY_SCALE,EnemyTypeHuman::ENEMY_SCALE,EnemyTypeHuman::ENEMY_SCALE };

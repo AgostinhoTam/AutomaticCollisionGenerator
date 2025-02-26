@@ -9,7 +9,7 @@
 
 constexpr float RADIUS_ADJUSTMENT = 0.7f;
 
-void Animator::Update(aiScene* CurrentAnimation, aiScene* NextAnimation)
+void Animator::Update(const aiScene* CurrentAnimation, const aiScene* NextAnimation)
 {
 
 	if (!CurrentAnimation->HasAnimations())return;
@@ -105,6 +105,13 @@ void Animator::SetNextAnimation(const std::string& AnimationName)
 	m_NextAnimation = AnimationName;
 	m_IsTransitioning = true;
 	m_NextFrame = 0;
+}
+
+int Animator::GetAnimationDuration(const aiScene* Animation)
+{
+	if (Animation.count(AnimationName) == 0)return 0;
+	if (!m_Animation[AnimationName]->HasAnimations())return 0;
+	return (m_Animation[AnimationName]->mAnimations[0]->mDuration);
 }
 
 

@@ -32,8 +32,6 @@ ID3D11RasterizerState* Renderer::m_RasterStateCullOff{};
 ID3D11RasterizerState* Renderer::m_RasterStateCullFront{};
 ID3D11RasterizerState* Renderer::m_RasterStateCullBack{};
 
-constexpr int MAX_BONES = 256;
-
 void Renderer::Init()
 {
 	HRESULT hr = S_OK;

@@ -1,9 +1,9 @@
 #pragma once
-#include "StateMachine\PlayerState\playerState.h"
+#include "StateMachine/PlayerState/playerState.h"
 class PlayerStateJump :public PlayerState
 {
 public:
-	PlayerStateJump(Player* player, Camera* camera,AnimationModel* model) :PlayerState(player, camera,model) {}
+	PlayerStateJump(Player* player, Camera* camera, const std::string& AnimationName);
 	virtual void Init() override;
 	virtual void Update() override;
 	virtual void Uninit() override {}

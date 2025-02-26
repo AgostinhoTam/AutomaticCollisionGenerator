@@ -1,7 +1,7 @@
 #include "Main\main.h"
-#include "System\Renderer\animationModel.h"
 #include "System\Collision\sphereCollision.h"
 #include "System\Collision\characterBoneCollision.h"
+#include "System\Renderer\animationModelInstance.h"
 #include <fstream>
 #include <sstream>
 #include "character.h"
@@ -124,6 +124,11 @@ void Character::UpdateBoneCollision()
 		}
 	}
 
+}
+
+Animator*& Character::GetAnimator()
+{
+	return m_AnimationModel->GetAnimator();
 }
 
 void Character::CreateCharacterBoneCollision(const CHARACTER_BONE_TYPE& BoneType)

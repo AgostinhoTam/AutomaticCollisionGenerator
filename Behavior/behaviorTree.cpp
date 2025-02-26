@@ -4,6 +4,8 @@
 #include "Main\main.h"
 #include "GameObject\Character\Player\playerh.h"
 #include "GameObject\Character\Enemy\enemy.h"
+#include "System\Renderer\animationModelInstance.h"
+#include "System\Renderer\animator.h"
 #include "behaviorTree.h"
 
 constexpr float SENSE_DISTANCE = 10.0f;
@@ -76,11 +78,12 @@ BehaviorIdle::BehaviorIdle(Enemy* Enemy, const std::string& Type):BehaviorNode(E
 //=========================ステート==========================
 void BehaviorIdle::Init()
 {
-	if (!m_AnimationModel)return;
+	if (!m_Animator)return;
+
 	//	再設定防止
-	if (m_AnimationModel->GetCurrentAnimationName() != m_AnimationName)
+	if (m_Animator->GetCurrentAnimationName() != m_AnimationName)
 	{
-		m_AnimationModel->SetNextAnimation(m_AnimationName);
+		m_Animator->SetNextAnimation(m_AnimationName);
 	}
 
 }
@@ -97,11 +100,11 @@ BEHAVIOR_RESULT BehaviorIdle::Update(const float DeltaTime)
 		// 次の状態へ
 		return BEHAVIOR_RESULT::SUCCESS;
 	}
-	if (m_AnimationModel->GetNextAnimationName() != m_AnimationName)
+	if (m_Animator->GetNextAnimationName() != m_AnimationName)
 	{
 		Init();
 	}
-	m_AnimationModel->UpdateAnimationBlend();
+	m_AnimationModel->Update();
 	return BEHAVIOR_RESULT::CONTINUE;
 }
 
@@ -109,6 +112,7 @@ BehaviorNode::BehaviorNode(Enemy* Enemy)
 {
 	m_Enemy = Enemy;
 	m_AnimationModel = m_Enemy->GetAnimationModel();
+	m_Animator = m_Enemy->GetAnimator();
 	Scene* scene = SceneManager::GetCurrentScene();
 	if (!scene)return;
 	GameObjectManager* gameObjectManager = scene->GetGameObjectManager();
@@ -131,16 +135,16 @@ BehaviorMove::BehaviorMove(Enemy* Enemy, const std::string& Type) :BehaviorNode(
 
 void BehaviorMove::Init()
 {
-	if (!m_AnimationModel)return;
-	if (m_AnimationModel->GetCurrentAnimationName() != m_AnimationName)
+	if (!m_Animator)return;
+	if (m_Animator->GetCurrentAnimationName() != m_AnimationName)
 	{
-		m_AnimationModel->SetNextAnimation(m_AnimationName);
+		m_Animator->SetNextAnimation(m_AnimationName);
 	}
 }
 
 BEHAVIOR_RESULT BehaviorMove::Update(const float DeltaTime)
 {
-	if (!m_AnimationModel)return BEHAVIOR_RESULT::FAILURE;
+	if (!m_Animator)return BEHAVIOR_RESULT::FAILURE;
 	XMVECTOR playerPosition = XMLoadFloat3(&m_Player->GetPosition());
 	XMVECTOR enemyPosition = XMLoadFloat3(&m_Enemy->GetPosition());
 	XMVECTOR vector = XMVectorSubtract(playerPosition, enemyPosition);
@@ -157,7 +161,7 @@ BEHAVIOR_RESULT BehaviorMove::Update(const float DeltaTime)
 		return BEHAVIOR_RESULT::FAILURE;
 	}
 
-	if (m_AnimationModel->GetNextAnimationName() != m_AnimationName)
+	if (m_Animator->GetNextAnimationName() != m_AnimationName)
 	{
 		Init();
 	}
@@ -167,17 +171,17 @@ BEHAVIOR_RESULT BehaviorMove::Update(const float DeltaTime)
 	float yaw = atan2f(direction.x, direction.z);
 	m_Enemy->SetRotationY(yaw); // 向き更新
 	m_Enemy->SetMoveDirection(direction);
-	m_AnimationModel->UpdateAnimationBlend();
+	m_AnimationModel->Update();
 	return BEHAVIOR_RESULT::CONTINUE;
 }
 
 void BehaviorAttack::Init()
 {
-	if (!m_AnimationModel)return;
+	if (!m_Animator)return;
 	//	現在と同じならスキップ
-	if (m_AnimationModel->GetCurrentAnimationName() != m_AnimationName)
+	if (m_Animator->GetCurrentAnimationName() != m_AnimationName)
 	{
-		m_AnimationModel->SetNextAnimation(m_AnimationName);
+		m_Animator->SetNextAnimation(m_AnimationName);
 	}
 
 	m_IsAttackStart = true;
@@ -199,7 +203,8 @@ BehaviorAttack::~BehaviorAttack()
 
 BEHAVIOR_RESULT BehaviorAttack::Update(const float DeltaTime)
 {
-	if (!m_AnimationModel)return BEHAVIOR_RESULT::FAILURE;
+	if (!m_Animator)return BEHAVIOR_RESULT::FAILURE;
+	if(!m_AnimationModel)return BEHAVIOR_RESULT::FAILURE;
 	if (!m_BehaviorCoolDown)return BEHAVIOR_RESULT::FAILURE;
 	
 	//	攻撃初期化
@@ -230,9 +235,9 @@ BEHAVIOR_RESULT BehaviorAttack::Update(const float DeltaTime)
 	}
 
 	//	遷移中、またはアニメーションの再生中だったら
-	if (m_AnimationModel->GetIsTransitioning() || m_AnimationModel->GetCurrentAnimationFrame() <= m_AnimationModel->GetAnimationDuration(m_AnimationName))
+	if (m_Animator->GetIsTransitioning() || m_Animator->GetCurrentAnimationFrame() <= m_Animator->GetAnimationDuration(m_AnimationName))
 	{
-		m_AnimationModel->UpdateAnimationBlend();
+		m_AnimationModel->Update();
 		return BEHAVIOR_RESULT::CONTINUE;
 	}
 
@@ -288,11 +293,11 @@ void BehaviorCoolDown::ResetCoolDown()
 
 void BehaviorStandByAttack::Init()
 {
-	if (!m_AnimationModel)return;
+	if (!m_Animator)return;
 	//	現在と同じならスキップ
-	if (m_AnimationModel->GetCurrentAnimationName() != m_AnimationName)
+	if (m_Animator->GetCurrentAnimationName() != m_AnimationName)
 	{
-		m_AnimationModel->SetNextAnimation(m_AnimationName);
+		m_Animator->SetNextAnimation(m_AnimationName);
 	}
 }
 
@@ -303,10 +308,10 @@ BehaviorStandByAttack::BehaviorStandByAttack(Enemy* Enemy, const std::string& Ty
 
 BEHAVIOR_RESULT BehaviorStandByAttack::Update(const float DeltaTime)
 {
-	if (!m_AnimationModel)return BEHAVIOR_RESULT::FAILURE;
+	if (!m_Animator)return BEHAVIOR_RESULT::FAILURE;
 
 	//	初期化
-	if (m_AnimationModel->GetCurrentAnimationName() != m_AnimationName)
+	if (m_Animator->GetCurrentAnimationName() != m_AnimationName)
 	{
 		Init();
 	}
@@ -322,7 +327,7 @@ BEHAVIOR_RESULT BehaviorStandByAttack::Update(const float DeltaTime)
 	float yaw = atan2f(direction.x, direction.z);
 	m_Enemy->SetRotationY(yaw); //	向きは1回だけ更新する
 
-	m_AnimationModel->UpdateAnimationBlend();
+	m_AnimationModel->Update();
 	
 	//　一番手前の状態に返す
 	return BEHAVIOR_RESULT::SUCCESS;

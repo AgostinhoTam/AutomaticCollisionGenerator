@@ -1,7 +1,6 @@
 #pragma once
 #include "GameObject/gameobject.h"
 #include "System\Enum/moveDirection.h"
-#include "System\Renderer\animationModel.h"
 
 enum class CHARACTER_BONE_TYPE
 {
@@ -11,15 +10,14 @@ enum class CHARACTER_BONE_TYPE
 };
 struct MODEL;
 class Collision;
-class AnimationModel;
+class AnimationModelInstance;
 class Animator;
 class Character :public GameObject
 {
 protected:
 	XMFLOAT3 m_Velocity{};
 	XMFLOAT3 m_Accl{};
-	AnimationModel* m_AnimationModel{};
-	Animator* m_Animator;
+	AnimationModelInstance* m_AnimationModel{};
 	XMFLOAT3 m_MoveDirection{};
 	float	m_MaxMovementSpeed = 0;
 	float	m_MaxHorizontalAcclSpeed = 0;
@@ -41,7 +39,8 @@ public:
 	void UpdateVerticalVelocity(XMVECTOR& Velocity, const float& DeltaTime);
 	void UpdateHorizontalVelocity(XMVECTOR& Velocity, const float& DeltaTime);
 	void UpdateBoneCollision();
-	AnimationModel* GetAnimationModel() const{ return m_AnimationModel; }
+	AnimationModelInstance* GetAnimationModel() const{ return m_AnimationModel; }
+	Animator*& GetAnimator();
 	void CreateCharacterBoneCollision(const CHARACTER_BONE_TYPE& BoneType);
 	void CreateCharacterBoneCollision(const std::string& FilePath);
 	void CreateSingleBoneCollision(const std::string& Head,const std::string& Tail,const XMFLOAT3& Offset={0.0f,0.0f,0.0f}, const float Radius = 0.0f);

@@ -6,23 +6,11 @@
 #include "assimp/postprocess.h"
 #include "assimp/matrix4x4.h"
 #include "assimp/Importer.hpp"
+#include "System\Renderer\animationModelResource.h"
 #pragma comment (lib, "assimp-vc143-mt.lib")
 
-constexpr int MAX_BONES = 256;
-
-//ボーン構造体
-struct BONE
-{
-	XMMATRIX	worldMatrix{};
-	XMMATRIX	localMatrix{};
-	aiMatrix4x4 Matrix;		//	assimp用matrix
-	aiMatrix4x4 AnimationMatrix;
-	aiMatrix4x4 OffsetMatrix;
-	XMFLOAT3	HeadPosition{};
-	float		Radius{};
-};
-
 class GameObject;
+class AnimationModelInstance;
 
 class Animator
 {
@@ -37,10 +25,10 @@ private:
 	std::string m_CurrentAnimation = "";
 	std::string m_NextAnimation = "";
 	bool m_IsTransitioning = false;
-
+	AnimationModelInstance*& m_Owner;
 public:
-	Animator(std::vector<BONE>& Bones, std::unordered_map<std::string, int>& BoneIndexMap) :m_Bones(Bones), m_BoneIndexMap(BoneIndexMap){}
-	void Update(aiScene* CurrentAnimation,aiScene* NextAnimation);
+	Animator(AnimationModelInstance* Owner,std::vector<BONE>& Bones, std::unordered_map<std::string, int>& BoneIndexMap) :m_Owner(Owner),m_Bones(Bones), m_BoneIndexMap(BoneIndexMap){}
+	void Update(const aiScene* CurrentAnimation,const aiScene* NextAnimation);
 
 	//	アニメーション関連
 	void SetNextAnimation(const std::string& AnimationName);
@@ -58,5 +46,5 @@ public:
 	void AddBlendRatio(const float BlendRatio = 0.1f){ m_BlendRatio += BlendRatio; }
 	void AddCurrentAnimationFrame(const unsigned int frame = 1) { m_CurrentFrame += frame; }
 	void AddNextAnimationFrame(const unsigned int frame = 1) { m_NextFrame += frame; }
-
+	int GetAnimationDuration();
 };
