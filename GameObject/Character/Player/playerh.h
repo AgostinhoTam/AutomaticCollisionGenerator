@@ -10,13 +10,13 @@ enum class PLAYER_STATE;
 class Player : public Character
 {
 private:
-	Collision* m_Collision{};
 	std::unordered_map<PLAYER_STATE, PlayerState*> m_PlayerState;
 	PlayerState* m_CurrentState{};
 	Camera* m_Camera{};
 	std::vector<Enemy*> m_EnemyList;
 	bool m_IsHardLock = false;
 public:
+	Player();
 	virtual void Init()override;
 	virtual void Uninit()override;
 	virtual void Update(const float& DeltaTime)override;

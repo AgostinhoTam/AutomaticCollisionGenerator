@@ -120,9 +120,25 @@
     <ClCompile Include="System\Collision\collision.cpp">
       <Filter>System\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="Behavior\behaviorTree.cpp">
+    <ClCompile Include="Manager\conditionManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Behavior\behaviorNode.cpp">
       <Filter>BehaviorTree</Filter>
     </ClCompile>
+    <ClCompile Include="Behavior\behaviorAttackNode.cpp">
+      <Filter>BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="Behavior\conditionNode.cpp">
+      <Filter>BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="Behavior\behaviorIdleNode.cpp">
+      <Filter>BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="Behavior\behaviorRunNode.cpp">
+      <Filter>BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="Behavior\blackBoard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject\Field\field.h">
@@ -254,11 +270,35 @@
     <ClInclude Include="System\Structure\shaderStructure.h">
       <Filter>System\Structure</Filter>
     </ClInclude>
-    <ClInclude Include="Behavior\behaviorTree.h">
-      <Filter>BehaviorTree</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\Character\character.h">
       <Filter>GameObject\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Behavior\behaviorNode.h">
+      <Filter>BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Enum\behaviorTreeEnum.h">
+      <Filter>System\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Behavior\blackBoard.h">
+      <Filter>BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Behavior\blackBoardCondition.h">
+      <Filter>BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\conditionManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Behavior\conditionNode.h">
+      <Filter>BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Behavior\behaviorAttackNode.h">
+      <Filter>BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Behavior\behaviorIdleNode.h">
+      <Filter>BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Behavior\behaviorRunNode.h">
+      <Filter>BehaviorTree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

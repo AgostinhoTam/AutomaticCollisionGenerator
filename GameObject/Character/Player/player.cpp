@@ -17,15 +17,31 @@ constexpr float PLAYER_MAX_SPEED = 20.0f;
 constexpr float PLAYER_MAX_ACCL_SPEED = 50.0f;
 constexpr float PLAYER_MAX_JUMP_SPEED = 100.0f;
 constexpr float PLAYER_SCALE = 0.01f;
+Player::Player()
+{
+	Scene* scene = SceneManager::GetInstance()->GetCurrentScene();
+	if (scene)
+	{
+		GameObjectManager* objectManager = scene->GetGameObjectManager();
+		if (objectManager)
+		{
+			m_CharacterID = static_cast<unsigned int>(objectManager->GetGameObjectsList(GAMEOBJECT_TYPE::PLAYER).size());
+		}
+	}
+
+}
 void Player::Init()
 {
+	// アニメーションモデル
 	m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::PLAYER,this);
+	m_AnimationModel->SetCurrentAnimation("Player_Idle");
+	m_AnimationModel->SetNextAnimation("Player_Idle");
 
 	m_Shader = ShaderManager::LoadShader(SHADER_NAME::UNLIT_SKINNING_TEXTURE);
 
 	m_MaxMovementSpeed = PLAYER_MAX_SPEED;
 	m_MaxHorizontalAcclSpeed = PLAYER_MAX_ACCL_SPEED;
-	m_Name = "Player";
+	m_Name = "Player" + std::to_string(m_CharacterID);
 
 	Scene* scene = SceneManager::GetInstance()->GetCurrentScene();
 	if (scene)
@@ -39,13 +55,12 @@ void Player::Init()
 	}
 
 	m_PlayerState.reserve(static_cast<int>(PLAYER_STATE::MAX_STATE));
-	m_PlayerState.try_emplace(PLAYER_STATE::IDLE, new PlayerStateIdle(this, m_Camera, m_AnimationModel));
-	m_PlayerState.try_emplace(PLAYER_STATE::WALK, new PlayerStateWalk(this, m_Camera, m_AnimationModel));
+	m_PlayerState.try_emplace(PLAYER_STATE::IDLE, new PlayerStateIdle(this, m_Camera, m_AnimationModel,"Player_Idle"));
+	m_PlayerState.try_emplace(PLAYER_STATE::WALK, new PlayerStateWalk(this, m_Camera, m_AnimationModel,"Player_Run"));
 	m_CurrentState = m_PlayerState[PLAYER_STATE::IDLE];
 	m_CurrentState->Init();
 	m_Scale = { PLAYER_SCALE,PLAYER_SCALE,PLAYER_SCALE };
 	m_Position.y = 0.0f;
-	//m_Collision = new SphereCollision(m_Position, { 0.0f,1.0f,0.0f }, 1.0f);
 	m_IsGround = true;
 	CreateCharacterBoneCollision(CHARACTER_BONE_TYPE::HUMANOID);
 
@@ -54,10 +69,14 @@ void Player::Init()
 void Player::Uninit()
 {
 	m_AnimationModel->Uninit();
-	if (m_Collision)
+	
+	for (auto& collision : m_Collisions)
 	{
-		delete m_Collision;
-		m_Collision = nullptr;
+		if (collision.second)
+		{
+			collision.second->Uninit();
+			delete collision.second;
+		}
 	}
 }
 
@@ -69,13 +88,15 @@ void Player::Update(const float& DeltaTime)
 
 
 	//	アニメーション更新
-	m_AnimationModel->UpdateAnimationBlend();
+	m_AnimationModel->Update();
 
-	//if (m_Collision)m_Collision->UpdateCollision(m_Position);
-
-
+	//	ステート更新
 	m_CurrentState->Update();
 
+	//	衝突判定
+	CollisionCheck();
+
+	//	プレイヤー回転更新
 	UpdatePlayerRotation();
 
 	// 移動更新
@@ -89,14 +110,14 @@ void Player::Draw()
 	if (!m_CurrentState)return;
 	if (!m_AnimationModel)return;
 
-
-	if (m_Collision)m_Collision->Draw();
+	// カプセル描画
 	for (auto& capsule : m_Collisions)
 	{
 		if (!capsule.second)continue;
 		capsule.second->Draw();
 	}
 
+	//	アニメーション描画
 	m_AnimationModel->Draw();
 
 }
@@ -115,7 +136,8 @@ void Player::ChangeState(PLAYER_STATE State)
 
 void Player::UpdatePlayerRotation()
 {
-	CollisionCheck();
+
+
 	// 移動入力がある場合に回転を更新
 	if (m_MoveDirection.x != 0.0f || m_MoveDirection.z != 0.0f)
 	{
@@ -144,11 +166,31 @@ void Player::UpdatePlayerRotation()
 
 void Player::CollisionCheck()
 {
+	// プレイヤーの衝突判定
 	for (const auto& playerPair : m_Collisions)
 	{
 		if (!playerPair.second)continue;
+		//	衝突フラグをリセット
 		playerPair.second->SetIsHit(false);
+
+		// 敵の衝突判定
+		for (const auto& enemyPair : m_EnemyList)
+		{
+			// 敵の衝突リスト
+			std::unordered_map<std::string, Collision*>&  enemyCollsions = enemyPair->GetCollisionList();
+			for (auto& pair : enemyCollsions)
+			{
+				if (!pair.second)continue;
+				// 衝突判定
+				if (playerPair.second->IsCollisionOverlapping(pair.second))
+				{
+					playerPair.second->SetIsHit(true);
+					break;
+				}
+			}
+		}
 	}
+	
 }
 
 Enemy* Player::LockTarget()

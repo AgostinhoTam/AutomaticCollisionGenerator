@@ -13,12 +13,12 @@ constexpr XMFLOAT4 DEBUG_LINE_COLOR = XMFLOAT4(0.1f, 1.0f, 0.1f, 1.0f);
 constexpr XMFLOAT4 DEBUG_HITTED_LINE_COLOR = XMFLOAT4(1.0f, 0.1f, 0.1f, 1.0f);
 constexpr XMFLOAT4 DEBUG_SELECTED_LINE_COLOR = XMFLOAT4(0.5f, 0.5f, 0.1f, 1.0f);
 
-CharacterBoneCollision::CharacterBoneCollision(const int HeadBoneIndex, const int TailBoneIndex, const XMFLOAT3& Start, const XMFLOAT3& End, const XMFLOAT3& Offset, float Radius) :Collision(Start, Offset), m_Radius(Radius),m_StartPosition(Start),m_EndPosition(End),m_HeadBoneIndex(HeadBoneIndex),m_TailBoneIndex(TailBoneIndex)
+CharacterBoneCollision::CharacterBoneCollision(const int HeadBoneIndex, const int TailBoneIndex, const XMFLOAT3& Start, const XMFLOAT3& End, const XMFLOAT3& Offset, float Radius) :Collision(Start, Offset), m_Radius(Radius), m_StartPosition(Start), m_EndPosition(End), m_HeadBoneIndex(HeadBoneIndex), m_TailBoneIndex(TailBoneIndex)
 {
 	Init();
 }
 
-bool CharacterBoneCollision::IsCollisionOverlapping(const Collision* Collision) 
+bool CharacterBoneCollision::IsCollisionOverlapping(const Collision* Collision)
 {
 	if (!Collision)return false;
 	const CharacterBoneCollision* bone = dynamic_cast<const CharacterBoneCollision*>(Collision);
@@ -52,7 +52,7 @@ float CharacterBoneCollision::CheckDistanceSegmentToSegment(const XMVECTOR& Star
 	XMVECTOR vSS = XMVectorSubtract(Start1, Start2);
 
 	//	各ベクトルの長さと内積を求める
-	float lengthSE1 = XMVectorGetX(XMVector3Dot(vSE1, vSE1));	
+	float lengthSE1 = XMVectorGetX(XMVector3Dot(vSE1, vSE1));
 	float dSE12 = XMVectorGetX(XMVector3Dot(vSE1, vSE2));
 	float lengthSE2 = XMVectorGetX(XMVector3Dot(vSE2, vSE2));
 	float dSS1 = XMVectorGetX(XMVector3Dot(vSE1, vSS));
@@ -84,7 +84,7 @@ float CharacterBoneCollision::CheckDistanceSegmentToSegment(const XMVECTOR& Star
 	return XMVectorGetX(XMVector3Length(diff));
 }
 
-bool CharacterBoneCollision::CheckSphereToSphere(const SphereCollision* Collision) 
+bool CharacterBoneCollision::CheckSphereToSphere(const SphereCollision* Collision)
 {
 	if (!Collision)return false;
 	return false;
@@ -94,7 +94,7 @@ void CharacterBoneCollision::UpdateCollision(const XMFLOAT3& Position)
 {
 }
 
-void CharacterBoneCollision::UpdateBonePosition(const int FirstIndex, const int SecondIndex, const XMFLOAT3& HeadPos,const XMFLOAT3& TailPos)
+void CharacterBoneCollision::UpdateBonePosition(const int FirstIndex, const int SecondIndex, const XMFLOAT3& HeadPos, const XMFLOAT3& TailPos)
 {
 	//	コリジョンの位置を変える
 	XMVECTOR headPos = XMLoadFloat3(&HeadPos);
@@ -106,7 +106,7 @@ void CharacterBoneCollision::UpdateBonePosition(const int FirstIndex, const int 
 
 	if (m_HeadBoneIndex == FirstIndex)
 	{
-		XMStoreFloat3(&m_StartPosition,startPos);
+		XMStoreFloat3(&m_StartPosition, startPos);
 	}
 	if (m_TailBoneIndex == SecondIndex)
 	{
@@ -116,9 +116,9 @@ void CharacterBoneCollision::UpdateBonePosition(const int FirstIndex, const int 
 void CharacterBoneCollision::Init()
 {
 	m_Shader = ShaderManager::LoadShader(SHADER_NAME::DEBUG_LINE);
-	CreateCylinderLine(XMFLOAT4(1.0f,1.0f,1.0f,1.0f), m_CylinderLineVertices);
-	CreateSphereLine(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),m_StartSphereVertices);
-	CreateSphereLine(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),m_EndSphereVertices);
+	CreateCylinderLine(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), m_CylinderLineVertices);
+	CreateSphereLine(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), m_StartSphereVertices);
+	CreateSphereLine(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), m_EndSphereVertices);
 	CreateBufferVertices(m_CylinderLineVertices, m_CylinderBuffer);
 	CreateBufferVertices(m_StartSphereVertices, m_StartSphereBuffer);
 	CreateBufferVertices(m_EndSphereVertices, m_EndSphereBuffer);
@@ -168,6 +168,13 @@ void CharacterBoneCollision::Draw()
 
 }
 
+void CharacterBoneCollision::Uninit()
+{
+	if (m_CylinderBuffer)m_CylinderBuffer->Release();
+	if (m_StartSphereBuffer)m_StartSphereBuffer->Release();
+	if (m_EndSphereBuffer)m_EndSphereBuffer->Release();
+}
+
 //	球体の描画
 void CharacterBoneCollision::CreateSphereLine(const XMFLOAT4& Color, std::vector<LINE_VERTEX>& SphereVertices)
 {
@@ -181,8 +188,8 @@ void CharacterBoneCollision::CreateSphereLine(const XMFLOAT4& Color, std::vector
 		for (int i = 0; i < DEBUG_LINE_SEGMENTS; ++i)
 		{
 			float angle = (XM_2PI * i) / static_cast<float>(DEBUG_LINE_SEGMENTS);
-			float x =cosf(angle);
-			float z =sinf(angle);
+			float x = cosf(angle);
+			float z = sinf(angle);
 			XMFLOAT3 current = XMFLOAT3(x, 0, z);
 			if (!first)
 			{
@@ -205,7 +212,7 @@ void CharacterBoneCollision::CreateSphereLine(const XMFLOAT4& Color, std::vector
 			float angle = (XM_2PI * i) / static_cast<float>(DEBUG_LINE_SEGMENTS);
 			float y = cosf(angle);
 			float z = sinf(angle);
-			XMFLOAT3 current = XMFLOAT3(0, y,  z);
+			XMFLOAT3 current = XMFLOAT3(0, y, z);
 
 			if (!first)
 			{
@@ -219,7 +226,7 @@ void CharacterBoneCollision::CreateSphereLine(const XMFLOAT4& Color, std::vector
 			prev = current;
 		}
 	}
-	
+
 	//	XY面
 	{
 		XMFLOAT3 prev;
@@ -261,7 +268,7 @@ void CharacterBoneCollision::CreateCylinderLine(const XMFLOAT4& Color, std::vect
 			float x = cosf(angle);
 			float y = sinf(angle);
 
-			XMFLOAT3 current = XMFLOAT3(x,y,0);
+			XMFLOAT3 current = XMFLOAT3(x, y, 0);
 
 			if (!first)
 			{
@@ -274,7 +281,7 @@ void CharacterBoneCollision::CreateCylinderLine(const XMFLOAT4& Color, std::vect
 			}
 			prev = current;
 		}
-		
+
 	}
 
 	//	上の円
@@ -287,7 +294,7 @@ void CharacterBoneCollision::CreateCylinderLine(const XMFLOAT4& Color, std::vect
 			float x = cosf(angle);
 			float y = sinf(angle);
 
-			XMFLOAT3 current = XMFLOAT3(x,y,1);
+			XMFLOAT3 current = XMFLOAT3(x, y, 1);
 
 			if (!first)
 			{
@@ -301,7 +308,7 @@ void CharacterBoneCollision::CreateCylinderLine(const XMFLOAT4& Color, std::vect
 			prev = current;
 		}
 	}
-	
+
 	// 繋ぐ線（側面）
 	for (int i = 0; i < DEBUG_LINE_SEGMENTS; ++i)
 	{
@@ -309,7 +316,7 @@ void CharacterBoneCollision::CreateCylinderLine(const XMFLOAT4& Color, std::vect
 		float x = cosf(angle);
 		float y = sinf(angle);
 
-		XMFLOAT3 bottom = XMFLOAT3( x, y, 0);
+		XMFLOAT3 bottom = XMFLOAT3(x, y, 0);
 		XMFLOAT3 top = XMFLOAT3(x, y, 1);
 
 		CylinderVertices.emplace_back(LINE_VERTEX{ bottom, Color });
@@ -335,7 +342,7 @@ void CharacterBoneCollision::CreateBufferVertices(const std::vector<LINE_VERTEX>
 
 void CharacterBoneCollision::MakeSphereMatrix(const XMFLOAT3& Position)
 {
-	XMMATRIX world, scale,trans;
+	XMMATRIX world, scale, trans;
 	scale = XMMatrixScaling(m_Radius, m_Radius, m_Radius);
 
 	trans = XMMatrixTranslation(Position.x, Position.y, Position.z);

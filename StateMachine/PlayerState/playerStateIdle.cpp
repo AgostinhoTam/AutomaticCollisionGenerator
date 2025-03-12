@@ -10,14 +10,13 @@ void PlayerStateIdle::Init()
 	if (!m_Player)return;
 	m_Player->SetMoveForwardDirection(0);
 	m_Player->SetMoveRightDirection(0);
-	m_AnimationModel->SetNextAnimation("Player_Idle");
+	m_AnimationModel->SetNextAnimation(m_AnimationName);
 }
 
 void PlayerStateIdle::Update()
 {
 
-	UserInputDection();
-	
+	UserInputDection();	
 }
 
 void PlayerStateIdle::UserInputDection()

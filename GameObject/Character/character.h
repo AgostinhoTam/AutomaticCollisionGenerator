@@ -15,6 +15,7 @@ class AnimationModel;
 class Character :public GameObject
 {
 protected:
+	unsigned int m_CharacterID = 0;
 	XMFLOAT3 m_Velocity{};
 	XMFLOAT3 m_Accl{};
 	AnimationModel* m_AnimationModel{};
@@ -47,4 +48,5 @@ public:
 	Collision* GetSelectedCollision(const std::string& KeyName) { return m_Collisions[KeyName]; }
 	std::vector<std::string> GetBoneMap();
 	void DeleteCollision(const std::string& CollisionName);
+	unsigned int GetCharacterID()const { return m_CharacterID; }
 };

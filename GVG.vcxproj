@@ -150,6 +150,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)External/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
@@ -205,7 +206,12 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Behavior\behaviorTree.cpp" />
+    <ClCompile Include="Behavior\behaviorAttackNode.cpp" />
+    <ClCompile Include="Behavior\behaviorIdleNode.cpp" />
+    <ClCompile Include="Behavior\behaviorNode.cpp" />
+    <ClCompile Include="Behavior\behaviorRunNode.cpp" />
+    <ClCompile Include="Behavior\blackBoard.cpp" />
+    <ClCompile Include="Behavior\conditionNode.cpp" />
     <ClCompile Include="GameObject\2DPolygon\polygon2D.cpp" />
     <ClCompile Include="GameObject\Bullet\projection.cpp" />
     <ClCompile Include="GameObject\Camera\camera.cpp" />
@@ -222,6 +228,7 @@
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Main\main.cpp" />
     <ClCompile Include="Manager\animationRendererManager.cpp" />
+    <ClCompile Include="Manager\conditionManager.cpp" />
     <ClCompile Include="Manager\debuggerImGuiManager.cpp" />
     <ClCompile Include="Manager\gameObjectManager.cpp" />
     <ClCompile Include="Manager\inputManager.cpp" />
@@ -240,7 +247,13 @@
     <ClCompile Include="System\Renderer\renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Behavior\behaviorTree.h" />
+    <ClInclude Include="Behavior\behaviorAttackNode.h" />
+    <ClInclude Include="Behavior\behaviorIdleNode.h" />
+    <ClInclude Include="Behavior\behaviorRunNode.h" />
+    <ClInclude Include="Behavior\blackBoard.h" />
+    <ClInclude Include="Behavior\blackBoardCondition.h" />
+    <ClInclude Include="Behavior\behaviorNode.h" />
+    <ClInclude Include="Behavior\conditionNode.h" />
     <ClInclude Include="GameObject\2DPolygon\polygon2D.h" />
     <ClInclude Include="GameObject\Bullet\projection.h" />
     <ClInclude Include="GameObject\Camera\camera.h" />
@@ -259,6 +272,7 @@
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="Main\main.h" />
     <ClInclude Include="Manager\animationRendererManager.h" />
+    <ClInclude Include="Manager\conditionManager.h" />
     <ClInclude Include="Manager\debuggerImGuiManager.h" />
     <ClInclude Include="Manager\gameObjectManager.h" />
     <ClInclude Include="Manager\inputManager.h" />
@@ -275,6 +289,7 @@
     <ClInclude Include="System\Collision\characterBoneCollision.h" />
     <ClInclude Include="System\Collision\collision.h" />
     <ClInclude Include="System\Collision\sphereCollision.h" />
+    <ClInclude Include="System\Enum\behaviorTreeEnum.h" />
     <ClInclude Include="System\Enum\enemyTypeEnum.h" />
     <ClInclude Include="System\Enum\gameObjectEnum.h" />
     <ClInclude Include="System\Enum\modelEnum.h" />

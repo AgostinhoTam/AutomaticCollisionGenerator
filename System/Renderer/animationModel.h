@@ -59,8 +59,8 @@ private:
 	int m_CurrentFrame = 0;
 	int m_NextFrame = 0;
 	float m_BlendRatio = 0.0f;
-	std::string m_CurrentAnimation = "Idle";
-	std::string m_NextAnimation = "Idle";
+	std::string m_CurrentAnimation = "";
+	std::string m_NextAnimation = "";
 	bool m_IsTransitioning = false;
 	bool m_IsDebugMode = false;
 	GameObject* m_Owner{};
@@ -73,7 +73,6 @@ public:
 
 	//	アニメーション関連
 	void LoadAnimation(const char* FileName, const char* Name);
-	void UpdateAnimationBlend();
 	void SetNextAnimation(const std::string& AnimationName);
 	void SetCurrentAnimation(const std::string& AnimationName) { m_CurrentAnimation = AnimationName; }
 	void SetIsTransitioning(const bool flag) { m_IsTransitioning = flag; }

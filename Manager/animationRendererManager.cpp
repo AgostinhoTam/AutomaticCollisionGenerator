@@ -40,16 +40,16 @@ AnimationModel* AnimationRendererManager::LoadAnimationModel(const MODEL_NAME& M
 		break;
 	case MODEL_NAME::ENEMY:
 		animationModel->Load("asset\\model\\enemy.fbx", Owner);
-		animationModel->LoadAnimation("asset\\model\\enemy_Idle.fbx","Enemy_Idle");
-		animationModel->LoadAnimation("asset\\model\\enemy_Run.fbx","Enemy_Run");
-		animationModel->LoadAnimation("asset\\model\\enemy_Kick.fbx","Enemy_Kick");
+		animationModel->LoadAnimation("asset\\model\\enemy_Idle.fbx","Idle");
+		animationModel->LoadAnimation("asset\\model\\enemy_Run.fbx","Run");
+		animationModel->LoadAnimation("asset\\model\\enemy_Kick.fbx","Attack");
 		m_AnimationModelPool.try_emplace(Model, animationModel);
 		break;
 	case MODEL_NAME::MONSTER:
 		animationModel->Load("asset\\model\\monster.fbx", Owner);
-		animationModel->LoadAnimation("asset\\model\\monster_Idle.fbx", "Monster_Idle");
-		animationModel->LoadAnimation("asset\\model\\monster_Run.fbx", "Monster_Run");
-		animationModel->LoadAnimation("asset\\model\\monster_Attack.fbx", "Monster_Attack");
+		animationModel->LoadAnimation("asset\\model\\monster_Idle.fbx", "Idle");
+		animationModel->LoadAnimation("asset\\model\\monster_Run.fbx", "Run");
+		animationModel->LoadAnimation("asset\\model\\monster_Attack.fbx", "Attack");
 		m_AnimationModelPool.try_emplace(Model, animationModel);
 		break;
 	default:

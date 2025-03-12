@@ -10,7 +10,7 @@ void PlayerStateWalk::Init()
 	if (!m_Player)return;
 	if (!m_Camera)return;
 	UserInputDection();
-	m_AnimationModel->SetNextAnimation("Player_Run");
+	m_AnimationModel->SetNextAnimation(m_AnimationName);
 }
 
 void PlayerStateWalk::Update()

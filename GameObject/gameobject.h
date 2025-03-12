@@ -18,7 +18,7 @@ protected:
 	bool	m_IsUsed = false;
 public:
 	GameObject(){}
-	virtual ~GameObject(){}
+	virtual ~GameObject() = default;
 	virtual void Init() = 0;
 	virtual void Update(const float& DeltaTime) = 0;
 	virtual void Draw() = 0;

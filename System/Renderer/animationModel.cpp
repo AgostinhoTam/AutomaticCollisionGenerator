@@ -16,6 +16,28 @@ void AnimationModel::Update()
 	if (m_Animation.count(m_NextAnimation) == 0)return;
 	if (!m_Animation[m_NextAnimation]->HasAnimations())return;
 
+	//	遷移中だったら
+	if (m_IsTransitioning)
+	{
+		AddBlendRatio();
+		AddCurrentAnimationFrame();
+		AddNextAnimationFrame();
+	}
+	//	普通の再生
+	else
+	{
+		AddCurrentAnimationFrame();
+	}
+	//	遷移完成したら
+	if (m_BlendRatio >= 1)
+	{
+		m_IsTransitioning = false;
+		SetCurrentAnimation(m_NextAnimation);
+		m_CurrentFrame = m_NextFrame;
+		m_BlendRatio = 0;
+	}
+
+	//	デバッグモード
 	if (InputManager::GetKeyTrigger('J'))
 	{
 		m_IsDebugMode = !m_IsDebugMode;
@@ -265,10 +287,6 @@ void AnimationModel::Load(const char* FileName, GameObject* Owner)
 				//	ボーンの数が4以下だったら
 				if (dv.BoneNum < 4)
 				{
-					if (dv.BoneNum == 3)
-					{
-						getchar();
-					}
 					dv.BoneName[dv.BoneNum] = boneName;
 					dv.BoneWeight[dv.BoneNum] = wgt;
 					++dv.BoneNum;
@@ -586,32 +604,6 @@ XMFLOAT3 AnimationModel::GetBonePosition(const int BoneIndex, const XMMATRIX& Pl
 
 }
 
-void AnimationModel::UpdateAnimationBlend()
-{
-
-	//	遷移中だったら
-	if (m_IsTransitioning)
-	{
-		AddBlendRatio();
-		AddCurrentAnimationFrame();
-		AddNextAnimationFrame();
-	}
-	//	普通の再生
-	else
-	{
-		AddCurrentAnimationFrame();
-	}
-	//	遷移完成したら
-	if (m_BlendRatio >= 1)
-	{
-		m_IsTransitioning = false;
-		SetCurrentAnimation(m_NextAnimation);
-		m_CurrentFrame = m_NextFrame;
-		m_BlendRatio = 0;
-	}
-	//	ボーン、メッシュ更新
-	Update();
-}
 
 const float AnimationModel::CalculateCapsuleRadius(const std::string& HeadName, const std::string& TailName)
 {

@@ -27,6 +27,7 @@ public:
 	void UpdateBonePosition(const int FirstIndex,const int SecondIndex, const XMFLOAT3& HeadPos, const XMFLOAT3& TailPos);
 	virtual void Init()override;
 	virtual void Draw()override;
+	virtual void Uninit()override;
 	void CreateSphereLine(const XMFLOAT4& Color,std::vector<LINE_VERTEX>& SphereVertices);
 	void CreateCylinderLine(const XMFLOAT4& Color, std::vector<LINE_VERTEX>& CylinderVertices);
 	void CreateBufferVertices(const std::vector<LINE_VERTEX>& Vertices, ID3D11Buffer*& Buffer);
