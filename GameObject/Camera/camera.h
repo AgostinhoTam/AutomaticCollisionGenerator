@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 /*===================================================================================
 
-ƒJƒƒ‰§Œä(camera.h)
+ã‚«ãƒ¡ãƒ©åˆ¶å¾¡(camera.h)
 
 ====================================================================================*/
 #include "GameObject/gameobject.h"
@@ -10,13 +10,13 @@ class Camera:public GameObject
 {
 private:
 
-	XMFLOAT3			m_Target = XMFLOAT3{0.0f,0.0f,0.0f};				// ƒJƒƒ‰‚Ì’Ž‹“_
-	XMFLOAT3			m_Up = XMFLOAT3{ 0.0f,0.0f,0.0f };;				// ƒJƒƒ‰‚Ìã•ûŒüƒxƒNƒgƒ‹
-	float				m_Len = 0.0f;			// ƒJƒƒ‰‚ÌŽ‹“_‚Æ’Ž‹“_‚Ì‹——£
+	XMFLOAT3			m_Target = XMFLOAT3{0.0f,0.0f,0.0f};				// ã‚«ãƒ¡ãƒ©ã®æ³¨è¦–ç‚¹
+	XMFLOAT3			m_Up = XMFLOAT3{ 0.0f,0.0f,0.0f };;				// ã‚«ãƒ¡ãƒ©ã®ä¸Šæ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
+	float				m_Len = 0.0f;			// ã‚«ãƒ¡ãƒ©ã®è¦–ç‚¹ã¨æ³¨è¦–ç‚¹ã®è·é›¢
 
-	XMFLOAT4X4			m_MtxView{};		// ƒrƒ…[ƒ}ƒgƒŠƒbƒNƒX
-	XMMATRIX			m_MtxInvView{};		// ƒrƒ…[ƒ}ƒgƒŠƒbƒNƒX
-	XMMATRIX			m_MtxProjection{};	// ƒvƒƒWƒFƒNƒVƒ‡ƒ“ƒ}ƒgƒŠƒbƒNƒX
+	XMFLOAT4X4			m_MtxView{};		// ãƒ“ãƒ¥ãƒ¼ãƒžãƒˆãƒªãƒƒã‚¯ã‚¹
+	XMMATRIX			m_MtxInvView{};		// ãƒ“ãƒ¥ãƒ¼ãƒžãƒˆãƒªãƒƒã‚¯ã‚¹
+	XMMATRIX			m_MtxProjection{};	// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³ãƒžãƒˆãƒªãƒƒã‚¯ã‚¹
 	Player*				m_Player{};
 	float				m_Sensitivity = 0.0f;
 public:

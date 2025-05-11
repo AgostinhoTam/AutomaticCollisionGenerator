@@ -57,9 +57,6 @@
     <ClCompile Include="GameObject\Character\character.cpp">
       <Filter>GameObject\Character</Filter>
     </ClCompile>
-    <ClCompile Include="StateMachine\PlayerState\playerStateJump.cpp">
-      <Filter>StateMachine\PlayerState</Filter>
-    </ClCompile>
     <ClCompile Include="ImGui\imgui.cpp">
       <Filter>System\ImGui</Filter>
     </ClCompile>
@@ -107,9 +104,6 @@
     </ClCompile>
     <ClCompile Include="Manager\modelRendererManager.cpp">
       <Filter>Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\Bullet\projection.cpp">
-      <Filter>GameObject\Projection</Filter>
     </ClCompile>
     <ClCompile Include="System\Collision\capsuleCollision.cpp">
       <Filter>System\Collision</Filter>
@@ -168,9 +162,6 @@
       <Filter>StateMachine\PlayerState</Filter>
     </ClInclude>
     <ClInclude Include="StateMachine\PlayerState\playerStateIdle.h">
-      <Filter>StateMachine\PlayerState</Filter>
-    </ClInclude>
-    <ClInclude Include="StateMachine\PlayerState\playerStateJump.h">
       <Filter>StateMachine\PlayerState</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imconfig.h">
@@ -238,9 +229,6 @@
     </ClInclude>
     <ClInclude Include="System\Enum\shaderEnum.h">
       <Filter>System\Enum</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\Bullet\projection.h">
-      <Filter>GameObject\Projection</Filter>
     </ClInclude>
     <ClInclude Include="System\Enum\projectionTypeEnum.h">
       <Filter>System\Enum</Filter>
@@ -315,9 +303,6 @@
     </Filter>
     <Filter Include="System\Structure">
       <UniqueIdentifier>{070a58e8-ca38-49d2-9d79-49377a7da421}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject\Projection">
-      <UniqueIdentifier>{cbf928b3-c503-4431-bf18-53ba007fe45b}</UniqueIdentifier>
     </Filter>
     <Filter Include="BehaviorTree">
       <UniqueIdentifier>{6d149b7f-25f1-4cce-a854-45e2333907e4}</UniqueIdentifier>

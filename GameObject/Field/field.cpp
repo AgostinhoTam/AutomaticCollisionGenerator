@@ -1,4 +1,4 @@
-
+ï»¿
 #include "Main/main.h"
 #include "System\Renderer/renderer.h"
 #include "Manager/shaderManager.h"
@@ -34,7 +34,7 @@ void Field::Init()
 	m_Name = "Field";
 	m_Scale = XMFLOAT3(1.0f, 1.0f, 1.0f);
 	m_Rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	//’¸“_ƒoƒbƒtƒ@
+	//é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡
 	D3D11_BUFFER_DESC bd{};
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	bd.ByteWidth = sizeof(VERTEX_3D) * 4;
@@ -46,7 +46,7 @@ void Field::Init()
 
 	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &m_VertexBuffer);
 
-	//ƒeƒLƒXƒ`ƒƒ[“Ç‚Ýž‚Ý
+	//ãƒ†ã‚­ã‚¹ãƒãƒ£ãƒ¼èª­ã¿è¾¼ã¿
 	TexMetadata metadata;
 	ScratchImage image;
 	HRESULT hr =LoadFromWICFile(L"asset\\texture\\checker.png", WIC_FLAGS_NONE, &metadata, image);
@@ -74,14 +74,14 @@ void Field::Update(const float& DeltaTime)
 
 void Field::Draw()
 {
-	//“ü—ÍƒŒƒCƒAƒEƒgÝ’è
+	//å…¥åŠ›ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆè¨­å®š
 	Renderer::GetDeviceContext()->IASetInputLayout(m_Shader->m_VertexLayout);
 
-	//ƒVƒF[ƒ_[Ý’è
+	//ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼è¨­å®š
 	Renderer::GetDeviceContext()->VSSetShader(m_Shader->m_VertexShader, NULL, 0);
 	Renderer::GetDeviceContext()->PSSetShader(m_Shader->m_PixelShader, NULL, 0);
 
-	//ƒ}ƒgƒŠƒNƒXÝ’è
+	//ãƒžãƒˆãƒªã‚¯ã‚¹è¨­å®š
 	XMMATRIX world, scale, rot, trans;
 	scale = XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z);
 	rot = XMMatrixRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z);
@@ -89,25 +89,25 @@ void Field::Draw()
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(world);
 
-	//’¸“_ƒoƒbƒtƒ@Ý’è
+	//é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;
 	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
 
-	//ƒ}ƒeƒŠƒAƒ‹
+	//ãƒžãƒ†ãƒªã‚¢ãƒ«
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
 	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	material.TextureEnable = true;
 	Renderer::SetMaterial(material);
 
-	//ƒeƒLƒXƒ`ƒƒ[Ý’è
+	//ãƒ†ã‚­ã‚¹ãƒãƒ£ãƒ¼è¨­å®š
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &m_Texture);
 
-	//ƒvƒŠƒ~ƒeƒBƒuƒgƒ|ƒƒWÝ’è
+	//ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ãƒˆãƒãƒ­ã‚¸è¨­å®š
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	//ƒ|ƒŠƒRƒ“•`‰æ
+	//ãƒãƒªã‚³ãƒ³æç”»
 	Renderer::GetDeviceContext()->Draw(4, 0);
 
 }

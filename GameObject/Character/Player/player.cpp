@@ -1,4 +1,4 @@
-#include "Manager/animationRendererManager.h"
+ï»¿#include "Manager/animationRendererManager.h"
 #include "Manager/sceneManager.h"
 #include "Manager/shaderManager.h"
 #include "Manager/inputManager.h"
@@ -68,7 +68,7 @@ void Player::Update(const float& DeltaTime)
 	if (!m_Camera)return;
 
 
-	//	ƒAƒjƒ[ƒVƒ‡ƒ“XV
+	//	ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æ›´æ–°
 	m_AnimationModel->UpdateAnimationBlend();
 
 	//if (m_Collision)m_Collision->UpdateCollision(m_Position);
@@ -78,7 +78,7 @@ void Player::Update(const float& DeltaTime)
 
 	UpdatePlayerRotation();
 
-	// ˆÚ“®XV
+	// ç§»å‹•æ›´æ–°
 	Character::Update(DeltaTime);
 	UpdateBoneCollision();
 
@@ -103,7 +103,7 @@ void Player::Draw()
 
 void Player::ChangeState(PLAYER_STATE State)
 {
-	//	“¯‚¶State‚É‘JˆÚ‚µ‚È‚¢‚æ‚¤‚É
+	//	åŒã˜Stateã«é·ç§»ã—ãªã„ã‚ˆã†ã«
 	if (m_CurrentState == m_PlayerState[State])return;
 
 	m_CurrentState = m_PlayerState[State];
@@ -116,7 +116,7 @@ void Player::ChangeState(PLAYER_STATE State)
 void Player::UpdatePlayerRotation()
 {
 	CollisionCheck();
-	// ˆÚ“®“ü—Í‚ª‚ ‚éê‡‚É‰ñ“]‚ğXV
+	// ç§»å‹•å…¥åŠ›ãŒã‚ã‚‹å ´åˆã«å›è»¢ã‚’æ›´æ–°
 	if (m_MoveDirection.x != 0.0f || m_MoveDirection.z != 0.0f)
 	{
 		const XMFLOAT3& cameraForward = m_Camera->GetForward();
@@ -125,7 +125,7 @@ void Player::UpdatePlayerRotation()
 		float moveX = m_MoveDirection.x * cameraRight.x + m_MoveDirection.z * cameraForward.x;
 		float moveZ = m_MoveDirection.x * cameraRight.z + m_MoveDirection.z * cameraForward.z;
 
-		// ³‹K‰»‚µ‚Ä•ûŒüƒxƒNƒgƒ‹
+		// æ­£è¦åŒ–ã—ã¦æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
 		XMVECTOR moveVector = XMVectorSet(moveX, 0.0f, moveZ, 0.0f);
 		moveVector = XMVector3Normalize(moveVector);
 
@@ -134,7 +134,7 @@ void Player::UpdatePlayerRotation()
 
 		m_MoveDirection = XMFLOAT3(normalizeMove.x, 0.0f, normalizeMove.z);
 
-		// ‰ñ“]XV
+		// å›è»¢æ›´æ–°
 		float yaw = atan2f(normalizeMove.x, normalizeMove.z);
 		//yaw += XM_PI;
 		m_Rotation.y = yaw;

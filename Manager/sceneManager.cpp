@@ -1,4 +1,4 @@
-#include "Manager/inputManager.h"
+ï»¿#include "Manager/inputManager.h"
 #include "Manager/gameObjectManager.h"
 #include "Manager/sceneManager.h"
 #include "Manager/shaderManager.h"
@@ -40,7 +40,7 @@ void SceneManager::Update(const float& DeltaTime)
 	InputManager::Update();
 	if (InputManager::GetKeyTrigger('K'))
 	{
-		InputManager::SetIsInputEnable(!InputManager::GetIsInputEnable());	//”½“]
+		InputManager::SetIsInputEnable(!InputManager::GetIsInputEnable());	//åè»¢
 	}
 	m_CurrentScene->Update(DeltaTime);
 }

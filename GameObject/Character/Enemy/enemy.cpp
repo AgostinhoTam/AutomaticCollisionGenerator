@@ -1,4 +1,4 @@
-#include "GameObject\Character\Player\playerh.h"
+ï»¿#include "GameObject\Character\Player\playerh.h"
 #include "Manager\animationRendererManager.h"
 #include "Manager\shaderManager.h"
 #include "Manager\gameObjectManager.h"
@@ -77,7 +77,7 @@ void Enemy::Init()
 
 	m_Shader = ShaderManager::LoadShader(SHADER_NAME::UNLIT_SKINNING_TEXTURE);
 
-	//	‚Æ‚è‚ ‚¦‚¸Ú’n
+	//	ã¨ã‚Šã‚ãˆãšæ¥åœ°
 	m_Position.y = 0;
 	m_IsGround = true;
 
@@ -121,7 +121,7 @@ void Enemy::Draw()
 void Enemy::CollisionCheck()
 {
 
-	//	ƒLƒƒƒbƒVƒ…
+	//	ã‚­ãƒ£ãƒƒã‚·ãƒ¥
 	std::unordered_map<std::string, Collision*>& playerCollisonList = m_Player->GetCollisionList();
 
 	for (const auto& enemyPair : m_Collisions)

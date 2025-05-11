@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "collision.h"
 class SphereCollision :public Collision
 {

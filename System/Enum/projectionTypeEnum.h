@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 enum class PROJECTION_TYPE
 {
 	BEAM,

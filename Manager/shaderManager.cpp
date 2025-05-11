@@ -1,4 +1,4 @@
-#include "System\Renderer/renderer.h"
+ï»¿#include "System\Renderer/renderer.h"
 #include "Manager/shaderManager.h"
 
 std::unordered_map<SHADER_NAME, Shader*> ShaderManager::m_ShaderList;
@@ -18,14 +18,14 @@ void ShaderManager::Uninit()
 		pair.second->m_PixelShader->Release();
 		pair.second->m_VertexLayout->Release();
 		pair.second->m_VertexShader->Release();
-		delete pair.second; // “®“I‚ÉŠm•Û‚µ‚½ƒƒ‚ƒŠ‚ğ‰ğ•ú
+		delete pair.second; // å‹•çš„ã«ç¢ºä¿ã—ãŸãƒ¡ãƒ¢ãƒªã‚’è§£æ”¾
 	}
 	m_ShaderList.clear();
 }
 
 Shader* ShaderManager::CreateShader(const SHADER_NAME& ShaderName,const char* PSFileName, const char* VSFileName)
 {
-	//	d•¡‚Å‚«‚È‚¢‚æ‚¤‚É
+	//	é‡è¤‡ã§ããªã„ã‚ˆã†ã«
 	auto it = m_ShaderList.find(ShaderName);
 	if (it != m_ShaderList.end())
 	{
@@ -37,7 +37,7 @@ Shader* ShaderManager::CreateShader(const SHADER_NAME& ShaderName,const char* PS
 	if (ShaderName == SHADER_NAME::DEBUG_LINE)
 	{
 		Renderer::CreateDebugVertexShader(&shader->m_VertexShader, &shader->m_VertexLayout, VSFileName);
-		Renderer::CreatePixelShader(&shader->m_PixelShader,PSFileName);		// PSŒ»İ‚Í‚Pí—Ş‚¾‚¯‚È‚Ì‚Å‘S•”“¯‚¶
+		Renderer::CreatePixelShader(&shader->m_PixelShader,PSFileName);		// PSç¾åœ¨ã¯ï¼‘ç¨®é¡ã ã‘ãªã®ã§å…¨éƒ¨åŒã˜
 	}
 	else if (ShaderName == SHADER_NAME::UNLIT_SKINNING_TEXTURE)
 	{

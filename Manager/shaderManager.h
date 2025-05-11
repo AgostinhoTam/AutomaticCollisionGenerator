@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <unordered_map>
 #include "System\Structure/shaderStructure.h"
 #include "System\Enum/shaderEnum.h"

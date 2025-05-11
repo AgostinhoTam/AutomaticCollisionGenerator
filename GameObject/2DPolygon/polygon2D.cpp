@@ -1,4 +1,4 @@
-
+ï»¿
 #include "Manager/shaderManager.h"
 #include "GameObject/2DPolygon/polygon2D.h"
 
@@ -32,7 +32,7 @@ void Polygon2D::Init()
 {
 	
 
-	//’¸“_ƒoƒbƒtƒ@
+	//é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡
 	D3D11_BUFFER_DESC bd{};
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	bd.ByteWidth = sizeof(VERTEX_3D) * 4;
@@ -44,7 +44,7 @@ void Polygon2D::Init()
 
 	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &m_VertexBuffer);
 
-	//ƒeƒLƒXƒ`ƒƒ[“Ç‚Ýž‚Ý
+	//ãƒ†ã‚­ã‚¹ãƒãƒ£ãƒ¼èª­ã¿è¾¼ã¿
 	TexMetadata metadata;
 	ScratchImage image;
 	HRESULT hr =LoadFromWICFile(L"asset\\texture\\Brick.png", WIC_FLAGS_NONE, &metadata, image);
@@ -72,28 +72,28 @@ void Polygon2D::Update(const float& DeltaTime)
 
 void Polygon2D::Draw()
 {
-	//“ü—ÍƒŒƒCƒAƒEƒgÝ’è
+	//å…¥åŠ›ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆè¨­å®š
 	Renderer::GetDeviceContext()->IASetInputLayout(m_Shader->m_VertexLayout);
 
-	//ƒVƒF[ƒ_[Ý’è
+	//ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼è¨­å®š
 	Renderer::GetDeviceContext()->VSSetShader(m_Shader->m_VertexShader, NULL, 0);
 	Renderer::GetDeviceContext()->PSSetShader(m_Shader->m_PixelShader, NULL, 0);
 
-	//ƒ}ƒgƒŠƒNƒXÝ’è		//2D—p‚Ìƒ}ƒgƒŠƒNƒX‚ÉÝ’è
+	//ãƒžãƒˆãƒªã‚¯ã‚¹è¨­å®š		//2Dç”¨ã®ãƒžãƒˆãƒªã‚¯ã‚¹ã«è¨­å®š
 	Renderer::SetWorldViewProjection2D();
 
-	//’¸“_ƒoƒbƒtƒ@Ý’è
+	//é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;
 	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
 	
-	//ƒeƒLƒXƒ`ƒƒ[Ý’è
+	//ãƒ†ã‚­ã‚¹ãƒãƒ£ãƒ¼è¨­å®š
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &m_Texture);
 
-	//ƒvƒŠƒ~ƒeƒBƒuƒgƒ|ƒƒWÝ’è
+	//ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ãƒˆãƒãƒ­ã‚¸è¨­å®š
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	//ƒ|ƒŠƒRƒ“•`‰æ
+	//ãƒãƒªã‚³ãƒ³æç”»
 	Renderer::GetDeviceContext()->Draw(4, 0);
 
 }

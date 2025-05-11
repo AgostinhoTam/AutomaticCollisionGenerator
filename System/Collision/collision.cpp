@@ -1,4 +1,4 @@
-#include "collision.h"
+﻿#include "collision.h"
 #include "Manager\shaderManager.h"
 Collision::Collision(const XMFLOAT3& Position, const XMFLOAT3& Offset) :m_Position(Position), m_Offset(Offset)
 {

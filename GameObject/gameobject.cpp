@@ -1,4 +1,4 @@
-
+﻿
 #include "GameObject/gameobject.h"
 
 const XMFLOAT3 GameObject::GetForward()const

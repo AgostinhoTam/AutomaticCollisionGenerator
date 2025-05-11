@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Main\main.h"
 #include "System\Structure\shaderStructure.h"
 struct LINE_VERTEX
@@ -22,7 +22,7 @@ protected:
 	bool m_IsHit = false;
 	bool m_IsSelected = false;
 public:
-	Collision(const XMFLOAT3& Position, const XMFLOAT3& Offset);	// ˆø”iOwnerƒ|ƒCƒ“ƒ^AOffset’lj
+	Collision(const XMFLOAT3& Position, const XMFLOAT3& Offset);	// å¼•æ•°ï¼ˆOwnerãƒã‚¤ãƒ³ã‚¿ã€Offsetå€¤ï¼‰
 	virtual ~Collision() {}
 	virtual bool IsCollisionOverlapping(const Collision* Collision) = 0;
 	virtual void UpdateCollision(const XMFLOAT3& Position) {}

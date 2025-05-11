@@ -1,4 +1,4 @@
-#include "Main\main.h"
+ï»¿#include "Main\main.h"
 #include "System\Renderer\animationModel.h"
 #include "System\Collision\sphereCollision.h"
 #include "System\Collision\characterBoneCollision.h"
@@ -8,6 +8,7 @@
 constexpr float FRICTION = 0.8f;
 constexpr float MAX_DROP_SPEED = -50.0f;
 constexpr float GRAVITY = -9.8f;
+
 void Character::Update(const float& DeltaTime)
 {
 	XMVECTOR position = XMLoadFloat3(&m_Position);
@@ -48,14 +49,14 @@ void Character::UpdateVerticalVelocity(XMVECTOR& Velocity, const float& DeltaTim
 
 void Character::UpdateHorizontalVelocity(XMVECTOR& Velocity, const float& DeltaTime)
 {
-	//	•½–Ê•ûŒü³‹K‰»
-	XMVECTOR dirNormalize = XMVectorSet(m_MoveDirection.x, 0.0f, m_MoveDirection.z, 0.0f); //xzˆÚ“®
+	//	å¹³é¢æ–¹å‘æ­£è¦åŒ–
+	XMVECTOR dirNormalize = XMVectorSet(m_MoveDirection.x, 0.0f, m_MoveDirection.z, 0.0f); //xzç§»å‹•
 	dirNormalize = XMVector3Normalize(dirNormalize);
 
-	//	‰Á‘¬“x
+	//	åŠ é€Ÿåº¦
 	XMVECTOR accl = dirNormalize * m_MaxHorizontalAcclSpeed * DeltaTime;
 
-	//	‰Á‘¬“x“K—p
+	//	åŠ é€Ÿåº¦é©ç”¨
 	Velocity = XMVectorAdd(Velocity, accl);
 
 	XMVECTOR velocityXZ = XMVectorSet(XMVectorGetX(Velocity), 0.0f, XMVectorGetZ(Velocity), 0.0f);
@@ -65,11 +66,11 @@ void Character::UpdateHorizontalVelocity(XMVECTOR& Velocity, const float& DeltaT
 		Velocity = XMVectorSet(XMVectorGetX(velocityXZ), XMVectorGetY(Velocity), XMVectorGetZ(velocityXZ), 0.0f);
 	}
 
-	//	‘¬“xãŒÀ
+	//	é€Ÿåº¦ä¸Šé™
 	float velocityMagnitude = XMVectorGetX(XMVector3Length(velocityXZ));
 	if (velocityMagnitude > m_MaxMovementSpeed)
 	{
-		//	‘¬“x’²®
+		//	é€Ÿåº¦èª¿æ•´
 		velocityXZ = XMVector3Normalize(velocityXZ) * m_MaxMovementSpeed;
 
 		Velocity = XMVectorSet(XMVectorGetX(velocityXZ), XMVectorGetY(Velocity), XMVectorGetZ(velocityXZ), 0.0f);
@@ -80,11 +81,11 @@ void Character::UpdateBoneCollision()
 {
 	if (m_Collisions.empty())return;
 
-	//	ƒLƒƒƒbƒVƒ…
+	//	ã‚­ãƒ£ãƒƒã‚·ãƒ¥
 	std::unordered_map<int, XMFLOAT3> bonePosition;
 	const std::unordered_map<std::string,int>& boneIndexMap = m_AnimationModel->GetBoneIndexMap();
 
-	//	Œ»İ‚ÌMatrixæ“¾
+	//	ç¾åœ¨ã®Matrixå–å¾—
 	XMMATRIX world, scale, rot, trans;
 
 	scale = XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z);
@@ -96,7 +97,7 @@ void Character::UpdateBoneCollision()
 	trans = XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z);
 	world = scale * rot * trans;
 
-	//	ƒRƒŠƒWƒ‡ƒ“XV
+	//	ã‚³ãƒªã‚¸ãƒ§ãƒ³æ›´æ–°
 	for (const auto& pair : m_Collisions)
 	{
 		if (!pair.second)continue;
@@ -106,7 +107,7 @@ void Character::UpdateBoneCollision()
 			int headBoneIndex = boneCollision->GetHeadBoneIndex();
 			int tailBoneIndex = boneCollision->GetTailBoneIndex();
 
-			//	ˆÊ’u‚ğƒLƒƒƒVƒ…[
+			//	ä½ç½®ã‚’ã‚­ãƒ£ã‚·ãƒ¥ãƒ¼
 			if (bonePosition.find(headBoneIndex) == bonePosition.end())
 			{
 				bonePosition.try_emplace(headBoneIndex, m_AnimationModel->GetBonePosition(headBoneIndex, world));
@@ -162,14 +163,14 @@ void Character::CreateCharacterBoneCollision(const CHARACTER_BONE_TYPE& BoneType
 	}
 
 	std::string line;
-	std::getline(file, line);	//	Å‰‚Ìˆê—ñƒXƒLƒbƒv
+	std::getline(file, line);	//	æœ€åˆã®ä¸€åˆ—ã‚¹ã‚­ãƒƒãƒ—
 
 	while (std::getline(file, line))
 	{
 		std::istringstream ss(line);
 		std::string partName, headBone, tailBone;
 		std::getline(ss, partName, ',');
-		//	ƒf[ƒ^‚ª‚È‚¯‚ê‚Î
+		//	ãƒ‡ãƒ¼ã‚¿ãŒãªã‘ã‚Œã°
 		if (partName == "0")
 		{
 			break;
@@ -214,14 +215,14 @@ void Character::CreateCharacterBoneCollision(const std::string& FilePath)
 	}
 
 	std::string line;
-	std::getline(file, line);	//	Å‰‚Ìˆê—ñƒXƒLƒbƒv
+	std::getline(file, line);	//	æœ€åˆã®ä¸€åˆ—ã‚¹ã‚­ãƒƒãƒ—
 
 	while (std::getline(file, line))
 	{
 		std::istringstream ss(line);
 		std::string partName, headBone, tailBone;
 		std::getline(ss, partName, ',');
-		//	ƒf[ƒ^‚ª‚È‚¯‚ê‚Î
+		//	ãƒ‡ãƒ¼ã‚¿ãŒãªã‘ã‚Œã°
 		if (partName == "0")
 		{
 			break;
@@ -245,13 +246,13 @@ void Character::CreateSingleBoneCollision(const std::string& Head, const std::st
 	{
 
 		std::string keyName = Head + " -> " + Tail;
-		if (Radius == 0)	//@ƒƒbƒVƒ…ŒvZ‚·‚é
+		if (Radius == 0)	//ã€€ãƒ¡ãƒƒã‚·ãƒ¥è¨ˆç®—ã™ã‚‹æ™‚
 		{
 			float radius = m_AnimationModel->CalculateCapsuleRadius(Head, Tail);
 			radius *= m_Scale.x;
 			m_Collisions.emplace(keyName, new CharacterBoneCollision(headit->second, tailit->second, bones[headit->second].HeadPosition, bones[tailit->second].HeadPosition, Offset, radius));
 		}
-		else //@ŒvZ‚µ‚È‚¢‚Íw’è
+		else //ã€€è¨ˆç®—ã—ãªã„æ™‚ã¯æŒ‡å®š
 		{
 			m_Collisions.emplace(keyName, new CharacterBoneCollision(headit->second, tailit->second, bones[headit->second].HeadPosition, bones[tailit->second].HeadPosition, Offset, Radius));
 		}

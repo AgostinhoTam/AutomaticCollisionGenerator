@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "GameObject\Character\character.h"
 #include "System\Enum\enemyTypeEnum.h"
 class BehaviorNode;

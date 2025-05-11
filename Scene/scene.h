@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 class SceneManager;
 class GameObjectManager;
 class Scene

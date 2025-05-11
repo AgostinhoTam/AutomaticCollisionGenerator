@@ -1,4 +1,4 @@
-#include <filesystem>
+ï»¿#include <filesystem>
 #include "Manager\debuggerImGuiManager.h"
 #include "Main\main.h"
 #include "System\Renderer\renderer.h"
@@ -28,7 +28,7 @@ void DebuggerImGuiManager::LoadCurrentSceneGameObjectList(Scene* scene)
 }
 void DebuggerImGuiManager::Init()
 {
-	//	ImGuiƒZƒbƒgƒAƒbƒv
+	//	ImGuiã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
@@ -76,11 +76,11 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 	}
 
 	ImGui::End();
-	// ‘I‘ğ‚³‚ê‚½ƒIƒuƒWƒFƒNƒg‚ÌÚ×‚ğ•\¦
+	// é¸æŠã•ã‚ŒãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®è©³ç´°ã‚’è¡¨ç¤º
 	if (m_TargetObject)
 	{
 		ImGui::Begin("Selected GameObject");
-		//	Šî–{Transformî•ñ
+		//	åŸºæœ¬Transformæƒ…å ±
 		ImGui::Text("Name: %s", m_TargetObject->GetName().c_str());
 		if (ImGui::CollapsingHeader("Transform"))
 		{
@@ -92,11 +92,11 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 			ImGui::Text("Rotation: %.2f, %.2f, %.2f", scale.x, scale.y, scale.z);
 		}
 
-		//@ƒLƒƒƒ‰ƒNƒ^[‚ª‘I‘ğ‚³‚ê‚½‚É•\¦‚³‚ê‚éî•ñ
+		//ã€€ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ãŒé¸æŠã•ã‚ŒãŸæ™‚ã«è¡¨ç¤ºã•ã‚Œã‚‹æƒ…å ±
 		Character* characterObject = dynamic_cast<Character*>(m_TargetObject);
 		if (characterObject)
 		{
-			//	•¨—ŠÖ˜A
+			//	ç‰©ç†é–¢é€£
 			if (ImGui::CollapsingHeader("Physics"))
 			{
 				const XMFLOAT3& velocity = characterObject->GetVelocity();
@@ -105,7 +105,7 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 				ImGui::Text("Velocity: %.2f, %.2f, %.2f", velocity.x, velocity.y, velocity.z);
 				ImGui::Text("Acceleration: %.2f, %.2f, %.2f", acceleration.x, acceleration.y, acceleration.z);
 			}
-			//	ƒAƒjƒ[ƒVƒ‡ƒ“ŠÖ˜A
+			//	ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é–¢é€£
 			if (ImGui::CollapsingHeader("Animation"))
 			{
 				AnimationModel* model = characterObject->GetAnimationModel();
@@ -116,7 +116,7 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 				ImGui::Text("NextAnimationFrame: %d", model->GetNextAnimationFrame());
 				ImGui::Text("BlendRatio: %f", model->GetBlendRatio());
 			}
-			//	“–‚½‚è”»’èŠÖ˜A
+			//	å½“ãŸã‚Šåˆ¤å®šé–¢é€£
 			if (ImGui::CollapsingHeader("Collision"))
 			{
 				ImGui::Text("Current Collision List");
@@ -126,7 +126,7 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 				std::vector<std::string> allBoneKeys;
 				std::vector<const char*> allBoneKeyPointers;
 
-				//	==============Œ»İƒRƒŠƒWƒ‡ƒ“ƒŠƒXƒgì¬=====================
+				//	==============ç¾åœ¨ã‚³ãƒªã‚¸ãƒ§ãƒ³ãƒªã‚¹ãƒˆä½œæˆ=====================
 				std::unordered_map<std::string, Collision*>& collisionList = characterObject->GetCollisionList();
 				{
 					
@@ -139,19 +139,19 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 						if (!pair.second)continue;
 						collisionKeys.emplace_back(pair.first);
 					}
-					//	const char*”z—ñì¬@Imgui display
+					//	const char*é…åˆ—ä½œæˆã€€Imgui display
 					for (const auto& key : collisionKeys)
 					{
 						collisionKeyPointers.emplace_back(key.c_str());
 					}
-					//	Œ»İ‚ÌƒRƒŠƒWƒ‡ƒ“‚ğ‘S•”•\¦
+					//	ç¾åœ¨ã®ã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚’å…¨éƒ¨è¡¨ç¤º
 					if (!collisionKeyPointers.empty())
 					{
 						int previousItemCurrent = item_current;
 
 						ImGui::ListBox(" ", &item_current, collisionKeyPointers.data(), static_cast<int>(collisionKeyPointers.size()),4);
 
-						//	‘I‘ğ’†‚ÌƒRƒŠƒWƒ‡ƒ“‚ğ•ÏF
+						//	é¸æŠä¸­ã®ã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚’å¤‰è‰²
 						selectedKey = collisionKeys[item_current];
 						if (!previousKey.empty() && previousKey != selectedKey)
 						{
@@ -191,7 +191,7 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 					{
 						ImGui::Text("No Collision");
 					}
-					//	‘I‘ğ‚µ‚½ƒRƒŠƒWƒ‡ƒ“‚ğíœ
+					//	é¸æŠã—ãŸã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚’å‰Šé™¤
 					ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(1 / 7.0f, 0.6f, 0.6f));
 					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(1 / 7.0f, 0.7f, 0.7f));
 					ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(1 / 7.0f, 0.8f, 0.8f));
@@ -210,7 +210,7 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 					ImGui::PopStyleColor(3);
 				}
 
-				//	ƒ{[ƒ“ƒvƒƒtƒ@ƒCƒ‹‘I‘ğ
+				//	ãƒœãƒ¼ãƒ³ãƒ—ãƒ­ãƒ•ã‚¡ã‚¤ãƒ«é¸æŠ
 				{
 					static std::string directoryPath = "asset\\boneProfile";
 					static int selectedBoneProfile = 0;
@@ -238,7 +238,7 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 					}
 ;					
 				}
-				//==================ì¬‰Â”\ƒ{[ƒ“ƒŠƒXƒg===================
+				//==================ä½œæˆå¯èƒ½ãƒœãƒ¼ãƒ³ãƒªã‚¹ãƒˆ===================
 				{
 					ImGui::Text("Create Bone Collision");
 					static int head_bone = 0;
@@ -270,9 +270,9 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 		ImGui::End();
 	}
 
-	//	DrawData‡¬
-	ImGui::Render();			//@‚±‚Ìˆ—‚µ‚½ŒãAGetDrawData‚ÅRender‚³‚ê‚é
-	//	Renderƒf[ƒ^
+	//	DrawDataåˆæˆ
+	ImGui::Render();			//ã€€ã“ã®å‡¦ç†ã—ãŸå¾Œã€GetDrawDataã§Renderã•ã‚Œã‚‹
+	//	Renderãƒ‡ãƒ¼ã‚¿
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
@@ -297,7 +297,7 @@ void DebuggerImGuiManager::LoadCSVFiles(const std::string& Path, std::vector<con
 	{
 		if (entry.is_regular_file() && entry.path().extension() == ".csv")
 		{
-			m_FileList.push_back(entry.path().filename().string());  // ƒtƒ@ƒCƒ‹–¼‚Ì‚İæ“¾
+			m_FileList.push_back(entry.path().filename().string());  // ãƒ•ã‚¡ã‚¤ãƒ«åã®ã¿å–å¾—
 		}
 	}
 	

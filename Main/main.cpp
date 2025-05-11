@@ -1,10 +1,10 @@
-#include "Main/main.h"
+ï»¿#include "Main/main.h"
 
 #include <thread>
 #include "Manager/sceneManager.h"
 #include "Manager\debuggerImGuiManager.h"
 const char* CLASS_NAME = "AppClass";
-const char* WINDOW_NAME = "ƒRƒŠƒWƒ‡ƒ“©“®İ’uƒc[ƒ‹";
+const char* WINDOW_NAME = "ã‚³ãƒªã‚¸ãƒ§ãƒ³è‡ªå‹•è¨­ç½®ãƒ„ãƒ¼ãƒ«";
 
 constexpr float FPS = 60.0f;
 constexpr float FRAME_PER_SEC = 1 / FPS;
@@ -119,7 +119,7 @@ extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
-{	//	‚à‚µImGui‚ÌUI‚ÉƒNƒŠƒbƒN‚µ‚½‚çAˆ—‚ÍImGui‚ÉŒü‚­
+{	//	ã‚‚ã—ImGuiã®UIã«ã‚¯ãƒªãƒƒã‚¯ã—ãŸã‚‰ã€å‡¦ç†ã¯ImGuiã«å‘ã
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))return true;
 
 	switch(uMsg)

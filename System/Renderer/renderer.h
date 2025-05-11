@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Main/main.h"
 
 struct VERTEX_3D
@@ -44,19 +44,19 @@ struct LIGHT
 
 enum class CULL_MODE
 {
-	CULL_MODE_NONE,			//ƒJƒŠƒ“ƒO–³‚µ
-	CULL_MODE_FRONT,		//•\‚Ìƒ|ƒŠƒSƒ“‚ð•`‰æ‚µ‚È‚¢
-	CULL_MODE_BACK,			//— ‚Ìƒ|ƒŠƒSƒ“‚ð•`‰æ‚µ‚È‚¢
+	CULL_MODE_NONE,			//ã‚«ãƒªãƒ³ã‚°ç„¡ã—
+	CULL_MODE_FRONT,		//è¡¨ã®ãƒãƒªã‚´ãƒ³ã‚’æç”»ã—ãªã„
+	CULL_MODE_BACK,			//è£ã®ãƒãƒªã‚´ãƒ³ã‚’æç”»ã—ãªã„
 
 	CULL_MODE_NUM
 };
 
 enum class BLEND_MODE
 {
-	BLEND_MODE_NONE,		//ƒuƒŒƒ“ƒh–³‚µ
-	BLEND_MODE_ALPHABLEND,	//ƒ¿ƒuƒŒƒ“ƒh
-	BLEND_MODE_ADD,			//‰ÁŽZƒuƒŒƒ“ƒh
-	BLEND_MODE_ATC			//Alpha-To-CoverageA‘‚È‚Æ‚Ì”¼“§–¾•\Œ»
+	BLEND_MODE_NONE,		//ãƒ–ãƒ¬ãƒ³ãƒ‰ç„¡ã—
+	BLEND_MODE_ALPHABLEND,	//Î±ãƒ–ãƒ¬ãƒ³ãƒ‰
+	BLEND_MODE_ADD,			//åŠ ç®—ãƒ–ãƒ¬ãƒ³ãƒ‰
+	BLEND_MODE_ATC			//Alpha-To-Coverageã€è‰ãªã¨ã®åŠé€æ˜Žè¡¨ç¾
 };
 class Renderer
 {

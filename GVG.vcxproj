@@ -115,6 +115,7 @@
       <PrecompiledHeaderFile>main.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>
       </ForcedIncludeFiles>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -143,6 +144,7 @@
       <PrecompiledHeaderFile>main.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>
       </ForcedIncludeFiles>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -207,7 +209,6 @@
   <ItemGroup>
     <ClCompile Include="Behavior\behaviorTree.cpp" />
     <ClCompile Include="GameObject\2DPolygon\polygon2D.cpp" />
-    <ClCompile Include="GameObject\Bullet\projection.cpp" />
     <ClCompile Include="GameObject\Camera\camera.cpp" />
     <ClCompile Include="GameObject\Character\character.cpp" />
     <ClCompile Include="GameObject\Character\Enemy\enemy.cpp" />
@@ -220,7 +221,84 @@
     <ClCompile Include="ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="Main\main.cpp" />
+    <ClCompile Include="Main\main.cpp">
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <Optimization>Disabled</Optimization>
+      <SupportJustMyCode>true</SupportJustMyCode>
+      <AssemblerOutput>NoListing</AssemblerOutput>
+      <AssemblerListingLocation>GVG\x64\Debug\</AssemblerListingLocation>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <BrowseInformationFile>GVG\x64\Debug\</BrowseInformationFile>
+      <CompileAs>Default</CompileAs>
+      <ConformanceMode>true</ConformanceMode>
+      <DiagnosticsFormat>Column</DiagnosticsFormat>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <ErrorReporting>Prompt</ErrorReporting>
+      <ExpandAttributedSource>false</ExpandAttributedSource>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <EnableASAN>false</EnableASAN>
+      <EnableFuzzer>false</EnableFuzzer>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <ForcedIncludeFiles>
+      </ForcedIncludeFiles>
+      <GenerateModuleDependencies>false</GenerateModuleDependencies>
+      <GenerateSourceDependencies>false</GenerateSourceDependencies>
+      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ModuleDependenciesFile>GVG\x64\Debug\</ModuleDependenciesFile>
+      <ModuleOutputFile>GVG\x64\Debug\</ModuleOutputFile>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <ObjectFileName>GVG\x64\Debug\</ObjectFileName>
+      <CallingConvention>Cdecl</CallingConvention>
+      <ProgramDataBaseFileName>GVG\x64\Debug\vc143.pdb</ProgramDataBaseFileName>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>main.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>GVG\x64\Debug\GVG.pch</PrecompiledHeaderOutputFile>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessKeepComments>false</PreprocessKeepComments>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+      <ShowIncludes>false</ShowIncludes>
+      <SourceDependenciesFile>GVG\x64\Debug\</SourceDependenciesFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <SpectreMitigation>false</SpectreMitigation>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <TrackerLogDirectory>GVG\x64\Debug\GVG.tlog\</TrackerLogDirectory>
+      <TranslateIncludes>false</TranslateIncludes>
+      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <UseFullPaths>true</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <XMLDocumentationFileName>GVG\x64\Debug\</XMLDocumentationFileName>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <IntelJCCErratum>false</IntelJCCErratum>
+      <BuildStlModules>false</BuildStlModules>
+      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+      <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_MBCS;</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\SchoolFile\GM31\GVG\External/DirectXTex;C:\SchoolFile\GM31\GVG\;;C:\Users\agost\vcpkg\installed\x64-windows\include</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LinkCompiled>true</LinkCompiled>
+    </ClCompile>
     <ClCompile Include="Manager\animationRendererManager.cpp" />
     <ClCompile Include="Manager\debuggerImGuiManager.cpp" />
     <ClCompile Include="Manager\gameObjectManager.cpp" />
@@ -230,7 +308,6 @@
     <ClCompile Include="Manager\shaderManager.cpp" />
     <ClCompile Include="Scene\gameScene.cpp" />
     <ClCompile Include="StateMachine\PlayerState\playerStateIdle.cpp" />
-    <ClCompile Include="StateMachine\PlayerState\playerStateJump.cpp" />
     <ClCompile Include="StateMachine\PlayerState\playerStateWalk.cpp" />
     <ClCompile Include="System\Collision\capsuleCollision.cpp" />
     <ClCompile Include="System\Collision\characterBoneCollision.cpp" />
@@ -242,7 +319,6 @@
   <ItemGroup>
     <ClInclude Include="Behavior\behaviorTree.h" />
     <ClInclude Include="GameObject\2DPolygon\polygon2D.h" />
-    <ClInclude Include="GameObject\Bullet\projection.h" />
     <ClInclude Include="GameObject\Camera\camera.h" />
     <ClInclude Include="GameObject\Character\character.h" />
     <ClInclude Include="GameObject\Character\Enemy\enemy.h" />
@@ -269,7 +345,6 @@
     <ClInclude Include="Scene\scene.h" />
     <ClInclude Include="StateMachine\PlayerState\playerState.h" />
     <ClInclude Include="StateMachine\PlayerState\playerStateIdle.h" />
-    <ClInclude Include="StateMachine\PlayerState\playerStateJump.h" />
     <ClInclude Include="StateMachine\PlayerState\playerStateWalk.h" />
     <ClInclude Include="System\Collision\capsuleCollision.h" />
     <ClInclude Include="System\Collision\characterBoneCollision.h" />

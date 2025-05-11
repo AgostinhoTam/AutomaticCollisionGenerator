@@ -1,4 +1,4 @@
-#include"Manager\sceneManager.h"
+ï»¿#include"Manager\sceneManager.h"
 #include "Manager\gameObjectManager.h"
 #include "Scene\scene.h"
 #include "Main\main.h"
@@ -11,14 +11,14 @@ constexpr float FOLLOW_DISTANCE = 25.0f;
 constexpr float ATTACK_DISTANCE = 5.0f;
 constexpr float ATTACK_COOLDOWN = 3.0f;
 
-//	===========================§Œäƒm[ƒh===============================
+//	===========================è›»ï½¶è •ï½¡ç¹å¼±ãƒ»ç¹ãƒ»==============================
 BEHAVIOR_RESULT BehaviorSequence::Update(const float DeltaTime)
 {
 	while (m_Index < m_Child.size())
 	{
 		BEHAVIOR_RESULT result = m_Child[m_Index]->Update(DeltaTime);
 
-		if (result == BEHAVIOR_RESULT::SUCCESS)
+		if (result == BEHAVIOR_RESULT::SUCCESS)	//	è¬Œä»™ç²¥ç¸ºåŠ±â—†ç¹§ç”»ï½¬ï½¡ç¸ºï½®ç¹å¼±ãƒ»ç¹å³¨âˆˆ
 		{
 			++m_Index;
 			if (m_Index >= m_Child.size())
@@ -27,11 +27,11 @@ BEHAVIOR_RESULT BehaviorSequence::Update(const float DeltaTime)
 				return BEHAVIOR_RESULT::SUCCESS;
 			}
 		}
-		else if (result == BEHAVIOR_RESULT::CONTINUE)
+		else if (result == BEHAVIOR_RESULT::CONTINUE)	//ç¸²Â€é‚¯å’ï½¶ãƒ»
 		{
 			return BEHAVIOR_RESULT::CONTINUE;
 		}
-		else
+		else // èŸï½±è¬¨åŠ±ï¼ ç¸ºæº˜ï½‰ç¹ï½ªç¹§ï½»ç¹ãƒ»ãƒ¨
 		{
 			m_Index = 0;
 			return BEHAVIOR_RESULT::FAILURE;
@@ -73,11 +73,11 @@ BehaviorIdle::BehaviorIdle(Enemy* Enemy, const std::string& Type):BehaviorNode(E
 	m_AnimationName = Type;
 }
 
-//=========================ƒXƒe[ƒg==========================
+//=========================ç¹§ï½¹ç¹ãƒ»ãƒ»ç¹ãƒ»=========================
 void BehaviorIdle::Init()
 {
 	if (!m_AnimationModel)return;
-	//	Äİ’è–h~
+	//	èœ€å´ï½¨ï½­è³å¤äºŸè±ï½¢
 	if (m_AnimationModel->GetCurrentAnimationName() != m_AnimationName)
 	{
 		m_AnimationModel->SetNextAnimation(m_AnimationName);
@@ -94,7 +94,7 @@ BEHAVIOR_RESULT BehaviorIdle::Update(const float DeltaTime)
 	float length = XMVectorGetX(XMVector3Length(direction));
 	if (length < SENSE_DISTANCE)
 	{
-		// Ÿ‚Ìó‘Ô‚Ö
+		// è°ºï½¡ç¸ºï½®è¿¥ï½¶è«·ä¹âˆˆ
 		return BEHAVIOR_RESULT::SUCCESS;
 	}
 	if (m_AnimationModel->GetNextAnimationName() != m_AnimationName)
@@ -119,7 +119,7 @@ BehaviorNode::BehaviorNode(Enemy* Enemy)
 
 void BehaviorNode::AddChildNode(BehaviorNode* Node)
 {	
-	//	ƒcƒŠ[’Ç‰Á‚ÌQÆ’Ç‰Á
+	//	ç¹ãƒ»Îœç¹ï½¼éœ‘ï½½èœ‰ï£°ç¸ºï½®è­ã‚‡ç›¾è¾£ï½§éœ‘ï½½èœ‰ï£°
 	Node->m_Parent = this;
 	m_Child.emplace_back(Node);
 }
@@ -146,7 +146,7 @@ BEHAVIOR_RESULT BehaviorMove::Update(const float DeltaTime)
 	XMVECTOR vector = XMVectorSubtract(playerPosition, enemyPosition);
 	float length = XMVectorGetX(XMVector3Length(vector));
 	
-	//	ˆê’è‹——£‚Å’â~
+	//	è³Â€è³å¤Šï½·æ™å±¬ç¸ºï½§è››æ‡ˆï½­ï½¢
 	if (length < ATTACK_DISTANCE)
 	{
 		m_Enemy->SetMoveDirection(XMFLOAT3(0, 0, 0));
@@ -166,7 +166,7 @@ BEHAVIOR_RESULT BehaviorMove::Update(const float DeltaTime)
 	XMFLOAT3 direction;
 	XMStoreFloat3(&direction, normalizeDirection);
 	float yaw = atan2f(direction.x, direction.z);
-	m_Enemy->SetRotationY(yaw); // Œü‚«XV
+	m_Enemy->SetRotationY(yaw); // èœ·ä»£â€³è­–ï½´è­ï½°
 	m_Enemy->SetMoveDirection(direction);
 	m_AnimationModel->UpdateAnimationBlend();
 	return BEHAVIOR_RESULT::CONTINUE;
@@ -175,7 +175,7 @@ BEHAVIOR_RESULT BehaviorMove::Update(const float DeltaTime)
 void BehaviorAttack::Init()
 {
 	if (!m_AnimationModel)return;
-	//	Œ»İ‚Æ“¯‚¶‚È‚çƒXƒLƒbƒv
+	//	è¿´ï½¾è¨ï½¨ç¸ºï½¨èœ·å¾ŒÂ§ç¸ºï½ªç¹§å³¨ã›ç¹§ï½­ç¹ãƒ»ãƒ»
 	if (m_AnimationModel->GetCurrentAnimationName() != m_AnimationName)
 	{
 		m_AnimationModel->SetNextAnimation(m_AnimationName);
@@ -189,7 +189,7 @@ void BehaviorAttack::Init()
 BehaviorAttack::BehaviorAttack(Enemy* Enemy, const std::string& Type,const float AttackDistance):BehaviorNode(Enemy),m_AttackDistance(AttackDistance)
 {
 	m_AnimationName = Type;
-	m_BehaviorCoolDown = new BehaviorCoolDown(m_Enemy);	// CoolDownÀ‘•
+	m_BehaviorCoolDown = new BehaviorCoolDown(m_Enemy);	// CoolDownè³æº¯ï½£ãƒ»
 
 }
 
@@ -203,7 +203,7 @@ BEHAVIOR_RESULT BehaviorAttack::Update(const float DeltaTime)
 	if (!m_AnimationModel)return BEHAVIOR_RESULT::FAILURE;
 	if (!m_BehaviorCoolDown)return BEHAVIOR_RESULT::FAILURE;
 	
-	//	UŒ‚‰Šú‰»
+	//	è¬¾ï½»è¬¦ãƒ»ãƒ»è­›æº·å–§
 	if (!m_IsAttackStart)
 	{
 		Init();
@@ -214,12 +214,12 @@ BEHAVIOR_RESULT BehaviorAttack::Update(const float DeltaTime)
 	XMVECTOR vector = XMVectorSubtract(playerPosition, enemyPosition);
 	float length = XMVectorGetX(XMVector3Length(vector));
 
-	//	’Ç‚¢‚©‚¯‚é‹——£ŠO‚¾‚Á‚½‚ç
+	//	éœ‘ï½½ç¸ºãƒ»Â°ç¸ºä»£ï½‹éœæ™å±¬èŸæ‚¶â–¡ç¸ºï½£ç¸ºæº˜ï½‰
 	if (length > SENSE_DISTANCE)
 	{
 		return BEHAVIOR_RESULT::FAILURE;
 	}
-	//	UŒ‚”ÍˆÍ“à‚¶‚á‚È‚¢
+	//	è¬¾ï½»è¬¦ãƒ»ï½¯ãƒ»å³‡èœ€ãƒ»Â§ç¹§ãƒ»â†‘ç¸ºãƒ»å‡¾
 	if (length >= m_AttackDistance)
 	{
 		XMVECTOR normalizeDirection = XMVector3Normalize(vector);
@@ -232,26 +232,26 @@ BEHAVIOR_RESULT BehaviorAttack::Update(const float DeltaTime)
 	}
 	else
 	{	
-		//”ÍˆÍ“à‚¾‚Á‚½‚ç~‚Ü‚é
+		//é½ãƒ»å³‡èœ€ãƒ»â–¡ç¸ºï½£ç¸ºæº˜ï½‰è±ï½¢ç¸ºï½¾ç¹§ãƒ»
 		m_Enemy->SetMoveDirection(XMFLOAT3(0, 0, 0));
 	}
 
 
-	//	‘JˆÚ’†A‚Ü‚½‚ÍƒAƒjƒ[ƒVƒ‡ƒ“‚ÌÄ¶’†‚¾‚Á‚½‚ç
+	//	é©•ï½·é˜ï½»è³ï½­ç¸²âˆšâˆªç¸ºæº˜ãƒ»ç¹§ï½¢ç¹ä¹Î“ç¹ï½¼ç¹§ï½·ç¹ï½§ç¹ï½³ç¸ºï½®èœ€å’²å‡½è³ï½­ç¸ºï£°ç¸ºï½£ç¸ºæº˜ï½‰
 	if (m_AnimationModel->GetIsTransitioning() || m_AnimationModel->GetCurrentAnimationFrame() <= m_AnimationModel->GetAnimationDuration(m_AnimationName))
 	{
 		m_AnimationModel->UpdateAnimationBlend();
 		return BEHAVIOR_RESULT::CONTINUE;
 	}
 
-	//======ƒAƒjƒ[ƒVƒ‡ƒ“Ä¶I‚í‚Á‚½Œã‚Ìˆ—=======
+	//======ç¹§ï½¢ç¹ä¹Î“ç¹ï½¼ç¹§ï½·ç¹ï½§ç¹ï½³èœ€å’²å‡½é‚¨ã‚…ï½ç¸ºï½£ç¸ºæº·ï½¾å¾Œãƒ»èœƒï½¦é€…ãƒ»======
 
-	//	ƒN[ƒ‹ƒ_ƒEƒ“’†‚¾‚Á‚½‚çŸ‚ÌƒAƒ^ƒbƒN‚Ö
+	//	ç¹§ï½¯ç¹ï½¼ç¹ï½«ç¹Â€ç¹§ï½¦ç¹ï½³è³ï½­ç¸ºï£°ç¸ºï½£ç¸ºæº˜ï½‰è°ºï½¡ç¸ºï½®ç¹§ï½¢ç¹§ï½¿ç¹ãƒ»ã‘ç¸ºï½¸
 	if (m_BehaviorCoolDown->Update(DeltaTime) == BEHAVIOR_RESULT::FAILURE)
 	{
 		return BEHAVIOR_RESULT::FAILURE;
 	}
-	//	ƒN[ƒ‹ƒ_ƒEƒ“I‚í‚Á‚½‚ç
+	//	ç¹§ï½¯ç¹ï½¼ç¹ï½«ç¹Â€ç¹§ï½¦ç¹ï½³é‚¨ã‚…ï½ç¸ºï½£ç¸ºæº˜ï½‰
 	else
 	{
 		m_IsAttackStart = false;
@@ -270,9 +270,9 @@ BEHAVIOR_RESULT BehaviorCoolDown::Update(const float DeltaTime)
 	if (m_ElapsedTime >= ATTACK_COOLDOWN)
 	{
 		m_IsCoolDownActive = false;
-		return BEHAVIOR_RESULT::SUCCESS;	// ƒN[ƒ‹ƒ_ƒEƒ“I—¹
+		return BEHAVIOR_RESULT::SUCCESS;	// ç¹§ï½¯ç¹ï½¼ç¹ï½«ç¹Â€ç¹§ï½¦ç¹ï½³é‚¨ã‚†ï½ºãƒ»
 	}
-	return BEHAVIOR_RESULT::FAILURE;		//@ƒN[ƒ‹ƒ_ƒEƒ“’†
+	return BEHAVIOR_RESULT::FAILURE;		//ç¸²Â€ç¹§ï½¯ç¹ï½¼ç¹ï½«ç¹Â€ç¹§ï½¦ç¹ï½³è³ï½­
 }
 
 void BehaviorCoolDown::StartCoolDown()
@@ -290,7 +290,7 @@ void BehaviorCoolDown::ResetCoolDown()
 void BehaviorStandByAttack::Init()
 {
 	if (!m_AnimationModel)return;
-	//	Œ»İ‚Æ“¯‚¶‚È‚çƒXƒLƒbƒv
+	//	è¿´ï½¾è¨ï½¨ç¸ºï½¨èœ·å¾ŒÂ§ç¸ºï½ªç¹§å³¨ã›ç¹§ï½­ç¹ãƒ»ãƒ»
 	if (m_AnimationModel->GetCurrentAnimationName() != m_AnimationName)
 	{
 		m_AnimationModel->SetNextAnimation(m_AnimationName);
@@ -306,13 +306,13 @@ BEHAVIOR_RESULT BehaviorStandByAttack::Update(const float DeltaTime)
 {
 	if (!m_AnimationModel)return BEHAVIOR_RESULT::FAILURE;
 
-	//	‰Šú‰»
+	//	è›»æ™„æ‚„è›¹ãƒ»
 	if (m_AnimationModel->GetCurrentAnimationName() != m_AnimationName)
 	{
 		Init();
 	}
 
-	//	Œü‚«XV
+	//	èœ·ä»£â€³è­–ï½´è­ï½°
 	XMVECTOR playerPosition = XMLoadFloat3(&m_Player->GetPosition());
 	XMVECTOR enemyPosition = XMLoadFloat3(&m_Enemy->GetPosition());
 	XMVECTOR vector = XMVectorSubtract(playerPosition, enemyPosition);
@@ -321,11 +321,11 @@ BEHAVIOR_RESULT BehaviorStandByAttack::Update(const float DeltaTime)
 	XMFLOAT3 direction;
 	XMStoreFloat3(&direction, normalizeDirection);
 	float yaw = atan2f(direction.x, direction.z);
-	m_Enemy->SetRotationY(yaw); //	Œü‚«‚Í1‰ñ‚¾‚¯XV‚·‚é
+	m_Enemy->SetRotationY(yaw); //	èœ·ä»£â€³ç¸ºï½¯1è—æ§­â–¡ç¸ºç¬¬å³©è­ï½°ç¸ºå¶ï½‹
 
 	m_AnimationModel->UpdateAnimationBlend();
 	
-	//@ˆê”Ôè‘O‚Ìó‘Ô‚É•Ô‚·
+	//ç¸²Â€è³Â€é€¡ï½ªè¬‡å¥ç‡•ç¸ºï½®è¿¥ï½¶è«·ä¹â†“éœ‘æ–â˜†
 	return BEHAVIOR_RESULT::SUCCESS;
 }
 

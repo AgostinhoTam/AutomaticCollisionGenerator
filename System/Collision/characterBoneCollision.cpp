@@ -1,4 +1,4 @@
-#include <vector>
+ï»¿#include <vector>
 #include "GameObject\gameobject.h"
 #include "Manager\shaderManager.h"
 #include "System\Renderer\renderer.h"
@@ -7,7 +7,7 @@
 #include "sphereCollision.h"
 #include <algorithm>
 
-constexpr int DEBUG_LINE_SEGMENTS = 18;	//ƒfƒoƒbƒO—p‚Ìü‚Ì•ªŠ„”
+constexpr int DEBUG_LINE_SEGMENTS = 18;	//ãƒ‡ãƒãƒƒã‚°ç”¨ã®ç·šã®åˆ†å‰²æ•°
 constexpr int DEBUG_LINE_CONNECTION = 4;
 constexpr XMFLOAT4 DEBUG_LINE_COLOR = XMFLOAT4(0.1f, 1.0f, 0.1f, 1.0f);
 constexpr XMFLOAT4 DEBUG_HITTED_LINE_COLOR = XMFLOAT4(1.0f, 0.1f, 0.1f, 1.0f);
@@ -44,14 +44,14 @@ bool CharacterBoneCollision::CheckCapsuleToCapsule(const CharacterBoneCollision*
 
 float CharacterBoneCollision::CheckDistanceSegmentToSegment(const XMVECTOR& Start1, const XMVECTOR& End1, const XMVECTOR& Start2, const XMVECTOR& End2)
 {
-	//	Å’Z‹——£Œö®	s = S1 + s(E1-S1)   t = S2 + t(E2-S2)
+	//	æœ€çŸ­è·é›¢å…¬å¼	s = S1 + s(E1-S1)   t = S2 + t(E2-S2)
 
-	//	ü•ª‚Ì•ûŒüƒxƒNƒgƒ‹‚ğŒvZ
+	//	ç·šåˆ†ã®æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¨ˆç®—
 	XMVECTOR vSE1 = XMVectorSubtract(End1, Start1);
 	XMVECTOR vSE2 = XMVectorSubtract(End2, Start2);
 	XMVECTOR vSS = XMVectorSubtract(Start1, Start2);
 
-	//	ŠeƒxƒNƒgƒ‹‚Ì’·‚³‚Æ“àÏ‚ğ‹‚ß‚é
+	//	å„ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•ã¨å†…ç©ã‚’æ±‚ã‚ã‚‹
 	float lengthSE1 = XMVectorGetX(XMVector3Dot(vSE1, vSE1));	
 	float dSE12 = XMVectorGetX(XMVector3Dot(vSE1, vSE2));
 	float lengthSE2 = XMVectorGetX(XMVector3Dot(vSE2, vSE2));
@@ -61,7 +61,7 @@ float CharacterBoneCollision::CheckDistanceSegmentToSegment(const XMVECTOR& Star
 	float denom = lengthSE1 * lengthSE2 - dSE12 * dSE12;
 	float s, t;
 
-	//	0‚É‹ß‚¢
+	//	0ã«è¿‘ã„
 	if (denom < 1e-6f)
 	{
 		s = 0.0f;
@@ -73,7 +73,7 @@ float CharacterBoneCollision::CheckDistanceSegmentToSegment(const XMVECTOR& Star
 		t = (lengthSE1 * eSS2 - dSE12 * dSS1) / denom;
 	}
 
-	//	”ÍˆÍŠO‚É‚È‚ç‚È‚¢‚æ‚¤‚É
+	//	ç¯„å›²å¤–ã«ãªã‚‰ãªã„ã‚ˆã†ã«
 	s = std::clamp(s, 0.0f, 1.0f);
 	t = std::clamp(t, 0.0f, 1.0f);
 
@@ -96,7 +96,7 @@ void CharacterBoneCollision::UpdateCollision(const XMFLOAT3& Position)
 
 void CharacterBoneCollision::UpdateBonePosition(const int FirstIndex, const int SecondIndex, const XMFLOAT3& HeadPos,const XMFLOAT3& TailPos)
 {
-	//	ƒRƒŠƒWƒ‡ƒ“‚ÌˆÊ’u‚ğ•Ï‚¦‚é
+	//	ã‚³ãƒªã‚¸ãƒ§ãƒ³ã®ä½ç½®ã‚’å¤‰ãˆã‚‹
 	XMVECTOR headPos = XMLoadFloat3(&HeadPos);
 	XMVECTOR tailPos = XMLoadFloat3(&TailPos);
 	XMVECTOR offset = XMLoadFloat3(&m_Offset);
@@ -133,7 +133,7 @@ void CharacterBoneCollision::Draw()
 	Renderer::GetDeviceContext()->PSSetShader(m_Shader->m_PixelShader, NULL, 0);
 
 	XMFLOAT4 color;
-	//	•`‰æ—pF
+	//	æç”»ç”¨è‰²
 	if (m_IsSelected)
 	{
 		color = DEBUG_SELECTED_LINE_COLOR;
@@ -149,11 +149,11 @@ void CharacterBoneCollision::Draw()
 
 	Renderer::SetColor(color);
 
-	// ƒvƒŠƒ~ƒeƒBƒuƒgƒ|ƒƒWİ’è
+	// ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ãƒˆãƒãƒ­ã‚¸è¨­å®š
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
-	// ’¸“_ƒoƒbƒtƒ@İ’è
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
 	UINT stride = sizeof(LINE_VERTEX);
 	UINT offset = 0;
 	MakeSphereMatrix(m_StartPosition);
@@ -168,12 +168,12 @@ void CharacterBoneCollision::Draw()
 
 }
 
-//	‹…‘Ì‚Ì•`‰æ
+//	çƒä½“ã®æç”»
 void CharacterBoneCollision::CreateSphereLine(const XMFLOAT4& Color, std::vector<LINE_VERTEX>& SphereVertices)
 {
 	XMFLOAT4 color = Color;
 
-	// XZ–Ê
+	// XZé¢
 	{
 		XMFLOAT3 prev;
 		bool first = true;
@@ -196,7 +196,7 @@ void CharacterBoneCollision::CreateSphereLine(const XMFLOAT4& Color, std::vector
 			prev = current;
 		}
 	}
-	// YZ–Ê
+	// YZé¢
 	{
 		XMFLOAT3 prev;
 		bool first = true;
@@ -220,7 +220,7 @@ void CharacterBoneCollision::CreateSphereLine(const XMFLOAT4& Color, std::vector
 		}
 	}
 	
-	//	XY–Ê
+	//	XYé¢
 	{
 		XMFLOAT3 prev;
 		bool first = true;
@@ -246,11 +246,11 @@ void CharacterBoneCollision::CreateSphereLine(const XMFLOAT4& Color, std::vector
 }
 
 
-//	‰~’Œ‚Ì•`‰æ
+//	å††æŸ±ã®æç”»
 void CharacterBoneCollision::CreateCylinderLine(const XMFLOAT4& Color, std::vector<LINE_VERTEX>& CylinderVertices)
 {
 
-	//	‰º‚Ì‰~
+	//	ä¸‹ã®å††
 	{
 		XMFLOAT3 prev;
 		bool first = true;
@@ -277,7 +277,7 @@ void CharacterBoneCollision::CreateCylinderLine(const XMFLOAT4& Color, std::vect
 		
 	}
 
-	//	ã‚Ì‰~
+	//	ä¸Šã®å††
 	{
 		XMFLOAT3 prev;
 		bool first = true;
@@ -302,7 +302,7 @@ void CharacterBoneCollision::CreateCylinderLine(const XMFLOAT4& Color, std::vect
 		}
 	}
 	
-	// Œq‚®üi‘¤–Êj
+	// ç¹‹ãç·šï¼ˆå´é¢ï¼‰
 	for (int i = 0; i < DEBUG_LINE_SEGMENTS; ++i)
 	{
 		float angle = XM_2PI * static_cast<float>(i) / static_cast<float>(DEBUG_LINE_SEGMENTS);
@@ -348,7 +348,7 @@ void CharacterBoneCollision::MakeCapsuleMatrix(const XMFLOAT3& StartPos, const X
 	XMVECTOR startVec = XMLoadFloat3(&StartPos);
 	XMVECTOR endVec = XMLoadFloat3(&EndPos);
 	XMVECTOR axis = XMVectorSubtract(endVec, startVec);
-	float length = XMVectorGetX(XMVector3Length(axis)); //‰~’Œ‚Ì‚‚³
+	float length = XMVectorGetX(XMVector3Length(axis)); //å††æŸ±ã®é«˜ã•
 
 	XMMATRIX scale = XMMatrixScaling(m_Radius, m_Radius, length);
 
@@ -362,14 +362,14 @@ void CharacterBoneCollision::MakeCapsuleMatrix(const XMFLOAT3& StartPos, const X
 
 
 	XMMATRIX rot = XMMatrixIdentity();
-	// ²‚ªŠ®‘S‚É•½s/‹tŒü‚« ‚Å‚È‚¯‚ê‚Î‰ñ“]
+	// è»¸ãŒå®Œå…¨ã«å¹³è¡Œ/é€†å‘ã ã§ãªã‘ã‚Œã°å›è»¢
 	if (fabsf(sinTheta) > 1e-4f)
 	{
 		cross = XMVector3Normalize(cross);
 		rot = XMMatrixRotationAxis(cross, angle);
 	}
 
-	// 4) •½sˆÚ“®
+	// 4) å¹³è¡Œç§»å‹•
 	XMMATRIX trans = XMMatrixTranslation(StartPos.x, StartPos.y, StartPos.z);
 	XMMATRIX world = scale * rot * trans;
 	Renderer::SetWorldMatrix(world);

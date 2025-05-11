@@ -1,13 +1,12 @@
-#include "Manager/gameObjectManager.h"
+﻿#include "Manager/gameObjectManager.h"
 #include "GameObject/Character/Player/playerh.h"
 #include "GameObject/Field/field.h"
 #include "GameObject/Camera/camera.h"
-#include "GameObject\Bullet\projection.h"
 #include "GameObject\Character\Enemy\enemy.h"
 #include "System\Enum\enemyTypeEnum.h"
 #include "System\Enum/gameObjectEnum.h"
 #include "gameScene.h"
-constexpr int MAX_PROJECTION = 10;
+
 void GameScene::Init()
 {
 	m_GameObjectManager = new GameObjectManager;

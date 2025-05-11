@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <vector>
 #include <unordered_map>
 #include "System\Enum/gameObjectEnum.h"
@@ -41,7 +41,7 @@ public:
 		return nullptr;
 	}
 
-	//@ƒŠƒXƒgw’è‚Åˆ—‚ª‘‚¢
+	//ã€€ãƒªã‚¹ãƒˆæŒ‡å®šã§å‡¦ç†ãŒæ—©ã„
 	template<typename T>
 	void GetGameObjectsByLayer(std::vector<T*>& targetlist, const GAMEOBJECT_TYPE& layer)
 	{
@@ -55,7 +55,7 @@ public:
 		}
 	}
 
-	//@ƒŠƒXƒgw’è‚Åˆ—‚ª‘‚¢
+	//ã€€ãƒªã‚¹ãƒˆæŒ‡å®šã§å‡¦ç†ãŒæ—©ã„
 	template<typename T>
 	T* GetGameObject(const GAMEOBJECT_TYPE& layer)
 	{

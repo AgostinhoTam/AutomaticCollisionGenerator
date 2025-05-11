@@ -1,4 +1,4 @@
-#include <numeric> 
+ï»¿#include <numeric> 
 #include "Main\main.h"
 #include "Manager\inputManager.h"
 #include "GameObject\gameobject.h"
@@ -20,7 +20,7 @@ void AnimationModel::Update()
 	{
 		m_IsDebugMode = !m_IsDebugMode;
 	}
-	//	ƒAƒjƒ[ƒVƒ‡ƒ“ƒf[ƒ^‚©‚ç
+	//	ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒ‡ãƒ¼ã‚¿ã‹ã‚‰
 	aiAnimation* animation1 = m_Animation[m_CurrentAnimation]->mAnimations[0];
 	aiAnimation* animation2 = m_Animation[m_NextAnimation]->mAnimations[0];
 
@@ -62,27 +62,27 @@ void AnimationModel::Update()
 
 		if (nodeAnim1)
 		{
-			f = m_CurrentFrame % nodeAnim1->mNumRotationKeys;	//ŠÈˆÕÀ‘•
+			f = m_CurrentFrame % nodeAnim1->mNumRotationKeys;	//ç°¡æ˜“å®Ÿè£…
 			rot1 = nodeAnim1->mRotationKeys[f].mValue;
-			f = m_CurrentFrame % nodeAnim1->mNumPositionKeys;	//ŠÈˆÕÀ‘•
+			f = m_CurrentFrame % nodeAnim1->mNumPositionKeys;	//ç°¡æ˜“å®Ÿè£…
 			pos1 = nodeAnim1->mPositionKeys[f].mValue;
 		}
 		if (nodeAnim2)
 		{
-			f = m_NextFrame % nodeAnim2->mNumRotationKeys;	//ŠÈˆÕÀ‘•
+			f = m_NextFrame % nodeAnim2->mNumRotationKeys;	//ç°¡æ˜“å®Ÿè£…
 			rot2 = nodeAnim2->mRotationKeys[f].mValue;
-			f = m_NextFrame % nodeAnim2->mNumPositionKeys;	//ŠÈˆÕÀ‘•
+			f = m_NextFrame % nodeAnim2->mNumPositionKeys;	//ç°¡æ˜“å®Ÿè£…
 			pos2 = nodeAnim2->mPositionKeys[f].mValue;
 		}
 		aiVector3D pos;
 		aiQuaternion rot;
-		pos = pos1 * (1.0f - m_BlendRatio) + pos2 * m_BlendRatio;	//üŒ`•âŠÔ
-		aiQuaternion::Interpolate(rot, rot1, rot2, m_BlendRatio);	//‹…–ÊüŒ`•âŠÔ
+		pos = pos1 * (1.0f - m_BlendRatio) + pos2 * m_BlendRatio;	//ç·šå½¢è£œé–“
+		aiQuaternion::Interpolate(rot, rot1, rot2, m_BlendRatio);	//çƒé¢ç·šå½¢è£œé–“
 
 		bone.AnimationMatrix = aiMatrix4x4(aiVector3D(1.0f, 1.0f, 1.0f), rot, pos);
 	}
 
-	//	Ä‹A“I‚Éƒ{[ƒ“matrix
+	//	å†å¸°çš„ã«ãƒœãƒ¼ãƒ³matrix
 	aiMatrix4x4 rootMatrix = aiMatrix4x4(aiVector3D(1.0f, 1.0f, 1.0f),
 		aiQuaternion((float)AI_MATH_PI, 0.0f, 0.0f),
 		aiVector3D(0.0f, 0.0f, 0.0f));
@@ -117,11 +117,11 @@ void AnimationModel::Draw()
 	Renderer::GetDeviceContext()->VSSetShader(Shader->m_VertexShader, NULL, 0);
 	Renderer::GetDeviceContext()->PSSetShader(Shader->m_PixelShader, NULL, 0);
 
-	// ƒvƒŠƒ~ƒeƒBƒuƒgƒ|ƒƒWİ’è
+	// ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ãƒˆãƒãƒ­ã‚¸è¨­å®š
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	// ƒ}ƒeƒŠƒAƒ‹İ’è
+	// ãƒãƒ†ãƒªã‚¢ãƒ«è¨­å®š
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
 	material.Ambient = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -135,7 +135,7 @@ void AnimationModel::Draw()
 		aiMesh* mesh = m_AiScene->mMeshes[m];
 
 
-		// ƒ}ƒeƒŠƒAƒ‹İ’è
+		// ãƒãƒ†ãƒªã‚¢ãƒ«è¨­å®š
 		aiString texture;
 		aiColor3D diffuse;
 		float opacity;
@@ -161,15 +161,15 @@ void AnimationModel::Draw()
 		Renderer::SetMaterial(material);
 
 
-		// ’¸“_ƒoƒbƒtƒ@İ’è
+		// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
 		UINT stride = sizeof(VERTEX_3D_SKIN);
 		UINT offset = 0;
 		Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer[m], &stride, &offset);
 
-		// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@İ’è
+		// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
 		Renderer::GetDeviceContext()->IASetIndexBuffer(m_IndexBuffer[m], DXGI_FORMAT_R32_UINT, 0);
 
-		// ƒ|ƒŠƒSƒ“•`‰æ
+		// ãƒãƒªã‚´ãƒ³æç”»
 		Renderer::GetDeviceContext()->DrawIndexed(mesh->mNumFaces * 3, 0, 0);
 	}
 	Renderer::SetDepthEnable(true);
@@ -195,10 +195,10 @@ void AnimationModel::Load(const char* FileName, GameObject* Owner)
 	m_Bones.clear();
 	m_BoneIndexMap.clear();
 
-	//•ÏŒ`Œã’¸“_”z—ñ¶¬
+	//å¤‰å½¢å¾Œé ‚ç‚¹é…åˆ—ç”Ÿæˆ
 	m_DeformVertex = new std::vector<DEFORM_VERTEX>[m_AiScene->mNumMeshes];
 
-	//	Ä‹A“I‚Éƒ{[ƒ“¶¬
+	//	å†å¸°çš„ã«ãƒœãƒ¼ãƒ³ç”Ÿæˆ
 	CreateBone(m_AiScene->mRootNode);
 
 	for (unsigned int m = 0; m < m_AiScene->mNumMeshes; ++m)
@@ -207,7 +207,7 @@ void AnimationModel::Load(const char* FileName, GameObject* Owner)
 
 		m_DeformVertex[m].resize(mesh->mNumVertices);
 
-		//	’¸“_î•ñ‚¾‚¯‹L˜^
+		//	é ‚ç‚¹æƒ…å ±ã ã‘è¨˜éŒ²
 		for (unsigned int v = 0; v < mesh->mNumVertices; ++v)
 		{
 			DEFORM_VERTEX dv;
@@ -223,27 +223,27 @@ void AnimationModel::Load(const char* FileName, GameObject* Owner)
 		}
 
 
-		//	ƒƒbƒVƒ…‚ÉŠÜ‚ß‚éƒ{[ƒ“î•ñ
+		//	ãƒ¡ãƒƒã‚·ãƒ¥ã«å«ã‚ã‚‹ãƒœãƒ¼ãƒ³æƒ…å ±
 		for (unsigned int b = 0; b < mesh->mNumBones; ++b)
 		{
-			aiBone* bone = mesh->mBones[b];	//@ƒ{[ƒ“æ‚èo‚·
+			aiBone* bone = mesh->mBones[b];	//ã€€ãƒœãƒ¼ãƒ³å–ã‚Šå‡ºã™
 			if (!bone)continue;
 			std::string boneName = bone->mName.C_Str();
-			if (boneName.length() == 0)continue;	//	–¼‘O‚ª‹ó‚Á‚Û‚¾‚Á‚½‚çŸ‚Ö
+			if (boneName.length() == 0)continue;	//	åå‰ãŒç©ºã£ã½ã ã£ãŸã‚‰æ¬¡ã¸
 
 			int newIndex;
 
 			auto it = m_BoneIndexMap.find(boneName);
 
-			//	‚à‚µƒ{[ƒ“‚ª‚Ü‚¾‘¶İ‚µ‚È‚¢‚È‚çì¬
+			//	ã‚‚ã—ãƒœãƒ¼ãƒ³ãŒã¾ã å­˜åœ¨ã—ãªã„ãªã‚‰ä½œæˆ
 			if (it == m_BoneIndexMap.end())
 			{
-				newIndex = static_cast<int>(m_Bones.size());	//	ƒ{[ƒ“‚ÉƒCƒ“ƒfƒbƒNƒX•t‚¯‚é
+				newIndex = static_cast<int>(m_Bones.size());	//	ãƒœãƒ¼ãƒ³ã«ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ä»˜ã‘ã‚‹
 
 				BONE newBone;
 				newBone.OffsetMatrix = bone->mOffsetMatrix;
 				m_Bones.emplace_back(newBone);
-				m_BoneIndexMap[boneName] = newIndex;				//	ƒ{[ƒ“–¼‘O‚ÆƒCƒ“ƒfƒbƒNƒX‚Ìmap
+				m_BoneIndexMap[boneName] = newIndex;				//	ãƒœãƒ¼ãƒ³åå‰ã¨ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®map
 			}
 			else
 			{
@@ -252,16 +252,16 @@ void AnimationModel::Load(const char* FileName, GameObject* Owner)
 			}
 
 
-			//	Še’¸“_‚²‚Æ‚ÌWeight‚ğŠÇ—
+			//	å„é ‚ç‚¹ã”ã¨ã®Weightã‚’ç®¡ç†
 			for (unsigned int w = 0; w < bone->mNumWeights; ++w)
 			{
-				aiVertexWeight vw = bone->mWeights[w];	//	bone weightæ‚èo‚·
+				aiVertexWeight vw = bone->mWeights[w];	//	bone weightå–ã‚Šå‡ºã™
 				int vID = vw.mVertexId;
 				float wgt = vw.mWeight;
 
-				DEFORM_VERTEX& dv = m_DeformVertex[m][vID];		//@ƒV[ƒ“‚Ì‰½”Ô–Ú’¸“_
+				DEFORM_VERTEX& dv = m_DeformVertex[m][vID];		//ã€€ã‚·ãƒ¼ãƒ³ã®ä½•ç•ªç›®é ‚ç‚¹
 
-				//	ƒ{[ƒ“‚Ì”‚ª4ˆÈ‰º‚¾‚Á‚½‚ç
+				//	ãƒœãƒ¼ãƒ³ã®æ•°ãŒ4ä»¥ä¸‹ã ã£ãŸã‚‰
 				if (dv.BoneNum < 4)
 				{
 					dv.BoneName[dv.BoneNum] = boneName;
@@ -273,7 +273,7 @@ void AnimationModel::Load(const char* FileName, GameObject* Owner)
 					int minIndex = 0;
 					float minWeight = dv.BoneWeight[0];
 
-					//	4–{‚Ìƒ{[ƒ“‘–¸
+					//	4æœ¬ã®ãƒœãƒ¼ãƒ³èµ°æŸ»
 					for (int i = 1; i < 4; ++i)
 					{
 						if (dv.BoneWeight[i] < minWeight)
@@ -283,7 +283,7 @@ void AnimationModel::Load(const char* FileName, GameObject* Owner)
 						}
 					}
 
-					//@î•ñ“ü‚ê‚é
+					//ã€€æƒ…å ±å…¥ã‚Œã‚‹
 					if (wgt > minWeight)
 					{
 						dv.BoneName[minIndex] = boneName;
@@ -293,7 +293,7 @@ void AnimationModel::Load(const char* FileName, GameObject* Owner)
 			}
 		}
 
-		//	’¸“_ƒoƒbƒtƒ@¶¬
+		//	é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
 		{
 			auto* vertexData = new VERTEX_3D_SKIN[mesh->mNumVertices];
 
@@ -314,7 +314,7 @@ void AnimationModel::Load(const char* FileName, GameObject* Owner)
 				}
 				vs.Diffuse = XMFLOAT4(1, 1, 1, 1);
 
-				//	ƒCƒ“ƒfƒbƒNƒXæ‚é
+				//	ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹å–ã‚‹
 				for (int i = 0; i < 4; ++i)
 				{
 					std::string bName = dv.BoneName[i];
@@ -349,7 +349,7 @@ void AnimationModel::Load(const char* FileName, GameObject* Owner)
 
 			delete[] vertexData;
 		}
-		// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@¶¬
+		// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
 		{
 			unsigned int* index = new unsigned int[mesh->mNumFaces * 3];
 
@@ -381,7 +381,7 @@ void AnimationModel::Load(const char* FileName, GameObject* Owner)
 		}
 	}
 
-	//ƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
 	for (unsigned int i = 0; i < m_AiScene->mNumTextures; i++)
 	{
 		aiTexture* aitexture = m_AiScene->mTextures[i];
@@ -390,7 +390,7 @@ void AnimationModel::Load(const char* FileName, GameObject* Owner)
 
 			ID3D11ShaderResourceView* texture;
 
-			// ƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ
+			// ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
 			TexMetadata metadata;
 			ScratchImage image;
 			std::string filename(aitexture->mFilename.C_Str());
@@ -415,7 +415,7 @@ void AnimationModel::Load(const char* FileName, GameObject* Owner)
 
 	}
 
-	//	ƒ{[ƒ“‚Ì’è”ƒoƒbƒtƒ@ì¬
+	//	ãƒœãƒ¼ãƒ³ã®å®šæ•°ãƒãƒƒãƒ•ã‚¡ä½œæˆ
 	{
 		D3D11_BUFFER_DESC bd;
 		ZeroMemory(&bd, sizeof(bd));
@@ -491,16 +491,16 @@ void AnimationModel::UpdateBoneMatrix(aiNode* node, aiMatrix4x4 matrix)
 
 		BONE* bone = &m_Bones[index];
 
-		aiMatrix4x4 worldMatrix = matrix * bone->AnimationMatrix;		//	e‚©‚ç‚Ìƒ}ƒgƒŠƒNƒX‚Æ©M‚ÌƒAƒjƒ[ƒVƒ‡ƒ“•ÏŠ·
-		bone->localMatrix = TransformToXMMATRIX(worldMatrix);		//	DX—pƒ[ƒJƒ‹ƒ}ƒgƒŠƒNƒX
+		aiMatrix4x4 worldMatrix = matrix * bone->AnimationMatrix;		//	è¦ªã‹ã‚‰ã®ãƒãƒˆãƒªã‚¯ã‚¹ã¨è‡ªä¿¡ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å¤‰æ›
+		bone->localMatrix = TransformToXMMATRIX(worldMatrix);		//	DXç”¨ãƒ­ãƒ¼ã‚«ãƒ«ãƒãƒˆãƒªã‚¯ã‚¹
 
-		// **ƒXƒLƒjƒ“ƒO—p‚ÌÅIs—ñ (ƒ[ƒ‹ƒhs—ñ ~ ƒIƒtƒZƒbƒgs—ñ)**
-		bone->Matrix = worldMatrix * bone->OffsetMatrix;			//	Še’¸“_‚É“K—p‚·‚éƒ}ƒgƒŠƒNƒX
+		// **ã‚¹ã‚­ãƒ‹ãƒ³ã‚°ç”¨ã®æœ€çµ‚è¡Œåˆ— (ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ— Ã— ã‚ªãƒ•ã‚»ãƒƒãƒˆè¡Œåˆ—)**
+		bone->Matrix = worldMatrix * bone->OffsetMatrix;			//	å„é ‚ç‚¹ã«é©ç”¨ã™ã‚‹ãƒãƒˆãƒªã‚¯ã‚¹
 
-		// **DirectX—p‚Ìs—ñ‚É•ÏŠ·**
-		bone->worldMatrix = TransformToXMMATRIX(bone->Matrix);		//	DX—p‚É•ÏŠ·
+		// **DirectXç”¨ã®è¡Œåˆ—ã«å¤‰æ›**
+		bone->worldMatrix = TransformToXMMATRIX(bone->Matrix);		//	DXç”¨ã«å¤‰æ›
 
-		localMatrix = worldMatrix;									//	ƒAƒjƒ[ƒVƒ‡ƒ““K—pŒã‚Ìƒ}ƒgƒŠƒNƒX‚ğŸ‚É“n‚·€”õ
+		localMatrix = worldMatrix;									//	ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é©ç”¨å¾Œã®ãƒãƒˆãƒªã‚¯ã‚¹ã‚’æ¬¡ã«æ¸¡ã™æº–å‚™
 
 	}
 	else
@@ -567,7 +567,7 @@ const BONE AnimationModel::GetBone(int Index)
 
 XMFLOAT3 AnimationModel::GetBonePosition(const int BoneIndex, const XMMATRIX& PlayerMatrix)
 {
-	//	”ÍˆÍŠO‘ŠúƒŠƒ^[ƒ“
+	//	ç¯„å›²å¤–æ—©æœŸãƒªã‚¿ãƒ¼ãƒ³
 	if (BoneIndex < 0 || BoneIndex >= m_Bones.size())return XMFLOAT3{};
 
 	XMMATRIX& headMatrix = m_Bones[BoneIndex].localMatrix;
@@ -584,19 +584,19 @@ XMFLOAT3 AnimationModel::GetBonePosition(const int BoneIndex, const XMMATRIX& Pl
 void AnimationModel::UpdateAnimationBlend()
 {
 
-	//	‘JˆÚ’†‚¾‚Á‚½‚ç
+	//	é·ç§»ä¸­ã ã£ãŸã‚‰
 	if (m_IsTransitioning)
 	{
 		AddBlendRatio();
 		AddCurrentAnimationFrame();
 		AddNextAnimationFrame();
 	}
-	//	•’Ê‚ÌÄ¶
+	//	æ™®é€šã®å†ç”Ÿ
 	else
 	{
 		AddCurrentAnimationFrame();
 	}
-	//	‘JˆÚŠ®¬‚µ‚½‚ç
+	//	é·ç§»å®Œæˆã—ãŸã‚‰
 	if (m_BlendRatio >= 1)
 	{
 		m_IsTransitioning = false;
@@ -604,7 +604,7 @@ void AnimationModel::UpdateAnimationBlend()
 		m_CurrentFrame = m_NextFrame;
 		m_BlendRatio = 0;
 	}
-	//	ƒ{[ƒ“AƒƒbƒVƒ…XV
+	//	ãƒœãƒ¼ãƒ³ã€ãƒ¡ãƒƒã‚·ãƒ¥æ›´æ–°
 	Update();
 }
 
@@ -621,7 +621,7 @@ const float AnimationModel::CalculateCapsuleRadius(const std::string& HeadName, 
 	int headIndex = headit->second;
 	int tailIndex = tailit->second;
 
-	// Head‚ÆTail‚ÌˆÊ’u‚ğƒƒbƒVƒ…‹óŠÔ‚Åæ“¾
+	// Headã¨Tailã®ä½ç½®ã‚’ãƒ¡ãƒƒã‚·ãƒ¥ç©ºé–“ã§å–å¾—
 	aiMatrix4x4 offsetHeadInv = m_Bones[headIndex].OffsetMatrix;
 	offsetHeadInv.Inverse();
 	aiVector3D headPosMesh = offsetHeadInv * aiVector3D(0.0f, 0.0f, 0.0f);
@@ -630,11 +630,11 @@ const float AnimationModel::CalculateCapsuleRadius(const std::string& HeadName, 
 	offsetTailInv.Inverse();
 	aiVector3D tailPosMesh = offsetTailInv * aiVector3D(0.0f, 0.0f, 0.0f);
 
-	// ü•ª [S, E] ‚ğƒƒbƒVƒ…‹óŠÔ‚Å’è‹`
+	// ç·šåˆ† [S, E] ã‚’ãƒ¡ãƒƒã‚·ãƒ¥ç©ºé–“ã§å®šç¾©
 	XMFLOAT3 S(headPosMesh.x, headPosMesh.y, headPosMesh.z);
 	XMFLOAT3 E(tailPosMesh.x, tailPosMesh.y, tailPosMesh.z);
 
-	// 2) ’¸“_‚ğƒƒbƒVƒ…‹óŠÔ‚Å’¼ÚŒvZ
+	// 2) é ‚ç‚¹ã‚’ãƒ¡ãƒƒã‚·ãƒ¥ç©ºé–“ã§ç›´æ¥è¨ˆç®—
 	float maxDistSq = 0.0f;
 	std::vector<float> radiusList;
 
@@ -643,7 +643,7 @@ const float AnimationModel::CalculateCapsuleRadius(const std::string& HeadName, 
 		aiMesh* mesh = m_AiScene->mMeshes[m];
 		for (unsigned int v = 0; v < mesh->mNumVertices; ++v)
 		{
-			aiVector3D bindPos = mesh->mVertices[v]; // ƒƒbƒVƒ…‹óŠÔ‚Ì’¸“_
+			aiVector3D bindPos = mesh->mVertices[v]; // ãƒ¡ãƒƒã‚·ãƒ¥ç©ºé–“ã®é ‚ç‚¹
 
 			DEFORM_VERTEX& deformVertex = m_DeformVertex[m][v];
 			int boneCount = deformVertex.BoneNum;
@@ -652,14 +652,14 @@ const float AnimationModel::CalculateCapsuleRadius(const std::string& HeadName, 
 			{
 				const std::string& boneName = deformVertex.BoneName[i];
 
-				// ’¸“_‚ªHead‚Ü‚½‚ÍTailƒ{[ƒ“‚Ì‰e‹¿‚ğó‚¯‚Ä‚¢‚éê‡‚Ì‚İŒvZ
+				// é ‚ç‚¹ãŒHeadã¾ãŸã¯Tailãƒœãƒ¼ãƒ³ã®å½±éŸ¿ã‚’å—ã‘ã¦ã„ã‚‹å ´åˆã®ã¿è¨ˆç®—
 				if (boneName != HeadName && boneName != TailName)
 					continue;
 
-				// ƒƒbƒVƒ…‹óŠÔ‚Ì’¸“_ˆÊ’u‚ğg—p
+				// ãƒ¡ãƒƒã‚·ãƒ¥ç©ºé–“ã®é ‚ç‚¹ä½ç½®ã‚’ä½¿ç”¨
 				XMFLOAT3 p(bindPos.x, bindPos.y, bindPos.z);
 
-				// “_‚Æü•ª‚ÌÅ’Z‹——£
+				// ç‚¹ã¨ç·šåˆ†ã®æœ€çŸ­è·é›¢
 				float dist = DistancePointLineSegment(p, S, E);
 				radiusList.emplace_back(dist);
 			}
@@ -668,7 +668,7 @@ const float AnimationModel::CalculateCapsuleRadius(const std::string& HeadName, 
 
 	if (radiusList.empty()) return 0.0f;
 
-	// ’†‰›’l‚ğ”¼Œa‚Æ‚µ‚Äg—p
+	// ä¸­å¤®å€¤ã‚’åŠå¾„ã¨ã—ã¦ä½¿ç”¨
 	size_t size = radiusList.size();
 	std::nth_element(radiusList.begin(), radiusList.begin() + size / 2, radiusList.end());
 	float median = radiusList[size / 2];
@@ -683,29 +683,29 @@ const float AnimationModel::DistancePointLineSegment(const XMFLOAT3& Point, cons
 	XMVECTOR vS = XMLoadFloat3(&Start);
 	XMVECTOR vE = XMLoadFloat3(&End);
 
-	XMVECTOR vSE = XMVectorSubtract(vE, vS); // ü•ªƒxƒNƒgƒ‹ E - S
+	XMVECTOR vSE = XMVectorSubtract(vE, vS); // ç·šåˆ†ãƒ™ã‚¯ãƒˆãƒ« E - S
 	XMVECTOR vSP = XMVectorSubtract(vP, vS); // p - s
 
-	// SE ‚Ì’·‚³^2
+	// SE ã®é•·ã•^2
 	float segLenSq = XMVectorGetX(XMVector3Dot(vSE, vSE));
 	if (segLenSq < 1e-6f)
 	{
-		// S ‚Æ E ‚ª‚Ù‚Ú“¯‚¶À•W‚È‚çAS‚Æ‚Ì‹——£‚ğ•Ô‚·
+		// S ã¨ E ãŒã»ã¼åŒã˜åº§æ¨™ãªã‚‰ã€Sã¨ã®è·é›¢ã‚’è¿”ã™
 		return XMVectorGetX(XMVector3Length(vSP));
 	}
 
-	// “_P‚ğSE‚ÉË‰e‚µ‚½‚Æ‚«‚Ìƒpƒ‰ƒ[ƒ^ t (0 <= t <= 1)
+	// ç‚¹Pã‚’SEã«å°„å½±ã—ãŸã¨ãã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ t (0 <= t <= 1)
 	float dot = XMVectorGetX(XMVector3Dot(vSP, vSE));
 	float t = dot / segLenSq;
 
-	// ü•ª”ÍˆÍ“à‚ÉƒNƒ‰ƒ“ƒv
+	// ç·šåˆ†ç¯„å›²å†…ã«ã‚¯ãƒ©ãƒ³ãƒ—
 	if (t < 0.0f) t = 0.0f;
 	if (t > 1.0f) t = 1.0f;
 
-	// Å‹ßÚ“_ C = S + t*(E - S)
+	// æœ€è¿‘æ¥ç‚¹ C = S + t*(E - S)
 	XMVECTOR vClosest = XMVectorAdd(vS, XMVectorScale(vSE, t));
 
-	// P-C ‚Ì‹——£
+	// P-C ã®è·é›¢
 	XMVECTOR vDiff = XMVectorSubtract(vP, vClosest);
 	float dist = XMVectorGetX(XMVector3Length(vDiff));
 	return dist;
@@ -717,26 +717,26 @@ void AnimationModel::UpdateBoneMatrixToGPU()
 
 	int boneCount = static_cast<int>(m_Bones.size());
 
-	//	ƒoƒbƒtƒ@‚É“ü‚ê‚é
+	//	ãƒãƒƒãƒ•ã‚¡ã«å…¥ã‚Œã‚‹
 	for (int i = 0; i < boneCount; ++i)
 	{
 		cbBones->BoneMatrices[i] = m_Bones[i].worldMatrix;
 		cbBones->BoneMatrices[i] = XMMatrixTranspose(cbBones->BoneMatrices[i]);
 
 	}
-	//	c‚è‚ÍƒŠƒZƒbƒg
+	//	æ®‹ã‚Šã¯ãƒªã‚»ãƒƒãƒˆ
 	for (int i = boneCount; i < MAX_BONES; ++i)
 	{
 		cbBones->BoneMatrices[i] = XMMatrixIdentity();
 	}
 
-	// ’è”ƒoƒbƒtƒ@XV
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡æ›´æ–°
 	D3D11_MAPPED_SUBRESOURCE ms;
 	Renderer::GetDeviceContext()->Map(m_BoneMatricesBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms);
 	memcpy(ms.pData, cbBones, sizeof(CB_BONES));
 	Renderer::GetDeviceContext()->Unmap(m_BoneMatricesBuffer, 0);
 
-	// VS‚ÉƒZƒbƒg
+	// VSã«ã‚»ãƒƒãƒˆ
 	Renderer::GetDeviceContext()->VSSetConstantBuffers(6, 1, &m_BoneMatricesBuffer);
 
 	if(cbBones)delete cbBones;

@@ -1,4 +1,4 @@
-
+ï»¿
 #include "Main/main.h"
 #include "System\Renderer/renderer.h"
 #include <io.h>
@@ -39,7 +39,7 @@ void Renderer::Init()
 	HRESULT hr = S_OK;
 
 
-	// ƒfƒoƒCƒXAƒXƒƒbƒvƒ`ƒF[ƒ“ì¬
+	// ãƒ‡ãƒã‚¤ã‚¹ã€ã‚¹ãƒ¯ãƒƒãƒ—ãƒã‚§ãƒ¼ãƒ³ä½œæˆ
 	DXGI_SWAP_CHAIN_DESC swapChainDesc{};
 	swapChainDesc.BufferCount = 1;
 	swapChainDesc.BufferDesc.Width = SCREEN_WIDTH;
@@ -71,14 +71,14 @@ void Renderer::Init()
 
 
 
-	// ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒgƒrƒ…[ì¬
+	// ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãƒ“ãƒ¥ãƒ¼ä½œæˆ
 	ID3D11Texture2D* renderTarget{};
 	m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&renderTarget);
 	m_Device->CreateRenderTargetView(renderTarget, NULL, &m_RenderTargetView);
 	renderTarget->Release();
 
 
-	// ƒfƒvƒXƒXƒeƒ“ƒVƒ‹ƒoƒbƒtƒ@ì¬
+	// ãƒ‡ãƒ—ã‚¹ã‚¹ãƒ†ãƒ³ã‚·ãƒ«ãƒãƒƒãƒ•ã‚¡ä½œæˆ
 	ID3D11Texture2D* depthStencile{};
 	D3D11_TEXTURE2D_DESC textureDesc{};
 	textureDesc.Width = swapChainDesc.BufferDesc.Width;
@@ -93,7 +93,7 @@ void Renderer::Init()
 	textureDesc.MiscFlags = 0;
 	m_Device->CreateTexture2D(&textureDesc, NULL, &depthStencile);
 
-	// ƒfƒvƒXƒXƒeƒ“ƒVƒ‹ƒrƒ…[ì¬
+	// ãƒ‡ãƒ—ã‚¹ã‚¹ãƒ†ãƒ³ã‚·ãƒ«ãƒ“ãƒ¥ãƒ¼ä½œæˆ
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc{};
 	depthStencilViewDesc.Format = textureDesc.Format;
 	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
@@ -108,7 +108,7 @@ void Renderer::Init()
 
 
 
-	// ƒrƒ…[ƒ|[ƒgÝ’è
+	// ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆè¨­å®š
 	D3D11_VIEWPORT viewport;
 	viewport.Width = (FLOAT)SCREEN_WIDTH;
 	viewport.Height = (FLOAT)SCREEN_HEIGHT;
@@ -120,7 +120,7 @@ void Renderer::Init()
 
 
 
-	// ƒ‰ƒXƒ^ƒ‰ƒCƒUƒXƒe[ƒgÝ’è
+	// ãƒ©ã‚¹ã‚¿ãƒ©ã‚¤ã‚¶ã‚¹ãƒ†ãƒ¼ãƒˆè¨­å®š
 	D3D11_RASTERIZER_DESC rasterizerDesc{};
 	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
 	rasterizerDesc.CullMode = D3D11_CULL_BACK;
@@ -135,7 +135,7 @@ void Renderer::Init()
 	rasterizerDesc.CullMode = D3D11_CULL_FRONT;
 	m_Device->CreateRasterizerState(&rasterizerDesc, &m_RasterStateCullFront);
 
-	// ƒuƒŒƒ“ƒhƒXƒe[ƒgÝ’è
+	// ãƒ–ãƒ¬ãƒ³ãƒ‰ã‚¹ãƒ†ãƒ¼ãƒˆè¨­å®š
 	D3D11_BLEND_DESC blendDesc{};
 	blendDesc.AlphaToCoverageEnable = FALSE;
 	blendDesc.IndependentBlendEnable = FALSE;
@@ -166,25 +166,25 @@ void Renderer::Init()
 
 
 
-	// ƒfƒvƒXƒXƒeƒ“ƒVƒ‹ƒXƒe[ƒgÝ’è
+	// ãƒ‡ãƒ—ã‚¹ã‚¹ãƒ†ãƒ³ã‚·ãƒ«ã‚¹ãƒ†ãƒ¼ãƒˆè¨­å®š
 	D3D11_DEPTH_STENCIL_DESC depthStencilDesc{};
 	depthStencilDesc.DepthEnable = TRUE;
 	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 	depthStencilDesc.StencilEnable = FALSE;
 
-	m_Device->CreateDepthStencilState(&depthStencilDesc, &m_DepthStateEnable);//[“x—LŒøƒXƒe[ƒg
+	m_Device->CreateDepthStencilState(&depthStencilDesc, &m_DepthStateEnable);//æ·±åº¦æœ‰åŠ¹ã‚¹ãƒ†ãƒ¼ãƒˆ
 
 	//depthStencilDesc.DepthEnable = FALSE;
 	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
-	m_Device->CreateDepthStencilState(&depthStencilDesc, &m_DepthStateDisable);//[“x–³ŒøƒXƒe[ƒg
+	m_Device->CreateDepthStencilState(&depthStencilDesc, &m_DepthStateDisable);//æ·±åº¦ç„¡åŠ¹ã‚¹ãƒ†ãƒ¼ãƒˆ
 
 	m_DeviceContext->OMSetDepthStencilState(m_DepthStateEnable, NULL);
 
 
 
 
-	// ƒTƒ“ƒvƒ‰[ƒXƒe[ƒgÝ’è
+	// ã‚µãƒ³ãƒ—ãƒ©ãƒ¼ã‚¹ãƒ†ãƒ¼ãƒˆè¨­å®š
 	D3D11_SAMPLER_DESC samplerDesc{};
 	samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
 	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -200,7 +200,7 @@ void Renderer::Init()
 
 
 
-	// ’è”ƒoƒbƒtƒ@¶¬
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
 	D3D11_BUFFER_DESC bufferDesc{};
 	bufferDesc.ByteWidth = sizeof(XMFLOAT4X4);
 	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -240,7 +240,7 @@ void Renderer::Init()
 	m_Device->CreateBuffer(&bufferDesc, NULL, &m_BoneMatricesBuffer);
 	m_DeviceContext->VSSetConstantBuffers(6, 1, &m_BoneMatricesBuffer);
 
-	// ƒ‰ƒCƒg‰Šú‰»
+	// ãƒ©ã‚¤ãƒˆåˆæœŸåŒ–
 	LIGHT light{};
 	light.Enable = true;
 	light.Direction = XMFLOAT4(0.0f, -1.0f, 0.0f, 0.0f);
@@ -250,7 +250,7 @@ void Renderer::Init()
 
 
 
-	// ƒ}ƒeƒŠƒAƒ‹‰Šú‰»
+	// ãƒžãƒ†ãƒªã‚¢ãƒ«åˆæœŸåŒ–
 	MATERIAL material{};
 	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	material.Ambient = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -353,12 +353,12 @@ void Renderer::SetBlendState(const BLEND_MODE& BlendMode)
 	switch (BlendMode)
 	{
 	case BLEND_MODE::BLEND_MODE_ALPHABLEND:
-		// ’ÊíƒAƒ‹ƒtƒ@ƒuƒŒƒ“ƒh
+		// é€šå¸¸ã‚¢ãƒ«ãƒ•ã‚¡ãƒ–ãƒ¬ãƒ³ãƒ‰
 		m_DeviceContext->OMSetBlendState(m_BlendState, blendFactor, sampleMask);
 		break;
 
 	case BLEND_MODE::BLEND_MODE_ADD:
-		// ‰ÁŽZ
+		// åŠ ç®—
 		m_DeviceContext->OMSetBlendState(m_BlendStateAdd, blendFactor, sampleMask);
 		break;
 
@@ -368,7 +368,7 @@ void Renderer::SetBlendState(const BLEND_MODE& BlendMode)
 		break;
 	case BLEND_MODE::BLEND_MODE_NONE:
 	default:
-		// ƒuƒŒƒ“ƒh–³Œø (null‚ð“n‚¹‚ÎƒuƒŒƒ“ƒh‚È‚µ)
+		// ãƒ–ãƒ¬ãƒ³ãƒ‰ç„¡åŠ¹ (nullã‚’æ¸¡ã›ã°ãƒ–ãƒ¬ãƒ³ãƒ‰ãªã—)
 		m_DeviceContext->OMSetBlendState(nullptr, blendFactor, sampleMask);
 		break;
 	}

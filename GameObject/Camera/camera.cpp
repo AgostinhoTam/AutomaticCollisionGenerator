@@ -1,6 +1,6 @@
-/*===================================================================================
+ï»¿/*===================================================================================
 
-ƒJƒƒ‰§Œä(camera.cpp)
+ã‚«ãƒ¡ãƒ©åˆ¶å¾¡(camera.cpp)
 
 ====================================================================================*/
 #include "Main/main.h"
@@ -12,7 +12,7 @@
 #include "GameObject/Character/Player/playerh.h"
 #include "GameObject/Camera/camera.h"
 /*===================================================================================
-’è”
+å®šæ•°
 ====================================================================================*/
 constexpr float CAMERA_LEN = 5.0f;
 constexpr float CAMERA_SENSITIVE = 0.01f;
@@ -74,12 +74,12 @@ void Camera::Uninit()
 
 void Camera::Draw()
 {
-	//ƒrƒ…[ƒ}ƒgƒŠƒNƒXİ’è
+	//ãƒ“ãƒ¥ãƒ¼ãƒãƒˆãƒªã‚¯ã‚¹è¨­å®š
 
 	XMMATRIX viewMatrix = XMLoadFloat4x4(&m_MtxView);
 	Renderer::SetViewMatrix(viewMatrix);
 
-	//ƒvƒƒWƒFƒNƒVƒ‡ƒ“ƒ}ƒgƒŠƒNƒXİ’èi‰æŠpA‰æ–Ê‚Ìİ’èj
+	//ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³ãƒãƒˆãƒªã‚¯ã‚¹è¨­å®šï¼ˆç”»è§’ã€ç”»é¢ã®è¨­å®šï¼‰
 	XMMATRIX projectionMatrix;
 	projectionMatrix = XMMatrixPerspectiveFovLH(1.0f, (float)SCREEN_WIDTH / SCREEN_HEIGHT, 1.0f, 1000.0f);
 	
@@ -90,7 +90,7 @@ bool Camera::CheckView(const XMFLOAT3& Pos)
 {
 	XMFLOAT3 up{ 0.0f,1.0f,0.0f };
 	XMMATRIX viewMatrix = XMMatrixLookAtLH(XMLoadFloat3(&m_Position), XMLoadFloat3(&m_Target), XMLoadFloat3(&up));
-	//ƒvƒƒWƒFƒNƒVƒ‡ƒ“ƒ}ƒgƒŠƒNƒXİ’è		ƒJƒƒ‰‚Ì‹ŠE‚ğİ’è‚·‚éŠÖ”
+	//ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³ãƒãƒˆãƒªã‚¯ã‚¹è¨­å®š		ã‚«ãƒ¡ãƒ©ã®è¦–ç•Œã‚’è¨­å®šã™ã‚‹é–¢æ•°
 	XMMATRIX projectionMatrix;
 	projectionMatrix = XMMatrixPerspectiveFovLH(1.0f, (float)SCREEN_WIDTH / SCREEN_HEIGHT, 1.0f, 1000.0f);
 
@@ -99,7 +99,7 @@ bool Camera::CheckView(const XMFLOAT3& Pos)
 	vp = viewMatrix * projectionMatrix;
 	invvp = XMMatrixInverse(&det, vp);
 
-	//	À•W•ÏŠ·4‚Â•ª
+	//	åº§æ¨™å¤‰æ›4ã¤åˆ†
 	XMFLOAT3 vpos[4];
 	XMFLOAT3 wpos[4];
 
@@ -121,7 +121,7 @@ bool Camera::CheckView(const XMFLOAT3& Pos)
 	wposv[2] = XMVector3TransformCoord(vposv[2], invvp);
 	wposv[3] = XMVector3TransformCoord(vposv[3], invvp);
 
-	//	‹‘ä‚ÌÀ•W
+	//	è¦–éŒå°ã®åº§æ¨™
 	XMStoreFloat3(&wpos[0], wposv[0]);
 	XMStoreFloat3(&wpos[1], wposv[1]);
 	XMStoreFloat3(&wpos[2], wposv[2]);
@@ -133,100 +133,100 @@ bool Camera::CheckView(const XMFLOAT3& Pos)
 	v.y = Pos.y - m_Position.y;
 	v.z = Pos.z - m_Position.z;
 
-	// ¶–Ê
-	{	//@¶ã
+	// å·¦é¢
+	{	//ã€€å·¦ä¸Š
 		v1.x = wpos[0].x - m_Position.x;
 		v1.y = wpos[0].y - m_Position.y;
 		v1.z = wpos[0].z - m_Position.z;
-		//@¶‰º
+		//ã€€å·¦ä¸‹
 		v2.x = wpos[2].x - m_Position.x;
 		v2.y = wpos[2].y - m_Position.y;
 		v2.z = wpos[2].z - m_Position.z;
 
-		//	ŠOÏ	‡”Ô‘å–y z z y‚Æ‚©(ŠOÏ‚ÌŒö®)
+		//	å¤–ç©	é †ç•ªå¤§äº‹y z z yã¨ã‹(å¤–ç©ã®å…¬å¼)
 		n.x = v1.y * v2.z - v1.z * v2.y;
 		n.y = v1.z * v2.x - v1.x * v2.z;
 		n.z = v1.x * v2.y - v1.y * v2.x;
 
-		//	³‹K‰»
+		//	æ­£è¦åŒ–
 
-		//	“àÏ
+		//	å†…ç©
 		float dot = n.x * v.x + n.y * v.y + n.z * v.z;
 		if (dot < 0.0f)
 		{
 			return false;
 		}
 	}
-	//	‰E–Ê
+	//	å³é¢
 	{
-		//	‰Eã
+		//	å³ä¸Š
 		v1.x = wpos[3].x - m_Position.x;
 		v1.y = wpos[3].y - m_Position.y;
 		v1.z = wpos[3].z - m_Position.z;
-		//@‰E‰º
+		//ã€€å³ä¸‹
 		v2.x = wpos[1].x - m_Position.x;
 		v2.y = wpos[1].y - m_Position.y;
 		v2.z = wpos[1].z - m_Position.z;
 
-		//	ŠOÏ	‡”Ô‘å–y z z y‚Æ‚©
+		//	å¤–ç©	é †ç•ªå¤§äº‹y z z yã¨ã‹
 		n.x = v1.y * v2.z - v1.z * v2.y;
 		n.y = v1.z * v2.x - v1.x * v2.z;
 		n.z = v1.x * v2.y - v1.y * v2.x;
 
-		//	“àÏ
+		//	å†…ç©
 		float dot = n.x * v.x + n.y * v.y + n.z * v.z;
 		if (dot < 0.0f)
 		{
 			return false;
 		}
 	}
-	//	ã–Ê
+	//	ä¸Šé¢
 	{
-		//@¶ã
+		//ã€€å·¦ä¸Š
 		v1.x = wpos[1].x - m_Position.x;
 		v1.y = wpos[1].y - m_Position.y;
 		v1.z = wpos[1].z - m_Position.z;
-		//@‰Eã
+		//ã€€å³ä¸Š
 		v2.x = wpos[0].x - m_Position.x;
 		v2.y = wpos[0].y - m_Position.y;
 		v2.z = wpos[0].z - m_Position.z;
 
-		//	ŠOÏ	‡”Ô‘å–y z z y‚Æ‚©
+		//	å¤–ç©	é †ç•ªå¤§äº‹y z z yã¨ã‹
 		n.x = v1.y * v2.z - v1.z * v2.y;
 		n.y = v1.z * v2.x - v1.x * v2.z;
 		n.z = v1.x * v2.y - v1.y * v2.x;
 
-		//	“àÏ
+		//	å†…ç©
 		float dot = n.x * v.x + n.y * v.y + n.z * v.z;
 		if (dot < 0.0f)
 		{
 			return false;
 		}
 	}
-	//	‰º–Ê
+	//	ä¸‹é¢
 	{
-		//@¶‰º
+		//ã€€å·¦ä¸‹
 		v1.x = wpos[2].x - m_Position.x;
 		v1.y = wpos[2].y - m_Position.y;
 		v1.z = wpos[2].z - m_Position.z;
-		//@‰E‰º
+		//ã€€å³ä¸‹
 		v2.x = wpos[3].x - m_Position.x;
 		v2.y = wpos[3].y - m_Position.y;
 		v2.z = wpos[3].z - m_Position.z;
 
-		//	ŠOÏ	‡”Ô‘å–y z z y‚Æ‚©
+		//	å¤–ç©	é †ç•ªå¤§äº‹y z z yã¨ã‹
 		n.x = v1.y * v2.z - v1.z * v2.y;
 		n.y = v1.z * v2.x - v1.x * v2.z;
 		n.z = v1.x * v2.y - v1.y * v2.x;
 
-		//	“àÏ
+		//	å†…ç©
 		float dot = n.x * v.x + n.y * v.y + n.z * v.z;
 		if (dot < 0.0f)
 		{
 			return false;
 		}
 	}
-	//	‰œ–Ê
+	//	å¥¥é¢
 	{
 		v1.x = wpos[1].x - wpos[0].x;
 		v1.y = wpos[1].y - wpos[0].y;
@@ -236,12 +236,12 @@ bool Camera::CheckView(const XMFLOAT3& Pos)
 		v2.y = wpos[2].y - wpos[0].y;
 		v2.z = wpos[2].z - wpos[0].z;
 
-		//	ŠOÏ	‡”Ô‘å–y z z y‚Æ‚©
+		//	å¤–ç©	é †ç•ªå¤§äº‹y z z yã¨ã‹
 		n.x = v1.y * v2.z - v1.z * v2.y;
 		n.y = v1.z * v2.x - v1.x * v2.z;
 		n.z = v1.x * v2.y - v1.y * v2.x;
 
-		//	“àÏ
+		//	å†…ç©
 		float dot = n.x * v.x + n.y * v.y + n.z * v.z;
 		if (dot > 0.0f)
 		{

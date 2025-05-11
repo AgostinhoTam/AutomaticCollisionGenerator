@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Scene/scene.h"
 
 class GameScene :public Scene

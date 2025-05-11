@@ -1,11 +1,11 @@
-#include <vector>
+ï»¿#include <vector>
 #include "GameObject\gameobject.h"
 #include "System\Renderer\renderer.h"
 #include "System\Collision\capsuleCollision.h"
 #include "Manager\sceneManager.h"
 
 
-constexpr int DEBUG_LINE_SEGMENTS = 32;	//ƒfƒoƒbƒO—p‚Ìü‚Ì•ªŠ„”
+constexpr int DEBUG_LINE_SEGMENTS = 32;	//ãƒ‡ãƒãƒƒã‚°ç”¨ã®ç·šã®åˆ†å‰²æ•°
 
 
 CapsuleCollision::CapsuleCollision(const XMFLOAT3& StartPosition, const XMFLOAT3& Offset, float Radius) :Collision(StartPosition, Offset)
@@ -70,12 +70,12 @@ void CapsuleCollision::Draw()
 	Renderer::GetDeviceContext()->VSSetShader(m_Shader->m_VertexShader, NULL, 0);
 	Renderer::GetDeviceContext()->PSSetShader(m_Shader->m_PixelShader, NULL, 0);
 
-	// ’¸“_ƒoƒbƒtƒ@İ’è
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
 	UINT stride = sizeof(XMFLOAT3);
 	UINT offset = 0;
 	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
 
-	// ƒvƒŠƒ~ƒeƒBƒuƒgƒ|ƒƒWİ’è
+	// ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ãƒˆãƒãƒ­ã‚¸è¨­å®š
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 
@@ -84,13 +84,13 @@ void CapsuleCollision::Draw()
 
 }
 
-//	ƒfƒoƒbƒO‚Ìü‚Ì’¸“_î•ñ•Û‘¶
+//	ãƒ‡ãƒãƒƒã‚°ã®ç·šã®é ‚ç‚¹æƒ…å ±ä¿å­˜
 void CapsuleCollision::CreateLineVertex(std::vector<XMFLOAT3>& SphereLineVertices)
 {
 	SphereLineVertices.clear();
 
 	SphereLineVertices.emplace_back(XMFLOAT3(0, 0, 0));
-	//	XZ•½–Ê
+	//	XZå¹³é¢
 	for (int i = 0; i < DEBUG_LINE_SEGMENTS; ++i)
 	{
 		float angle = XM_2PI * i / DEBUG_LINE_SEGMENTS;
@@ -104,7 +104,7 @@ void CapsuleCollision::CreateLineVertex(std::vector<XMFLOAT3>& SphereLineVertice
 	}
 
 	SphereLineVertices.emplace_back(XMFLOAT3(0, 0, 0));
-	//	YZ•½–Ê
+	//	YZå¹³é¢
 	for (int i = 0; i < DEBUG_LINE_SEGMENTS; ++i)
 	{
 		float angle = XM_2PI * i / DEBUG_LINE_SEGMENTS;
@@ -118,7 +118,7 @@ void CapsuleCollision::CreateLineVertex(std::vector<XMFLOAT3>& SphereLineVertice
 
 	}
 	SphereLineVertices.emplace_back(XMFLOAT3(0, 0, 0));
-	//	XY•½–Ê
+	//	XYå¹³é¢
 	for (int i = 0; i < DEBUG_LINE_SEGMENTS; ++i)
 	{
 		float angle = XM_2PI * i / DEBUG_LINE_SEGMENTS;

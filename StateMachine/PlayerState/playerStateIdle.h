@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "StateMachine/PlayerState/playerState.h"
 class PlayerStateIdle :public PlayerState
 {
