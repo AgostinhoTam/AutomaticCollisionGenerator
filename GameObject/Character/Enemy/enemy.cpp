@@ -1,12 +1,12 @@
-﻿#include "GameObject\Character\Player\playerh.h"
-#include "Manager\animationRendererManager.h"
-#include "Manager\shaderManager.h"
-#include "Manager\gameObjectManager.h"
-#include "Manager\sceneManager.h"
-#include "System\Renderer\animationModel.h"
-#include "System\Collision\characterBoneCollision.h"
-#include "Scene\scene.h"
-#include "Behavior\behaviorTree.h"
+﻿#include "GameObject/Character/Player/playerh.h"
+#include "Manager/animationRendererManager.h"
+#include "Manager/shaderManager.h"
+#include "Manager/gameObjectManager.h"
+#include "Manager/sceneManager.h"
+#include "System/Renderer/animationModel.h"
+#include "System/Collision/characterBoneCollision.h"
+#include "Scene/scene.h"
+#include "Behavior/behaviorTree.h"
 #include "enemy.h"
 namespace EnemyTypeHuman
 {
@@ -25,10 +25,14 @@ namespace EnemyTypeMonster
 
 void Enemy::Init()
 {
-	if (m_EnemyType == ENEMY_TYPE::ENEMY)
+
+	GameObjectManager* gameObjectManager = SceneManager::GetInstance()->GetGameObjectManager();
+	if (!gameObjectManager)return;
+	
+	if (m_EnemyType == Enemy_Type::Humanroid)
 	{
-		m_Name = "EnemyHuman";
-		m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::ENEMY, this);
+		m_Name = "EnemyHuman_" + m_Name;
+		m_AnimationModel = AnimationRendererManager::LoadAnimationModel(Model_Name::Enemy_Humanoid, this);
 		m_MaxMovementSpeed = EnemyTypeHuman::MAX_ENEMY_SPEED;
 		m_MaxHorizontalAcclSpeed = EnemyTypeHuman::ENEMY_MAX_ACCL_SPEED;
 		m_Scale = { EnemyTypeHuman::ENEMY_SCALE,EnemyTypeHuman::ENEMY_SCALE,EnemyTypeHuman::ENEMY_SCALE };
@@ -39,12 +43,12 @@ void Enemy::Init()
 		attackNode->AddChildNode(new BehaviorAttack(this, "Enemy_Kick", 1.5f));
 		attackNode->AddChildNode(new BehaviorStandByAttack(this, "Enemy_Idle"));
 		m_BehaviorRoot->AddChildNode(attackNode);
-		CreateCharacterBoneCollision(CHARACTER_BONE_TYPE::HUMANOID);
+		CreateCharacterBoneCollision(Character_Bone_Type::Humanoid);
 	}
-	else if (m_EnemyType == ENEMY_TYPE::MONSTER)
+	else if (m_EnemyType == Enemy_Type::Monster)
 	{
-		m_Name = "EnemyMonster";
-		m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::MONSTER, this);
+		m_Name = "EnemyMonster_"+ m_Name;
+		m_AnimationModel = AnimationRendererManager::LoadAnimationModel(Model_Name::Enemy_Monster, this);
 		m_MaxMovementSpeed = EnemyTypeMonster::MAX_SPEED;
 		m_MaxHorizontalAcclSpeed = EnemyTypeMonster::MAX_ACCL_SPEED;
 		m_Scale = { EnemyTypeMonster::SCALE,EnemyTypeMonster::SCALE,EnemyTypeMonster::SCALE };
@@ -56,12 +60,12 @@ void Enemy::Init()
 		attackNode->AddChildNode(new BehaviorAttack(this, "Monster_Attack", 1.0f));
 		attackNode->AddChildNode(new BehaviorStandByAttack(this, "Monster_Idle"));
 		m_BehaviorRoot->AddChildNode(attackNode);
-		CreateCharacterBoneCollision(CHARACTER_BONE_TYPE::MONSTER);
+		CreateCharacterBoneCollision(Character_Bone_Type::Monster);
 	}
 	else
 	{
-		m_Name = "EnemyHuman";
-		m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::ENEMY, this);
+		m_Name = "EnemyHuman_"+ m_Name;
+		m_AnimationModel = AnimationRendererManager::LoadAnimationModel(Model_Name::Enemy_Humanoid, this);
 		m_MaxMovementSpeed = EnemyTypeHuman::MAX_ENEMY_SPEED;
 		m_MaxHorizontalAcclSpeed = EnemyTypeHuman::ENEMY_MAX_ACCL_SPEED;
 		m_Scale = { EnemyTypeHuman::ENEMY_SCALE,EnemyTypeHuman::ENEMY_SCALE,EnemyTypeHuman::ENEMY_SCALE };
@@ -72,19 +76,18 @@ void Enemy::Init()
 		attackNode->AddChildNode(new BehaviorAttack(this, "Enemy_Kick", 1.0f));
 		attackNode->AddChildNode(new BehaviorStandByAttack(this, "Enemy_Idle"));
 		m_BehaviorRoot->AddChildNode(attackNode);
-		CreateCharacterBoneCollision(CHARACTER_BONE_TYPE::HUMANOID);
+		CreateCharacterBoneCollision(Character_Bone_Type::Humanoid);
 	}
 
-	m_Shader = ShaderManager::LoadShader(SHADER_NAME::UNLIT_SKINNING_TEXTURE);
+	m_Shader = ShaderManager::LoadShader(Shader_Type::Unlit_Skinning_Texture);
 
 	//	とりあえず接地
 	m_Position.y = 0;
 	m_IsGround = true;
-
-	GameObjectManager* gameObjectManager = SceneManager::GetInstance()->GetGameObjectManager();
+	
 	if (gameObjectManager)
 	{
-		m_Player = gameObjectManager->GetGameObject<Player>(GAMEOBJECT_TYPE::PLAYER);
+		m_Player = gameObjectManager->GetGameObject<Player>(GameObject_Type::Player);
 	}
 
 }
@@ -98,6 +101,7 @@ void Enemy::Uninit()
 void Enemy::Update(const float& DeltaTime)
 {
 	if (!m_AnimationModel)return;
+	
 	CollisionCheck();
 	m_BehaviorRoot->Update(DeltaTime);
 	Character::Update(DeltaTime);

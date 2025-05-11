@@ -1,8 +1,8 @@
 ﻿#pragma once
-enum class SHADER_NAME
+enum class Shader_Type
 {
-	DEBUG_LINE,
-	UNLIT_TEXTURE,
-	UNLIT_SKINNING_TEXTURE,
-	MAX_SHADER
+	Debug_Line,
+	Unlit_Texture,
+	Unlit_Skinning_Texture,
+	Max_Shader_Type
 };

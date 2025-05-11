@@ -6,12 +6,12 @@ class PlayerState;
 class Camera;
 class Enemy;
 class Collision;
-enum class PLAYER_STATE;
+enum class Player_State;
 class Player : public Character
 {
 private:
 	Collision* m_Collision{};
-	std::unordered_map<PLAYER_STATE, PlayerState*> m_PlayerState;
+	std::unordered_map<Player_State, PlayerState*> m_PlayerState;
 	PlayerState* m_CurrentState{};
 	Camera* m_Camera{};
 	std::vector<Enemy*> m_EnemyList;
@@ -21,7 +21,7 @@ public:
 	virtual void Uninit()override;
 	virtual void Update(const float& DeltaTime)override;
 	virtual void Draw()override;
-	void ChangeState(PLAYER_STATE State);
+	void ChangeState(Player_State State);
 	void UpdatePlayerRotation();
 	void CollisionCheck();
 	Enemy* LockTarget();

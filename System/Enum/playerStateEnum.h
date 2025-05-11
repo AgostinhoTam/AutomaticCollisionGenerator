@@ -1,7 +1,7 @@
 ﻿#pragma once
-enum class PLAYER_STATE
+enum class Player_State
 {
-	IDLE,
-	WALK,
-	MAX_STATE
+	Idle,
+	Walk,
+	Max_State
 };

@@ -1,10 +1,9 @@
 ﻿#include <vector>
-#include "GameObject\gameobject.h"
-#include "Manager\shaderManager.h"
-#include "System\Renderer\renderer.h"
-#include "System\Collision\sphereCollision.h"
-#include "System\Collision\characterBoneCollision.h"
-#include "sphereCollision.h"
+#include "GameObject/gameobject.h"
+#include "Manager/shaderManager.h"
+#include "System/Renderer/renderer.h"
+#include "System/Collision/capsuleCollision.h"
+#include "System/Collision/characterBoneCollision.h"
 #include <algorithm>
 
 constexpr int DEBUG_LINE_SEGMENTS = 18;	//デバッグ用の線の分割数
@@ -21,15 +20,16 @@ CharacterBoneCollision::CharacterBoneCollision(const int HeadBoneIndex, const in
 bool CharacterBoneCollision::IsCollisionOverlapping(const Collision* Collision) 
 {
 	if (!Collision)return false;
+	//	拡張できるように設計
 	const CharacterBoneCollision* bone = dynamic_cast<const CharacterBoneCollision*>(Collision);
 	if (bone)
 	{
-		return CheckCapsuleToCapsule(bone);
+		return IsOverlappingToCapsule(bone);
 	}
 	return false;
 }
 
-bool CharacterBoneCollision::CheckCapsuleToCapsule(const CharacterBoneCollision* Collision)
+bool CharacterBoneCollision::IsOverlappingToCapsule(const CharacterBoneCollision* Collision)
 {
 	if (!Collision) return false;
 	XMVECTOR S1 = XMLoadFloat3(&m_StartPosition);
@@ -38,7 +38,7 @@ bool CharacterBoneCollision::CheckCapsuleToCapsule(const CharacterBoneCollision*
 	XMVECTOR E2 = XMLoadFloat3(&Collision->m_EndPosition);
 
 	float shortestDistance = CheckDistanceSegmentToSegment(S1, E1, S2, E2);
-	float radiusSum = m_Radius + Collision->m_Radius;
+	float radiusSum = m_Radius + Collision->GetRadius();
 	return shortestDistance <= radiusSum;
 }
 
@@ -62,7 +62,7 @@ float CharacterBoneCollision::CheckDistanceSegmentToSegment(const XMVECTOR& Star
 	float s, t;
 
 	//	0に近い
-	if (denom < 1e-6f)
+	if (denom < 0.00001f)
 	{
 		s = 0.0f;
 		t = dSS1 / dSE12;
@@ -84,11 +84,7 @@ float CharacterBoneCollision::CheckDistanceSegmentToSegment(const XMVECTOR& Star
 	return XMVectorGetX(XMVector3Length(diff));
 }
 
-bool CharacterBoneCollision::CheckSphereToSphere(const SphereCollision* Collision) 
-{
-	if (!Collision)return false;
-	return false;
-}
+
 
 void CharacterBoneCollision::UpdateCollision(const XMFLOAT3& Position)
 {
@@ -115,7 +111,7 @@ void CharacterBoneCollision::UpdateBonePosition(const int FirstIndex, const int 
 }
 void CharacterBoneCollision::Init()
 {
-	m_Shader = ShaderManager::LoadShader(SHADER_NAME::DEBUG_LINE);
+	m_Shader = ShaderManager::LoadShader(Shader_Type::Debug_Line);
 	CreateCylinderLine(XMFLOAT4(1.0f,1.0f,1.0f,1.0f), m_CylinderLineVertices);
 	CreateSphereLine(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),m_StartSphereVertices);
 	CreateSphereLine(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),m_EndSphereVertices);

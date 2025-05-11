@@ -1,12 +1,11 @@
 ﻿#pragma once
-enum class GAMEOBJECT_TYPE
+enum class GameObject_Type
 {
-	NONE,
-	CAMERA,
-	FIELD,
-	PLAYER,
-	ENEMY,
-	PROJECTION,
-	POLYGON_2D,
-	MAX_TYPE,
+	None,
+	Camera,
+	Field,
+	Player,
+	Enemy,
+	Polygon_2D,
+	Max_Type,
 };

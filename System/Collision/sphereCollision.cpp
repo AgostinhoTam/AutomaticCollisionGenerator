@@ -1,8 +1,8 @@
 ﻿#include <vector>
-#include "GameObject\gameobject.h"
-#include "System\Renderer\renderer.h"
-#include "System\Collision\capsuleCollision.h"
-#include "Manager\sceneManager.h"
+#include "GameObject/gameobject.h"
+#include "System/Renderer/renderer.h"
+#include "System/Collision/capsuleCollision.h"
+#include "Manager/sceneManager.h"
 #include "sphereCollision.h"
 
 constexpr int DEBUG_LINE_SEGMENTS = 32;	//デバッグ用の線の分割数

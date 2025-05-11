@@ -38,10 +38,6 @@ void SceneManager::Update(const float& DeltaTime)
 {
 	if (!m_CurrentScene)return;
 	InputManager::Update();
-	if (InputManager::GetKeyTrigger('K'))
-	{
-		InputManager::SetIsInputEnable(!InputManager::GetIsInputEnable());	//反転
-	}
 	m_CurrentScene->Update(DeltaTime);
 }
 

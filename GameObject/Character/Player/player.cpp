@@ -3,29 +3,29 @@
 #include "Manager/shaderManager.h"
 #include "Manager/inputManager.h"
 #include "Manager/gameObjectManager.h"
-#include "System\Enum\playerStateEnum.h"
+#include "System/Enum/playerStateEnum.h"
 #include "Scene/scene.h"
-#include "System\Renderer/animationModel.h"
+#include "System/Renderer/animationModel.h"
 #include "StateMachine/PlayerState/playerStateIdle.h"
 #include "StateMachine/PlayerState/playerStateWalk.h"
 #include "GameObject/Character/Player/playerh.h"
 #include "GameObject/Camera/camera.h"
-#include "GameObject\Character\Enemy\enemy.h"
-#include "System\Collision\characterBoneCollision.h"
-#include "System\Collision\sphereCollision.h"
+#include "GameObject/Character/Enemy/enemy.h"
+#include "System/Collision/characterBoneCollision.h"
+
 constexpr float PLAYER_MAX_SPEED = 20.0f;
 constexpr float PLAYER_MAX_ACCL_SPEED = 50.0f;
 constexpr float PLAYER_MAX_JUMP_SPEED = 100.0f;
 constexpr float PLAYER_SCALE = 0.01f;
 void Player::Init()
 {
-	m_AnimationModel = AnimationRendererManager::LoadAnimationModel(MODEL_NAME::PLAYER,this);
+	m_AnimationModel = AnimationRendererManager::LoadAnimationModel(Model_Name::Player,this);
 
-	m_Shader = ShaderManager::LoadShader(SHADER_NAME::UNLIT_SKINNING_TEXTURE);
+	m_Shader = ShaderManager::LoadShader(Shader_Type::Unlit_Skinning_Texture);
 
 	m_MaxMovementSpeed = PLAYER_MAX_SPEED;
 	m_MaxHorizontalAcclSpeed = PLAYER_MAX_ACCL_SPEED;
-	m_Name = "Player";
+	m_Name = "Player_" + m_Name;
 
 	Scene* scene = SceneManager::GetInstance()->GetCurrentScene();
 	if (scene)
@@ -33,21 +33,21 @@ void Player::Init()
 		GameObjectManager* objectManager = scene->GetGameObjectManager();
 		if (objectManager)
 		{
-			m_Camera = objectManager->GetGameObject<Camera>(GAMEOBJECT_TYPE::CAMERA);
-			objectManager->GetGameObjectsByLayer<Enemy>(m_EnemyList,GAMEOBJECT_TYPE::ENEMY);
+			m_Camera = objectManager->GetGameObject<Camera>(GameObject_Type::Camera);
+			objectManager->GetGameObjectsByLayer<Enemy>(m_EnemyList,GameObject_Type::Enemy);
 		}
 	}
 
-	m_PlayerState.reserve(static_cast<int>(PLAYER_STATE::MAX_STATE));
-	m_PlayerState.try_emplace(PLAYER_STATE::IDLE, new PlayerStateIdle(this, m_Camera, m_AnimationModel));
-	m_PlayerState.try_emplace(PLAYER_STATE::WALK, new PlayerStateWalk(this, m_Camera, m_AnimationModel));
-	m_CurrentState = m_PlayerState[PLAYER_STATE::IDLE];
+	m_PlayerState.reserve(static_cast<int>(Player_State::Max_State));
+	m_PlayerState.try_emplace(Player_State::Idle, new PlayerStateIdle(this, m_Camera, m_AnimationModel));
+	m_PlayerState.try_emplace(Player_State::Walk, new PlayerStateWalk(this, m_Camera, m_AnimationModel));
+	m_CurrentState = m_PlayerState[Player_State::Idle];
 	m_CurrentState->Init();
 	m_Scale = { PLAYER_SCALE,PLAYER_SCALE,PLAYER_SCALE };
 	m_Position.y = 0.0f;
 	//m_Collision = new SphereCollision(m_Position, { 0.0f,1.0f,0.0f }, 1.0f);
 	m_IsGround = true;
-	CreateCharacterBoneCollision(CHARACTER_BONE_TYPE::HUMANOID);
+	CreateCharacterBoneCollision(Character_Bone_Type::Humanoid);
 
 }
 
@@ -70,9 +70,6 @@ void Player::Update(const float& DeltaTime)
 
 	//	アニメーション更新
 	m_AnimationModel->UpdateAnimationBlend();
-
-	//if (m_Collision)m_Collision->UpdateCollision(m_Position);
-
 
 	m_CurrentState->Update();
 
@@ -101,7 +98,7 @@ void Player::Draw()
 
 }
 
-void Player::ChangeState(PLAYER_STATE State)
+void Player::ChangeState(Player_State State)
 {
 	//	同じStateに遷移しないように
 	if (m_CurrentState == m_PlayerState[State])return;

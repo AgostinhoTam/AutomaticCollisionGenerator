@@ -8,7 +8,7 @@
 #include "Manager/gameObjectManager.h"
 #include "Manager/inputManager.h"
 #include "Scene/scene.h"
-#include "System\Renderer/renderer.h"
+#include "System/Renderer/renderer.h"
 #include "GameObject/Character/Player/playerh.h"
 #include "GameObject/Camera/camera.h"
 /*===================================================================================
@@ -21,14 +21,14 @@ void Camera::Init()
 	m_Position = XMFLOAT3(0.0f, 5.0f, -10.0f);
 	m_Target = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_Up = GetUp();
-	m_Name = "Camera";
+	m_Name = "Camera_" + m_Name;
 	Scene* scene = SceneManager::GetCurrentScene();
 	if (scene)
 	{
 		GameObjectManager* gameObjectManager = scene->GetGameObjectManager();
 		if (gameObjectManager)
 		{
-			m_Player = gameObjectManager->GetGameObject<Player>(GAMEOBJECT_TYPE::PLAYER);
+			m_Player = gameObjectManager->GetGameObject<Player>(GameObject_Type::Player);
 		}
 	}
 	m_Sensitivity = CAMERA_SENSITIVE;
@@ -39,7 +39,12 @@ void Camera::Update(const float& DeltaTime)
 {
 	if (!m_Player)return;
 
-
+	//	カメラ固定モード
+	if (InputManager::GetKeyTrigger('K'))
+	{
+		InputManager::SetIsInputEnable(!InputManager::GetIsInputEnable());
+	}
+	
 	XMFLOAT3 targetPos = m_Player->GetPosition();
 	POINT mouseDeltaPos = InputManager::GetMouseDelta();
 	

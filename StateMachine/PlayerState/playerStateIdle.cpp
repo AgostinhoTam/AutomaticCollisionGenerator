@@ -1,8 +1,8 @@
 ﻿#include "GameObject/Character/Player/playerh.h"
 #include "GameObject/Camera/camera.h"
 #include "Manager/inputManager.h"
-#include "System\Renderer\animationModel.h"
-#include "System\Enum\playerStateEnum.h"
+#include "System/Renderer/animationModel.h"
+#include "System/Enum/playerStateEnum.h"
 #include "playerStateIdle.h"
 
 void PlayerStateIdle::Init()
@@ -25,7 +25,7 @@ void PlayerStateIdle::UserInputDection()
 	if (InputManager::GetKeyTrigger('A') || InputManager::GetKeyTrigger('W') ||
 		InputManager::GetKeyTrigger('S') || InputManager::GetKeyTrigger('D'))
 	{
-		m_Player->ChangeState(PLAYER_STATE::WALK);
+		m_Player->ChangeState(Player_State::Walk);
 	}
 
 }

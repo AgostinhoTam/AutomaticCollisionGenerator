@@ -1,11 +1,11 @@
 ﻿#include <numeric> 
-#include "Main\main.h"
-#include "Manager\inputManager.h"
-#include "GameObject\gameobject.h"
-#include "assimp\Importer.hpp"
-//#include "System\Collision\sphereCollision.h"
-#include "System\Renderer\renderer.h"
-#include "System\Renderer\animationModel.h"
+#include "Main/main.h"
+#include "Manager/inputManager.h"
+#include "GameObject/gameobject.h"
+#include "assimp/Importer.hpp"
+
+#include "System/Renderer/renderer.h"
+#include "System/Renderer/animationModel.h"
 
 constexpr float RADIUS_ADJUSTMENT = 0.7f;
 

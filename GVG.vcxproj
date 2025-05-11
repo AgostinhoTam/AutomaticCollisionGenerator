@@ -350,12 +350,12 @@
     <ClInclude Include="System\Collision\characterBoneCollision.h" />
     <ClInclude Include="System\Collision\collision.h" />
     <ClInclude Include="System\Collision\sphereCollision.h" />
+    <ClInclude Include="System\Enum\collisionTypeEnum.h" />
     <ClInclude Include="System\Enum\enemyTypeEnum.h" />
     <ClInclude Include="System\Enum\gameObjectEnum.h" />
     <ClInclude Include="System\Enum\modelEnum.h" />
     <ClInclude Include="System\Enum\moveDirection.h" />
     <ClInclude Include="System\Enum\playerStateEnum.h" />
-    <ClInclude Include="System\Enum\projectionTypeEnum.h" />
     <ClInclude Include="System\Enum\shaderEnum.h" />
     <ClInclude Include="System\Renderer\animationModel.h" />
     <ClInclude Include="System\Renderer\renderer.h" />

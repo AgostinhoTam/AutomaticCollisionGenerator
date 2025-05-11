@@ -8,7 +8,7 @@ BYTE InputManager::m_KeyState[256];
 POINT InputManager::m_CurrentMousePos;
 POINT InputManager::m_LastMousePos;
 POINT InputManager::m_MouseDelta;
-bool	InputManager::m_IsInputEnable = true;
+bool	InputManager::m_IsInputEnable = false;
 void InputManager::Init()
 {
 

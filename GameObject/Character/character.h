@@ -3,11 +3,11 @@
 #include "System\Enum/moveDirection.h"
 #include "System\Renderer\animationModel.h"
 
-enum class CHARACTER_BONE_TYPE
+enum class Character_Bone_Type
 {
-	HUMANOID,
-	MONSTER,
-	MAX_CHARACTER_TYPES
+	Humanoid,
+	Monster,
+	Max_Character_Types
 };
 struct MODEL;
 class Collision;
@@ -40,7 +40,7 @@ public:
 	void UpdateHorizontalVelocity(XMVECTOR& Velocity, const float& DeltaTime);
 	void UpdateBoneCollision();
 	AnimationModel* GetAnimationModel() const{ return m_AnimationModel; }
-	void CreateCharacterBoneCollision(const CHARACTER_BONE_TYPE& BoneType);
+	void CreateCharacterBoneCollision(const Character_Bone_Type& BoneType);
 	void CreateCharacterBoneCollision(const std::string& FilePath);
 	void CreateSingleBoneCollision(const std::string& Head,const std::string& Tail,const XMFLOAT3& Offset={0.0f,0.0f,0.0f}, const float Radius = 0.0f);
 	std::unordered_map<std::string, Collision*>& GetCollisionList() { return m_Collisions; }

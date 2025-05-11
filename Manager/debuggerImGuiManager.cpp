@@ -1,15 +1,15 @@
 ﻿#include <filesystem>
-#include "Manager\debuggerImGuiManager.h"
-#include "Main\main.h"
-#include "System\Renderer\renderer.h"
-#include "System\Collision\collision.h"
-#include "System\Renderer\animationModel.h"
-#include "System\Collision\characterBoneCollision.h"
-#include "Manager\sceneManager.h"
-#include "Scene\scene.h"
-#include "Manager\gameObjectManager.h"
-#include "GameObject\gameobject.h"
-#include "GameObject\Character\character.h"
+#include "Manager/debuggerImGuiManager.h"
+#include "Main/main.h"
+#include "System/Renderer/renderer.h"
+#include "System/Collision/collision.h"
+#include "System/Renderer/animationModel.h"
+#include "System/Collision/characterBoneCollision.h"
+#include "Manager/sceneManager.h"
+#include "Scene/scene.h"
+#include "Manager/gameObjectManager.h"
+#include "GameObject/gameobject.h"
+#include "GameObject/Character/character.h"
 
 
 GameObject* DebuggerImGuiManager::m_TargetObject;
@@ -40,7 +40,7 @@ void DebuggerImGuiManager::Init()
 
 }
 
-void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE)])
+void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_cast<int>(GameObject_Type::Max_Type)])
 {
 
 	ImGui_ImplDX11_NewFrame();
@@ -63,7 +63,7 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 	ImGui::End();
 
 	ImGui::Begin("GameObject List");
-	for (int type = 0; type < static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE); ++type)
+	for (int type = 0; type < static_cast<int>(GameObject_Type::Max_Type); ++type)
 	{
 		for (GameObject*& gameObject : ObjectList[type])
 		{

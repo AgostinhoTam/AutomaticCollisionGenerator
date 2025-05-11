@@ -1,10 +1,10 @@
 ﻿#include "GameObject/gameobject.h"
 #include "Manager/gameObjectManager.h"
-#include "Manager\debuggerImGuiManager.h"
+#include "Manager/debuggerImGuiManager.h"
 
 void GameObjectManager::Init()
 {
-	for (int type = 0; type < static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE); ++type)
+	for (int type = 0; type < static_cast<int>(GameObject_Type::Max_Type); ++type)
 	{
 		for (GameObject* object : m_GameObjectList[type])
 		{
@@ -18,7 +18,7 @@ void GameObjectManager::Init()
 
 void GameObjectManager::Uninit()
 {
-	for (int type = 0; type < static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE); ++type)
+	for (int type = 0; type < static_cast<int>(GameObject_Type::Max_Type); ++type)
 	{
 		for (GameObject* object : m_GameObjectList[type])
 		{
@@ -31,7 +31,7 @@ void GameObjectManager::Uninit()
 
 void GameObjectManager::Update(const float& DeltaTime)
 {
-	for (int type = 0; type < static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE); ++type)
+	for (int type = 0; type < static_cast<int>(GameObject_Type::Max_Type); ++type)
 	{
 		for (GameObject* object : m_GameObjectList[type])
 		{
@@ -45,7 +45,7 @@ void GameObjectManager::Update(const float& DeltaTime)
 
 void GameObjectManager::Draw()
 {
-	for (int type = 0; type < static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE); ++type)
+	for (int type = 0; type < static_cast<int>(GameObject_Type::Max_Type); ++type)
 	{
 		for (GameObject* object : m_GameObjectList[type])
 		{

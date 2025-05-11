@@ -53,7 +53,7 @@ void Polygon2D::Init()
 		assert(m_Texture);
 	}
 
-	ShaderManager::LoadShader(SHADER_NAME::UNLIT_TEXTURE);
+	ShaderManager::LoadShader(Shader_Type::Unlit_Texture);
 
 }
 

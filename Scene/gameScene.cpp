@@ -12,11 +12,11 @@ void GameScene::Init()
 	m_GameObjectManager = new GameObjectManager;
 	if (m_GameObjectManager)
 	{
-		m_GameObjectManager->AddGameObject<Camera>(GAMEOBJECT_TYPE::CAMERA);
-		m_GameObjectManager->AddGameObjectArg<Field>(GAMEOBJECT_TYPE::FIELD, XMFLOAT3(0, 0, 0), XMFLOAT2(50, 50));
-		m_GameObjectManager->AddGameObject<Player>(GAMEOBJECT_TYPE::PLAYER);
-		m_GameObjectManager->AddGameObjectArg<Enemy>(GAMEOBJECT_TYPE::ENEMY,ENEMY_TYPE::ENEMY)->SetPosition(XMFLOAT3(-20.0f, 0.0f, 0.0f));
-		m_GameObjectManager->AddGameObjectArg<Enemy>(GAMEOBJECT_TYPE::ENEMY, ENEMY_TYPE::MONSTER)->SetPosition(XMFLOAT3(-20.0f, 0.0f, 10.0f));
+		m_GameObjectManager->AddGameObject<Camera>(GameObject_Type::Camera);
+		m_GameObjectManager->AddGameObjectArg<Field>(GameObject_Type::Field, XMFLOAT3(0, 0, 0), XMFLOAT2(50, 50));
+		m_GameObjectManager->AddGameObject<Player>(GameObject_Type::Player);
+		m_GameObjectManager->AddGameObjectArg<Enemy>(GameObject_Type::Enemy,Enemy_Type::Humanroid)->SetPosition(XMFLOAT3(-20.0f, 0.0f, 0.0f));
+		m_GameObjectManager->AddGameObjectArg<Enemy>(GameObject_Type::Enemy, Enemy_Type::Monster)->SetPosition(XMFLOAT3(-20.0f, 0.0f, 10.0f));
 		m_GameObjectManager->Init();
 	}
 	

@@ -1,13 +1,13 @@
-﻿#include "System\Renderer/renderer.h"
+﻿#include "System/Renderer/renderer.h"
 #include "Manager/shaderManager.h"
 
-std::unordered_map<SHADER_NAME, Shader*> ShaderManager::m_ShaderList;
+std::unordered_map<Shader_Type, Shader*> ShaderManager::m_ShaderList;
 
 void ShaderManager::Init()
 {
-	CreateShader(SHADER_NAME::UNLIT_TEXTURE, "shader\\unlitTexturePS.cso", "shader\\unlitTextureVS.cso");
-	CreateShader(SHADER_NAME::DEBUG_LINE, "shader\\debugLinePS.cso", "shader\\debugLineVS.cso");
-	CreateShader(SHADER_NAME::UNLIT_SKINNING_TEXTURE, "shader\\unlitTextureSkinningPS.cso", "shader\\unlitTextureSkinningVS.cso");
+	CreateShader(Shader_Type::Unlit_Texture, "shader\\unlitTexturePS.cso", "shader\\unlitTextureVS.cso");
+	CreateShader(Shader_Type::Debug_Line, "shader\\debugLinePS.cso", "shader\\debugLineVS.cso");
+	CreateShader(Shader_Type::Unlit_Skinning_Texture, "shader\\unlitTextureSkinningPS.cso", "shader\\unlitTextureSkinningVS.cso");
 }
 
 void ShaderManager::Uninit()
@@ -23,7 +23,7 @@ void ShaderManager::Uninit()
 	m_ShaderList.clear();
 }
 
-Shader* ShaderManager::CreateShader(const SHADER_NAME& ShaderName,const char* PSFileName, const char* VSFileName)
+Shader* ShaderManager::CreateShader(const Shader_Type& ShaderName,const char* PSFileName, const char* VSFileName)
 {
 	//	重複できないように
 	auto it = m_ShaderList.find(ShaderName);
@@ -34,12 +34,12 @@ Shader* ShaderManager::CreateShader(const SHADER_NAME& ShaderName,const char* PS
 
 	Shader* shader = new Shader;
 
-	if (ShaderName == SHADER_NAME::DEBUG_LINE)
+	if (ShaderName == Shader_Type::Debug_Line)
 	{
 		Renderer::CreateDebugVertexShader(&shader->m_VertexShader, &shader->m_VertexLayout, VSFileName);
 		Renderer::CreatePixelShader(&shader->m_PixelShader,PSFileName);		// PS現在は１種類だけなので全部同じ
 	}
-	else if (ShaderName == SHADER_NAME::UNLIT_SKINNING_TEXTURE)
+	else if (ShaderName == Shader_Type::Unlit_Skinning_Texture)
 	{
 		Renderer::CreateSkinningVertexShader(&shader->m_VertexShader, &shader->m_VertexLayout, VSFileName);
 		Renderer::CreatePixelShader(&shader->m_PixelShader,PSFileName);
@@ -56,7 +56,7 @@ Shader* ShaderManager::CreateShader(const SHADER_NAME& ShaderName,const char* PS
 	return m_ShaderList[ShaderName];
 }
 
-Shader* ShaderManager::LoadShader(const SHADER_NAME& ShaderName)
+Shader* ShaderManager::LoadShader(const Shader_Type& ShaderName)
 {
 	auto it = m_ShaderList.find(ShaderName);
 	if (it != m_ShaderList.end())
@@ -64,5 +64,5 @@ Shader* ShaderManager::LoadShader(const SHADER_NAME& ShaderName)
 		return it->second;
 	}
 
-	return m_ShaderList[SHADER_NAME::UNLIT_TEXTURE];
+	return m_ShaderList[Shader_Type::Unlit_Texture];
 }

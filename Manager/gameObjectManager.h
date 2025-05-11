@@ -1,14 +1,15 @@
 ﻿#pragma once
 #include <vector>
 #include <unordered_map>
-#include "System\Enum/gameObjectEnum.h"
+#include <string>
+#include "System/Enum/gameObjectEnum.h"
 
 class GameObject;
 
 class GameObjectManager
 {
 private:
-	std::vector<GameObject*> m_GameObjectList[static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE)];
+	std::vector<GameObject*> m_GameObjectList[static_cast<int>(GameObject_Type::Max_Type)];
 
 public:
 	GameObjectManager(){}
@@ -18,24 +19,30 @@ public:
 	void Draw();
 	void Uninit();
 	template<typename T>
-	T* AddGameObject(const GAMEOBJECT_TYPE& Type)
+	T* AddGameObject(const GameObject_Type& Type)
 	{
-		T* object = new T();
-		if (object)
+		auto& list = m_GameObjectList[static_cast<int>(Type)];
+		size_t id = list.size();
+		T* gameObject = new T();
+		if (gameObject)
 		{
-			m_GameObjectList[static_cast<int>(Type)].emplace_back(object);
-			return object;
+			list.emplace_back(gameObject);
+			gameObject->SetName(std::to_string(id));
+			return gameObject;
 		}
 		return nullptr;
 	}
 
 	template<typename T, typename... Args>
-	T* AddGameObjectArg(const GAMEOBJECT_TYPE& Type, Args&&... args)
+	T* AddGameObjectArg(const GameObject_Type& Type, Args&&... args)
 	{
+		auto& list = m_GameObjectList[static_cast<int>(Type)];
+		size_t id = list.size();
 		T* gameObject = new T(std::forward<Args>(args)...);
 		if (gameObject)
 		{
-			m_GameObjectList[static_cast<int>(Type)].emplace_back(gameObject);
+			list.emplace_back(gameObject);
+			gameObject->SetName(std::to_string(id));
 			return gameObject;
 		}
 		return nullptr;
@@ -43,7 +50,7 @@ public:
 
 	//　リスト指定で処理が早い
 	template<typename T>
-	void GetGameObjectsByLayer(std::vector<T*>& targetlist, const GAMEOBJECT_TYPE& layer)
+	void GetGameObjectsByLayer(std::vector<T*>& targetlist, const GameObject_Type& layer)
 	{
 		for (GameObject* object : m_GameObjectList[static_cast<int>(layer)])
 		{
@@ -57,7 +64,7 @@ public:
 
 	//　リスト指定で処理が早い
 	template<typename T>
-	T* GetGameObject(const GAMEOBJECT_TYPE& layer)
+	T* GetGameObject(const GameObject_Type& layer)
 	{
 		for (GameObject* object : m_GameObjectList[static_cast<int>(layer)])
 		{

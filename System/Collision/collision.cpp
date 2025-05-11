@@ -1,8 +1,8 @@
 ﻿#include "collision.h"
-#include "Manager\shaderManager.h"
+#include "Manager/shaderManager.h"
 Collision::Collision(const XMFLOAT3& Position, const XMFLOAT3& Offset) :m_Position(Position), m_Offset(Offset)
 {
-	m_Shader = ShaderManager::LoadShader(SHADER_NAME::UNLIT_TEXTURE);
+	m_Shader = ShaderManager::LoadShader(Shader_Type::Unlit_Texture);
 }
 
 

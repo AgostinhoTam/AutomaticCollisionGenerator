@@ -1,7 +1,7 @@
 ﻿#pragma once
-enum class ENEMY_TYPE
+enum class Enemy_Type
 {
-	ENEMY,
-	MONSTER,
-	MAX_ENEMY
+	Humanroid,
+	Monster,
+	Max_Enemy
 };

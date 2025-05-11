@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "collision.h"
-class SphereCollision;
+class CapsuleCollision;
 class CharacterBoneCollision :public Collision
 {
 private:
@@ -18,8 +18,7 @@ private:
 public:
 	CharacterBoneCollision(const int HeadBoneIndex, const int TailBoneIndex,const XMFLOAT3& Start,const XMFLOAT3& End, const XMFLOAT3& Offset, float Radius);
 	virtual bool IsCollisionOverlapping(const Collision* Collision) override;
-	bool CheckSphereToSphere(const SphereCollision* Collision);
-	bool CheckCapsuleToCapsule(const CharacterBoneCollision* Collision);
+	virtual bool IsOverlappingToCapsule(const CharacterBoneCollision* Collision) override;
 	float CheckDistanceSegmentToSegment(const XMVECTOR& Start1, const XMVECTOR& End1, const XMVECTOR& Start2, const XMVECTOR& End2);
 	float GetRadius()const { return m_Radius; }
 	void SetRadius(const float Radius) { m_Radius = Radius; }

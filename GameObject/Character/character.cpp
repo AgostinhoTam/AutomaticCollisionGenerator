@@ -127,7 +127,7 @@ void Character::UpdateBoneCollision()
 
 }
 
-void Character::CreateCharacterBoneCollision(const CHARACTER_BONE_TYPE& BoneType)
+void Character::CreateCharacterBoneCollision(const Character_Bone_Type& BoneType)
 {
 	if (!m_AnimationModel)return;
 
@@ -147,10 +147,10 @@ void Character::CreateCharacterBoneCollision(const CHARACTER_BONE_TYPE& BoneType
 	std::ifstream file;
 	switch (BoneType)
 	{
-	case CHARACTER_BONE_TYPE::HUMANOID:
+	case Character_Bone_Type::Humanoid:
 		file.open("asset\\boneProfile\\humanoidBone.csv");
 		break;
-	case CHARACTER_BONE_TYPE::MONSTER:
+	case Character_Bone_Type::Monster:
 		file.open("asset\\boneProfile\\monsterBone.csv");
 		break;
 	default:

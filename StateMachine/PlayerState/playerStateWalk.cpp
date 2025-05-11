@@ -1,8 +1,8 @@
 ﻿#include "GameObject/Character/Player/playerh.h"
 #include "GameObject/Camera/camera.h"
 #include "Manager/inputManager.h"
-#include "System\Renderer\animationModel.h"
-#include "System\Enum\playerStateEnum.h"
+#include "System/Renderer/animationModel.h"
+#include "System/Enum/playerStateEnum.h"
 #include "playerStateWalk.h"
 
 void PlayerStateWalk::Init()
@@ -50,7 +50,7 @@ void PlayerStateWalk::UserInputDection()
 	}
 	if (!hasInput)
 	{
-		m_Player->ChangeState(PLAYER_STATE::IDLE);
+		m_Player->ChangeState(Player_State::Idle);
 		if (!m_AnimationModel->GetIsTransitioning())
 		{
 			m_AnimationModel->SetNextAnimationFrame(m_AnimationModel->GetNextAnimationFrame());

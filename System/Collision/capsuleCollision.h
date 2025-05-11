@@ -14,5 +14,6 @@ public:
 	virtual void Init()override;
 	virtual void Draw()override;
 	void CreateLineVertex(std::vector<XMFLOAT3>& SphereLineVertices);
+	float GetRadius()const { return m_Radius; }
 };
 
