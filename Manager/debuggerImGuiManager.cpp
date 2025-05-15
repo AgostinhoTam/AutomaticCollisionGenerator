@@ -46,7 +46,7 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 
 	//	FPS表示UI
 	ImGui::Begin("Renderer");
-	ImGui::SetWindowSize(ImVec2(200, 200));
+	ImGui::SetWindowSize(ImVec2(300, 200));
 	ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
 	ImGui::Text("%.1f ms", ImGui::GetIO().DeltaTime);
 	static float value[180];
@@ -56,6 +56,7 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 	}
 	value[179] = ImGui::GetIO().DeltaTime * 1000.0f;
 	ImGui::PlotLines("FPS Average", value, sizeof(value) / sizeof(float), 0, NULL, 0,100.0f, ImVec2(0, 50));
+	ImGui::Text("Press K to Change Camera Mode");
 	ImGui::End();
 
 	//	ゲームオブジェクトUI
