@@ -1,4 +1,9 @@
-﻿#include "GameObject/Character/Player/playerh.h"
+﻿/*===================================================================================
+
+エネミー制御(enemy.cpp)
+
+====================================================================================*/
+#include "GameObject/Character/Player/playerh.h"
 #include "Manager/animationRendererManager.h"
 #include "Manager/shaderManager.h"
 #include "Manager/gameObjectManager.h"
@@ -8,6 +13,7 @@
 #include "Scene/scene.h"
 #include "Behavior/behaviorTree.h"
 #include "enemy.h"
+//=============敵種類=============
 namespace EnemyTypeHuman
 {
 	constexpr float MAX_ENEMY_SPEED = 10.0f;
@@ -22,13 +28,17 @@ namespace EnemyTypeMonster
 	constexpr float MAX_JUMP_SPEED = 100.0f;
 	constexpr float SCALE = 0.01f;
 }
+//====================================
 
+
+//	=========================敵初期化=========================
 void Enemy::Init()
 {
 
 	GameObjectManager* gameObjectManager = SceneManager::GetInstance()->GetGameObjectManager();
 	if (!gameObjectManager)return;
-	
+
+	//	敵のタイプで生成データ選択
 	if (m_EnemyType == Enemy_Type::Humanroid)
 	{
 		m_Name = "EnemyHuman_" + m_Name;
@@ -79,41 +89,55 @@ void Enemy::Init()
 		CreateCharacterBoneCollision(Character_Bone_Type::Humanoid);
 	}
 
+	//	GPUスキンニングシェーダー読み込み
 	m_Shader = ShaderManager::LoadShader(Shader_Type::Unlit_Skinning_Texture);
 
 	//	とりあえず接地
 	m_Position.y = 0;
 	m_IsGround = true;
-	
+
+	//	プレイヤー設置
 	if (gameObjectManager)
 	{
 		m_Player = gameObjectManager->GetGameObject<Player>(GameObject_Type::Player);
 	}
 
 }
-
+//	=========================敵Uninit=========================
 void Enemy::Uninit()
 {
 	if (!m_AnimationModel)return;
 	m_AnimationModel->Uninit();
 }
 
+//	=========================敵更新=========================
+//	DeltaTIme	:	float	デルタタイム
 void Enemy::Update(const float& DeltaTime)
 {
 	if (!m_AnimationModel)return;
-	
+
+	//	当たり判定
 	CollisionCheck();
+
+	//	ビヘイビアー更新
 	m_BehaviorRoot->Update(DeltaTime);
+
+	//	キャラクター共通部分更新
 	Character::Update(DeltaTime);
 
+	//	移動後当たり判定更新
 	UpdateBoneCollision();
 }
 
+//	=========================敵描画=========================
 void Enemy::Draw()
 {
 	if (!m_AnimationModel)return;
+	
+	//	モデル描画
 	m_AnimationModel->Draw();
 
+	//	コリジョンの描画
 	for (auto& pair : m_Collisions)
 	{
 		if (!pair.second)continue;
@@ -122,12 +146,14 @@ void Enemy::Draw()
 
 }
 
+//	========================当たり判定探知======================
 void Enemy::CollisionCheck()
 {
 
-	//	キャッシュ
+	//	プレイヤーの当たり判定をキャッシュ
 	std::unordered_map<std::string, Collision*>& playerCollisonList = m_Player->GetCollisionList();
 
+	//	敵クラス自身が保持している当たり判定を走査
 	for (const auto& enemyPair : m_Collisions)
 	{
 		bool isHit = false;
@@ -137,10 +163,10 @@ void Enemy::CollisionCheck()
 			continue;
 		}
 
+		//	プレイヤーとの当たり判定走査
 		for (auto& playerPair : playerCollisonList)
 		{
 			if (!playerPair.second)continue;
-
 			if (enemyPair.second->IsCollisionOverlapping(playerPair.second))
 			{
 				isHit = true;

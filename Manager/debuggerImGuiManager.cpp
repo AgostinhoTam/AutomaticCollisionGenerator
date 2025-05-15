@@ -1,4 +1,9 @@
-﻿#include <filesystem>
+﻿/*===================================================================================
+
+デバッグImGuiマネージャー(debuggerImGuiManager.cpp)
+
+====================================================================================*/
+#include <filesystem>
 #include "Manager/debuggerImGuiManager.h"
 #include "Main/main.h"
 #include "System/Renderer/renderer.h"
@@ -11,21 +16,11 @@
 #include "GameObject/gameobject.h"
 #include "GameObject/Character/character.h"
 
-
 GameObject* DebuggerImGuiManager::m_TargetObject;
 std::vector<GameObject*> DebuggerImGuiManager::m_GameObjectList;
 std::vector<std::string> DebuggerImGuiManager::m_FileList;
 
-void DebuggerImGuiManager::SetGameObject(GameObject* object)
-{
-
-
-}
-void DebuggerImGuiManager::LoadCurrentSceneGameObjectList(Scene* scene)
-{
-
-
-}
+//	====================ImGui初期化====================
 void DebuggerImGuiManager::Init()
 {
 	//	ImGuiセットアップ
@@ -40,13 +35,16 @@ void DebuggerImGuiManager::Init()
 
 }
 
+//	====================ImGui描画====================
+//	ObjectList	:	std::vector<GameObject*>	シーンからのGameObjectList
 void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_cast<int>(GameObject_Type::Max_Type)])
 {
-
+	//	ImGui初期化
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
+	//	FPS表示UI
 	ImGui::Begin("Renderer");
 	ImGui::SetWindowSize(ImVec2(200, 200));
 	ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
@@ -58,10 +56,9 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 	}
 	value[179] = ImGui::GetIO().DeltaTime * 1000.0f;
 	ImGui::PlotLines("FPS Average", value, sizeof(value) / sizeof(float), 0, NULL, 0,100.0f, ImVec2(0, 50));
-
-
 	ImGui::End();
 
+	//	ゲームオブジェクトUI
 	ImGui::Begin("GameObject List");
 	for (int type = 0; type < static_cast<int>(GameObject_Type::Max_Type); ++type)
 	{
@@ -74,8 +71,8 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 			}
 		}
 	}
-
 	ImGui::End();
+	
 	// 選択されたオブジェクトの詳細を表示
 	if (m_TargetObject)
 	{
@@ -275,7 +272,7 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 	//	Renderデータ
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
-
+//	===================ImGui Uninit======================
 void DebuggerImGuiManager::Uninit()
 {
 	ImGui_ImplDX11_Shutdown();
@@ -283,16 +280,23 @@ void DebuggerImGuiManager::Uninit()
 	ImGui::DestroyContext();
 }
 
+//	===================指定フォルダー内のボーンのCSVファイル読み込み======================
+//	Path		:	std::string	ファイルのパス
+//	CSVFileName	:	std::vector<const char*>	ImGui表示用のCSVファイルの名前
 void DebuggerImGuiManager::LoadCSVFiles(const std::string& Path, std::vector<const char*>& CSVFileName)
 {
+	//	再読み込みするので現在表示されているCSVの名前全部消す
 	m_FileList.clear();
 	CSVFileName.clear();
 
+	//	パスが存在しているかどうか
 	if (!std::filesystem::exists(Path) || !std::filesystem::is_directory(Path))
 	{
+		assert("CSV読み込みのフォルダーが存在しない asset/boneProfile");
 		return;
 	}
 
+	//	csvファイル取り出す
 	for (const auto& entry : std::filesystem::directory_iterator(Path))
 	{
 		if (entry.is_regular_file() && entry.path().extension() == ".csv")
@@ -300,7 +304,8 @@ void DebuggerImGuiManager::LoadCSVFiles(const std::string& Path, std::vector<con
 			m_FileList.push_back(entry.path().filename().string());  // ファイル名のみ取得
 		}
 	}
-	
+
+	//	名前表示するためにCharに変換
 	for (const auto& file : m_FileList)
 	{
 		CSVFileName.emplace_back(file.c_str());

@@ -1,8 +1,11 @@
-﻿#include <vector>
-#include "GameObject/gameobject.h"
+﻿/*===================================================================================
+
+キャラクター用コリジョン処理(characterBoneCollision.cpp)
+
+====================================================================================*/
+#include <vector>
 #include "Manager/shaderManager.h"
 #include "System/Renderer/renderer.h"
-#include "System/Collision/capsuleCollision.h"
 #include "System/Collision/characterBoneCollision.h"
 #include <algorithm>
 
@@ -12,11 +15,20 @@ constexpr XMFLOAT4 DEBUG_LINE_COLOR = XMFLOAT4(0.1f, 1.0f, 0.1f, 1.0f);
 constexpr XMFLOAT4 DEBUG_HITTED_LINE_COLOR = XMFLOAT4(1.0f, 0.1f, 0.1f, 1.0f);
 constexpr XMFLOAT4 DEBUG_SELECTED_LINE_COLOR = XMFLOAT4(0.5f, 0.5f, 0.1f, 1.0f);
 
+//	==========コリジョン設置=============
+//	HeadBoneIndex : int		始点インデックス
+//	TailBoneIndex : int		終点インデックス
+//	Start	: XMFLOAT3		始点座標
+//	End		: XMFLOAT3			終点座標
+//	Offset	: XMFLOAT3		オフセット値
+//	Radius	: float			カプセル半径
 CharacterBoneCollision::CharacterBoneCollision(const int HeadBoneIndex, const int TailBoneIndex, const XMFLOAT3& Start, const XMFLOAT3& End, const XMFLOAT3& Offset, float Radius) :Collision(Start, Offset), m_Radius(Radius),m_StartPosition(Start),m_EndPosition(End),m_HeadBoneIndex(HeadBoneIndex),m_TailBoneIndex(TailBoneIndex)
 {
 	Init();
 }
 
+//	============当たり判定===========
+//	Collision : Collision*	コリジョンポインタ
 bool CharacterBoneCollision::IsCollisionOverlapping(const Collision* Collision) 
 {
 	if (!Collision)return false;
@@ -29,6 +41,8 @@ bool CharacterBoneCollision::IsCollisionOverlapping(const Collision* Collision)
 	return false;
 }
 
+//	=====キャラクターボーン当たり判定======
+//	Collision : Collision*	コリジョンポインタ
 bool CharacterBoneCollision::IsOverlappingToCapsule(const CharacterBoneCollision* Collision)
 {
 	if (!Collision) return false;
@@ -42,6 +56,11 @@ bool CharacterBoneCollision::IsOverlappingToCapsule(const CharacterBoneCollision
 	return shortestDistance <= radiusSum;
 }
 
+//	=========最短距離計算関数==========
+//	Start1	: XMVECTOR	第1オブジェクトの始点
+//	End1	: XMVECTOR	第1オブジェクトの終点
+//	Start2	: XMVECTOR	第2オブジェクトの始点
+//	End2	: XMVECTOR	第2オブジェクトの終点
 float CharacterBoneCollision::CheckDistanceSegmentToSegment(const XMVECTOR& Start1, const XMVECTOR& End1, const XMVECTOR& Start2, const XMVECTOR& End2)
 {
 	//	最短距離公式	s = S1 + s(E1-S1)   t = S2 + t(E2-S2)
@@ -84,12 +103,11 @@ float CharacterBoneCollision::CheckDistanceSegmentToSegment(const XMVECTOR& Star
 	return XMVectorGetX(XMVector3Length(diff));
 }
 
-
-
-void CharacterBoneCollision::UpdateCollision(const XMFLOAT3& Position)
-{
-}
-
+//	===========ボーンコリジョンの位置更新================
+//	FirstIndex	:	int	始点インデックス
+//	SecondIndex	:	int	終点インデックス
+//	HeadPos	:	XMFLOAT3	始点位置
+//	TailPos	:	XMFLOAT3	終点位置
 void CharacterBoneCollision::UpdateBonePosition(const int FirstIndex, const int SecondIndex, const XMFLOAT3& HeadPos,const XMFLOAT3& TailPos)
 {
 	//	コリジョンの位置を変える
@@ -109,9 +127,13 @@ void CharacterBoneCollision::UpdateBonePosition(const int FirstIndex, const int 
 		XMStoreFloat3(&m_EndPosition, endPos);
 	}
 }
+
+//	=========初期化==============
 void CharacterBoneCollision::Init()
 {
+	//	デバッグ用シェーダー
 	m_Shader = ShaderManager::LoadShader(Shader_Type::Debug_Line);
+	//	デバッグの線を設定
 	CreateCylinderLine(XMFLOAT4(1.0f,1.0f,1.0f,1.0f), m_CylinderLineVertices);
 	CreateSphereLine(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),m_StartSphereVertices);
 	CreateSphereLine(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),m_EndSphereVertices);
@@ -129,7 +151,7 @@ void CharacterBoneCollision::Draw()
 	Renderer::GetDeviceContext()->PSSetShader(m_Shader->m_PixelShader, NULL, 0);
 
 	XMFLOAT4 color;
-	//	描画用色
+	//	描画用の色、選択している時、ヒット判定の時、何もない時
 	if (m_IsSelected)
 	{
 		color = DEBUG_SELECTED_LINE_COLOR;
@@ -164,7 +186,9 @@ void CharacterBoneCollision::Draw()
 
 }
 
-//	球体の描画
+//	===========球体の描画=============
+//	Color	:	XMFLOAT4	線の色
+//	SphpereVertices	:	std::vector<LINE_VERTEX>	頂点のデータ
 void CharacterBoneCollision::CreateSphereLine(const XMFLOAT4& Color, std::vector<LINE_VERTEX>& SphereVertices)
 {
 	XMFLOAT4 color = Color;
@@ -242,7 +266,9 @@ void CharacterBoneCollision::CreateSphereLine(const XMFLOAT4& Color, std::vector
 }
 
 
-//	円柱の描画
+//	===========円柱の描画==========
+//	Color	:	XMFLOAT4	線の色
+//	CylinderVertices	:	std::vector<LINE_VERTEX>	頂点のデータ
 void CharacterBoneCollision::CreateCylinderLine(const XMFLOAT4& Color, std::vector<LINE_VERTEX>& CylinderVertices)
 {
 
@@ -313,6 +339,9 @@ void CharacterBoneCollision::CreateCylinderLine(const XMFLOAT4& Color, std::vect
 	}
 }
 
+//	=======頂点バッファ設置========
+//	Vertices	: std::vector<LINE_VERTEX>	全頂点のデータ
+//	Buffer	:	ID3D11Buffer*	バッファポインタ
 void CharacterBoneCollision::CreateBufferVertices(const std::vector<LINE_VERTEX>& Vertices, ID3D11Buffer*& Buffer)
 {
 	ID3D11Buffer* vertexBuffer = nullptr;
@@ -329,6 +358,8 @@ void CharacterBoneCollision::CreateBufferVertices(const std::vector<LINE_VERTEX>
 	Renderer::GetDevice()->CreateBuffer(&bufferDesc, &sd, &Buffer);
 }
 
+//	========円形の位置のマトリクス変換=======
+//	Position	:	XMFLOAT3	現在位置
 void CharacterBoneCollision::MakeSphereMatrix(const XMFLOAT3& Position)
 {
 	XMMATRIX world, scale,trans;
@@ -339,6 +370,9 @@ void CharacterBoneCollision::MakeSphereMatrix(const XMFLOAT3& Position)
 	Renderer::SetWorldMatrix(world);
 }
 
+//	========カプセルの位置のマトリクス変換=======
+//	StartPos	:	XMFLOAT3	始点位置
+//	EndPos		:	XMFLOAT3	終点位置
 void CharacterBoneCollision::MakeCapsuleMatrix(const XMFLOAT3& StartPos, const XMFLOAT3& EndPos)
 {
 	XMVECTOR startVec = XMLoadFloat3(&StartPos);

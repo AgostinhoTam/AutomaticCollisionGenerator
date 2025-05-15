@@ -1,4 +1,9 @@
-﻿#include "Manager/gameObjectManager.h"
+﻿/*===================================================================================
+
+ゲームシーン(gameScene.cpp)
+
+====================================================================================*/
+#include "Manager/gameObjectManager.h"
 #include "GameObject/Character/Player/playerh.h"
 #include "GameObject/Field/field.h"
 #include "GameObject/Camera/camera.h"
@@ -7,6 +12,7 @@
 #include "System\Enum/gameObjectEnum.h"
 #include "gameScene.h"
 
+//	===================ゲームシーン初期化======================
 void GameScene::Init()
 {
 	m_GameObjectManager = new GameObjectManager;
@@ -19,20 +25,22 @@ void GameScene::Init()
 		m_GameObjectManager->AddGameObjectArg<Enemy>(GameObject_Type::Enemy, Enemy_Type::Monster)->SetPosition(XMFLOAT3(-20.0f, 0.0f, 10.0f));
 		m_GameObjectManager->Init();
 	}
-	
-
 }
 
+//	===================ゲームシーン更新======================
+//	DeltaTime	:	float	デルタタイム
 void GameScene::Update(const float& DeltaTime)
 {
 	m_GameObjectManager->Update(DeltaTime);
 }
 
+//	===================ゲームシーン描画======================
 void GameScene::Draw()
 {
 	m_GameObjectManager->Draw();
 }
 
+//	===================ゲームシーンUninit======================
 void GameScene::Uninit()
 {
 	m_GameObjectManager->Uninit();

@@ -1,4 +1,9 @@
-﻿#pragma once
+﻿/*===================================================================================
+
+フィールド(field.h)
+
+====================================================================================*/
+#pragma once
 #include "GameObject/gameobject.h"
 #include "System\Renderer/renderer.h"
 class Field:public GameObject {

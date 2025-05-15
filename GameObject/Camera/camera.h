@@ -1,9 +1,9 @@
-﻿#pragma once
-/*===================================================================================
+﻿/*===================================================================================
 
 カメラ制御(camera.h)
 
 ====================================================================================*/
+#pragma once
 #include "GameObject/gameobject.h"
 class Player;
 class Camera:public GameObject 
@@ -25,6 +25,5 @@ public:
 	void Uninit();
 	void Draw();
 	bool CheckView(const XMFLOAT3& Pos);
-	XMFLOAT2 WordToScreen(const XMFLOAT3 Pos);
 	const XMMATRIX& GetViewMatrix() const { return XMLoadFloat4x4(&m_MtxView); }
 };

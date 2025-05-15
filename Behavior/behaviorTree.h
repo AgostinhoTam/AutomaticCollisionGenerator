@@ -1,9 +1,16 @@
-﻿#pragma once
+﻿/*===================================================================================
 
+ビヘイビアーツリー(BehaviorTree.h)
+
+====================================================================================*/
+#pragma once
 #include <vector>
+
 class Enemy;
 class Player;
 class AnimationModel;
+
+//	=====Enum宣言=====
 enum class Current_Behavior
 {
 	Next,
@@ -20,6 +27,9 @@ enum class Behavior_Result
 	Cannot_Excute,
 	Max_Result
 };
+//	=========================
+
+//	===========ノード基底クラス=========
 class BehaviorNode
 {
 protected:
@@ -37,7 +47,7 @@ public:
 	void AddChildNode(BehaviorNode* Node);
 };
 
-// BehaviorTreeSequence
+// Sequenceノード
 class BehaviorSequence :public BehaviorNode
 {
 private:
@@ -47,6 +57,7 @@ public:
 	virtual Behavior_Result Update(const float DeltaTime)override;
 };
 
+//	Selectorノード
 class BehaviorSelector :public BehaviorNode
 {
 private:
@@ -56,6 +67,7 @@ public:
 	virtual Behavior_Result Update(const float DeltaTime)override;
 };
 
+//	クールダウンノード
 class BehaviorCoolDown :public BehaviorNode
 {
 private:
@@ -70,6 +82,7 @@ public:
 	void ResetCoolDown();
 };
 
+//	Idle状態ノード
 class BehaviorIdle :public BehaviorNode
 {
 private:
@@ -81,6 +94,7 @@ public:
 	virtual Behavior_Result Update(const float DeltaTime)override;
 };
 
+//	移動状態ノード
 class BehaviorMove :public BehaviorNode
 {
 private:
@@ -92,6 +106,7 @@ public:
 	virtual Behavior_Result Update(const float DeltaTime)override;
 };
 
+//	攻撃待機ノード
 class BehaviorStandByAttack : public BehaviorNode
 {
 private:
@@ -104,6 +119,7 @@ public:
 
 };
 
+//	攻撃状態ノード
 class BehaviorAttack : public BehaviorNode
 {
 private:

@@ -1,11 +1,15 @@
-﻿#pragma once
+﻿/*===================================================================================
+
+ゲームオブジェクトマネージャー(gameObjectManager.h)
+
+====================================================================================*/
+#pragma once
 #include <vector>
 #include <unordered_map>
 #include <string>
 #include "System/Enum/gameObjectEnum.h"
 
 class GameObject;
-
 class GameObjectManager
 {
 private:

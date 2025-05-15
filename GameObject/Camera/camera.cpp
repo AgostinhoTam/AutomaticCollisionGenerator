@@ -16,6 +16,8 @@
 ====================================================================================*/
 constexpr float CAMERA_LEN = 5.0f;
 constexpr float CAMERA_SENSITIVE = 0.01f;
+
+//	=========================カメラ初期化=========================
 void Camera::Init()
 {
 	m_Position = XMFLOAT3(0.0f, 5.0f, -10.0f);
@@ -34,7 +36,8 @@ void Camera::Init()
 	m_Sensitivity = CAMERA_SENSITIVE;
 	m_Len = CAMERA_LEN;
 }
-
+//	=========================カメラ更新=========================
+//	DeltaTime	:	float	デルタタイム
 void Camera::Update(const float& DeltaTime)
 {
 	if (!m_Player)return;
@@ -44,7 +47,8 @@ void Camera::Update(const float& DeltaTime)
 	{
 		InputManager::SetIsInputEnable(!InputManager::GetIsInputEnable());
 	}
-	
+
+	//	マウス移動でカメラ制御
 	XMFLOAT3 targetPos = m_Player->GetPosition();
 	POINT mouseDeltaPos = InputManager::GetMouseDelta();
 	
@@ -59,6 +63,7 @@ void Camera::Update(const float& DeltaTime)
 
 	XMVECTOR rotationQuat = XMQuaternionRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z);
 
+	//	カメラのパラメーター設置
 	XMVECTOR target = XMLoadFloat3(&m_Target);
 	XMVECTOR defaultPosition = XMVectorSet(0.0f, 0.0f, -m_Len, 1.0f);
 	XMVECTOR cameraPosition = XMVector3Rotate(defaultPosition, rotationQuat);
@@ -72,11 +77,11 @@ void Camera::Update(const float& DeltaTime)
 	XMStoreFloat4x4(&m_MtxView, viewMatrix);
 
 }
-
+//	=========================カメラUninit=========================
 void Camera::Uninit()
 {
 }
-
+//	=========================カメラ描画=========================
 void Camera::Draw()
 {
 	//ビューマトリクス設定
@@ -91,6 +96,8 @@ void Camera::Draw()
 	Renderer::SetProjectionMatrix(projectionMatrix);
 }
 
+//	=========================カメラ視錐台=========================
+//	Pos	:	XMFLOAT3	目標物位置
 bool Camera::CheckView(const XMFLOAT3& Pos)
 {
 	XMFLOAT3 up{ 0.0f,1.0f,0.0f };
@@ -254,9 +261,4 @@ bool Camera::CheckView(const XMFLOAT3& Pos)
 		}
 	}
 	return true;
-}
-
-XMFLOAT2 Camera::WordToScreen(const XMFLOAT3 Pos)
-{
-	return XMFLOAT2();
 }

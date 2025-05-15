@@ -1,4 +1,9 @@
-﻿#pragma once
+﻿/*===================================================================================
+
+プレイヤー制御(player.h)
+
+====================================================================================*/
+#pragma once
 #include "GameObject/Character/character.h"
 #include <unordered_map>
 #include <vector>
@@ -10,7 +15,6 @@ enum class Player_State;
 class Player : public Character
 {
 private:
-	Collision* m_Collision{};
 	std::unordered_map<Player_State, PlayerState*> m_PlayerState;
 	PlayerState* m_CurrentState{};
 	Camera* m_Camera{};

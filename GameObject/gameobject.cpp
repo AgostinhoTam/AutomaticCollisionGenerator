@@ -1,6 +1,11 @@
-﻿
-#include "GameObject/gameobject.h"
+﻿/*===================================================================================
 
+ゲームオブジェクト基底クラス(gameobject.cpp)
+
+====================================================================================*/
+# include "GameObject/gameobject.h"
+
+//	=========================前方向=========================
 const XMFLOAT3 GameObject::GetForward()const
 {
 	XMMATRIX rotationMatrix;
@@ -11,6 +16,7 @@ const XMFLOAT3 GameObject::GetForward()const
 	return forward;
 }
 
+//	=========================右方向=========================
 const XMFLOAT3 GameObject::GetRight()const
 {
 	XMMATRIX rotationMatrix;
@@ -21,6 +27,7 @@ const XMFLOAT3 GameObject::GetRight()const
 	return right;
 }
 
+//	=========================上方向=========================
 const XMFLOAT3 GameObject::GetUp()const
 {
 	XMMATRIX rotationMatrix;
@@ -31,6 +38,8 @@ const XMFLOAT3 GameObject::GetUp()const
 	return up;
 }
 
+//	=========================角度に変換する=========================
+//	Quat	:	XMVECTOR	クオータニオン
 XMFLOAT3 GameObject::XMQuaternionToEulerAngle(XMVECTOR Quat)
 {
 	XMFLOAT4 quaternion;

@@ -1,4 +1,9 @@
-﻿#pragma once
+﻿/*===================================================================================
+
+デバッグImGuiマネージャー(debuggerImGuiManager.h)
+
+====================================================================================*/
+#pragma once
 #include <vector>
 #include "System/Enum/gameObjectEnum.h"
 class GameObject;
@@ -10,8 +15,6 @@ private:
 	static std::vector<GameObject*> m_GameObjectList;
 	static std::vector<std::string> m_FileList;
 public:
-	static void SetGameObject(GameObject* object);
-	static void LoadCurrentSceneGameObjectList(Scene* scene);
 	static void Init();
 	static void Render(std::vector<GameObject*>(&ObjectList)[static_cast<int>(GameObject_Type::Max_Type)]);
 	static void Uninit();

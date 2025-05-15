@@ -1,12 +1,14 @@
-﻿#include <vector>
-#include "GameObject/gameobject.h"
+﻿/*===================================================================================
+
+カプセルコリジョン処理(capsuleCollision.cpp)
+
+====================================================================================*/
+#include <vector>
 #include "System/Renderer/renderer.h"
 #include "System/Collision/capsuleCollision.h"
 #include "Manager/sceneManager.h"
 
-
 constexpr int DEBUG_LINE_SEGMENTS = 32;	//デバッグ用の線の分割数
-
 
 CapsuleCollision::CapsuleCollision(const XMFLOAT3& StartPosition, const XMFLOAT3& Offset, float Radius) :Collision(StartPosition, Offset)
 {

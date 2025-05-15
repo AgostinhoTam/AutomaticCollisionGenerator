@@ -1,4 +1,9 @@
-﻿#pragma once
+﻿/*===================================================================================
+
+ゲームオブジェクト基底クラス(gameobject.cpp)
+
+====================================================================================*/
+#pragma once
 #include "Main/main.h"
 #include "System\Enum/gameObjectEnum.h"
 #include "System\Structure/shaderStructure.h"

@@ -1,39 +1,50 @@
-﻿
+﻿/*===================================================================================
+
+フィールド(field.cpp)
+
+====================================================================================*/
 #include "Main/main.h"
 #include "System\Renderer/renderer.h"
 #include "Manager/shaderManager.h"
 #include "System\Enum/shaderEnum.h"
 #include "GameObject/Field/field.h"
 
-Field::Field(const XMFLOAT3& location, const XMFLOAT2& size)
+//	=========================フィールドコンストラクタ=========================
+//	Location	:	XMFLOAT3	位置（左上基準）
+//	Size		:	XMFLOAT3	大きさ
+Field::Field(const XMFLOAT3& Location, const XMFLOAT2& Size)
 {
-	m_Position = location;
-	vertex[0].Position = XMFLOAT3(-size.x, 0.0f, size.y);
+	//	フィールドの頂点設置
+	m_Position = Location;
+	vertex[0].Position = XMFLOAT3(-Size.x, 0.0f, Size.y);
 	vertex[0].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[0].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[0].TexCoord = XMFLOAT2(0.0f, 0.0f);
 
-	vertex[1].Position = XMFLOAT3(size.x, 0.0f, size.y);
+	vertex[1].Position = XMFLOAT3(Size.x, 0.0f, Size.y);
 	vertex[1].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[1].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[1].TexCoord = XMFLOAT2(1.0f, 0.0f);
 
-	vertex[2].Position = XMFLOAT3(-size.x, 0.0f, -size.y);
+	vertex[2].Position = XMFLOAT3(-Size.x, 0.0f, -Size.y);
 	vertex[2].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[2].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[2].TexCoord = XMFLOAT2(0.0f, 1.0f);
 
-	vertex[3].Position = XMFLOAT3(size.x, 0.0f, -size.y);
+	vertex[3].Position = XMFLOAT3(Size.x, 0.0f, -Size.y);
 	vertex[3].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[3].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[3].TexCoord = XMFLOAT2(1.0f, 1.0f);
 }
 
+//	=========================フィールド初期化設定=========================
 void Field::Init()
 {
+	//	パラメータ設定
 	m_Name = "Field_"+ m_Name;
 	m_Scale = XMFLOAT3(1.0f, 1.0f, 1.0f);
 	m_Rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	
 	//頂点バッファ
 	D3D11_BUFFER_DESC bd{};
 	bd.Usage = D3D11_USAGE_DEFAULT;
@@ -55,23 +66,25 @@ void Field::Init()
 		assert(m_Texture);
 	}
 
+	//	シェーダー読み込み
 	m_Shader = ShaderManager::LoadShader(Shader_Type::Unlit_Texture);
-
-
 }
 
+//	=========================フィールドUninit=========================
 void Field::Uninit()
 {
 	if(m_VertexBuffer)m_VertexBuffer->Release();
 	if(m_Texture)m_Texture->Release();
 }
 
+//	=========================フィールド更新処理=========================
+//	DeltaTime	:	float	デルタタイム
 void Field::Update(const float& DeltaTime)
 {
-
 	
 }
 
+//	=========================フィールド描画=========================
 void Field::Draw()
 {
 	//入力レイアウト設定

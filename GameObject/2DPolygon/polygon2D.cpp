@@ -1,37 +1,41 @@
-﻿
+﻿/*===================================================================================
+
+	2D板ポリゴン_UI用(polygon2D.cpp)
+
+====================================================================================*/
 #include "Manager/shaderManager.h"
 #include "GameObject/2DPolygon/polygon2D.h"
 
-
-Polygon2D::Polygon2D(XMFLOAT2 location, XMFLOAT2 size)
+//	=========================２D板ポリゴン=========================
+//	Location	:	XMFLOAT2	位置（左上基準）
+//	Size	:	XMFLOAT2	大きさ
+Polygon2D::Polygon2D(XMFLOAT2 Location, XMFLOAT2 Size)
 {
-	vertex[0].Position = XMFLOAT3(location.x, location.y + 0.0f, 0.0f);
+	vertex[0].Position = XMFLOAT3(Location.x, Location.y + 0.0f, 0.0f);
 	vertex[0].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[0].Diffuse = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 	vertex[0].TexCoord = XMFLOAT2(0.0f, 0.0f);
 
-	vertex[1].Position = XMFLOAT3(location.x + size.x, location.y + 0.0f, 0.0f);
+	vertex[1].Position = XMFLOAT3(Location.x + Size.x, Location.y + 0.0f, 0.0f);
 	vertex[1].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[1].Diffuse = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
 	vertex[1].TexCoord = XMFLOAT2(1.0f, 0.0f);
 
-	vertex[2].Position = XMFLOAT3(location.x, location.y + size.y, 0.0f);
+	vertex[2].Position = XMFLOAT3(Location.x, Location.y + Size.y, 0.0f);
 	vertex[2].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[2].Diffuse = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
 	vertex[2].TexCoord = XMFLOAT2(0.0f, 1.0f);
 
-	vertex[3].Position = XMFLOAT3(location.x + size.x, location.y + size.y, 0.0f);
+	vertex[3].Position = XMFLOAT3(Location.x + Size.x, Location.y + Size.y, 0.0f);
 	vertex[3].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[3].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[3].TexCoord = XMFLOAT2(1.0f, 1.0f);
 
 	Init();
 }
-
+//	=========================２D板ポリゴン初期化=========================
 void Polygon2D::Init()
 {
-	
-
 	//頂点バッファ
 	D3D11_BUFFER_DESC bd{};
 	bd.Usage = D3D11_USAGE_DEFAULT;
@@ -54,9 +58,9 @@ void Polygon2D::Init()
 	}
 
 	ShaderManager::LoadShader(Shader_Type::Unlit_Texture);
-
 }
 
+//	=========================２D板ポリゴンUninit=========================
 void Polygon2D::Uninit()
 {
 	if(m_VertexBuffer)m_VertexBuffer->Release();
@@ -64,12 +68,14 @@ void Polygon2D::Uninit()
 
 }
 
+//	=========================２D板ポリゴン更新=========================
+//	DeltaTime	:	float	デルタタイム
 void Polygon2D::Update(const float& DeltaTime)
 {
-
 	
 }
 
+//	=========================２D板ポリゴン描画=========================
 void Polygon2D::Draw()
 {
 	//入力レイアウト設定

@@ -1,14 +1,19 @@
-﻿#include <numeric> 
+﻿/*===================================================================================
+
+アニメーションモデル読み込み(animationModel.cpp)
+
+====================================================================================*/
+#include <numeric> 
 #include "Main/main.h"
 #include "Manager/inputManager.h"
 #include "GameObject/gameobject.h"
 #include "assimp/Importer.hpp"
-
 #include "System/Renderer/renderer.h"
 #include "System/Renderer/animationModel.h"
 
 constexpr float RADIUS_ADJUSTMENT = 0.7f;
 
+//	===================アニメーション更新======================
 void AnimationModel::Update()
 {
 	if (m_Animation.count(m_CurrentAnimation) == 0)return;
@@ -87,16 +92,18 @@ void AnimationModel::Update()
 		aiQuaternion((float)AI_MATH_PI, 0.0f, 0.0f),
 		aiVector3D(0.0f, 0.0f, 0.0f));
 	UpdateBoneMatrix(m_AiScene->mRootNode, rootMatrix);
-
+	
+	//	GPUスキンニング
 	UpdateBoneMatrixToGPU();
 
 }
 
+//	===================アニメーション描画======================
 void AnimationModel::Draw()
 {
-
 	if (!m_Owner)return;
 
+	//	マトリクス設定
 	XMMATRIX world, scale, rot, trans;
 	const XMFLOAT3& objPosition = m_Owner->GetPosition();
 	const XMFLOAT3& objScale = m_Owner->GetScale();
@@ -113,6 +120,7 @@ void AnimationModel::Draw()
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(world);
 
+	//	シェーダー設置
 	Renderer::GetDeviceContext()->IASetInputLayout(Shader->m_VertexLayout);
 	Renderer::GetDeviceContext()->VSSetShader(Shader->m_VertexShader, NULL, 0);
 	Renderer::GetDeviceContext()->PSSetShader(Shader->m_PixelShader, NULL, 0);
@@ -129,7 +137,9 @@ void AnimationModel::Draw()
 	material.TextureEnable = true;
 	Renderer::SetMaterial(material);
 
+	//	GPUスキンニング
 	UpdateBoneMatrixToGPU();
+	
 	for (unsigned int m = 0; m < m_AiScene->mNumMeshes; m++)
 	{
 		aiMesh* mesh = m_AiScene->mMeshes[m];
@@ -176,6 +186,9 @@ void AnimationModel::Draw()
 	Renderer::SetBlendState(BLEND_MODE::BLEND_MODE_NONE);
 }
 
+//	===================アニメーション読み込み======================
+//	FileName	:	char*		ファイルパス
+//	Owner		:	GameObject*	所有者ポインタ
 void AnimationModel::Load(const char* FileName, GameObject* Owner)
 {
 	if (!Owner)return;
@@ -427,7 +440,7 @@ void AnimationModel::Load(const char* FileName, GameObject* Owner)
 		Renderer::GetDevice()->CreateBuffer(&bd, nullptr, &m_BoneMatricesBuffer);
 	}
 }
-
+//	===================アニメーションUninit======================
 void AnimationModel::Uninit()
 {
 	for (unsigned int m = 0; m < m_AiScene->mNumMeshes; m++)
@@ -457,15 +470,16 @@ void AnimationModel::Uninit()
 	if (m_Importer)delete m_Importer;
 }
 
+//	===================アニメーションモーション読み込み======================
 void AnimationModel::LoadAnimation(const char* FileName, const char* Name)
 {
 	m_Animation[Name] = aiImportFile(FileName, aiProcess_ConvertToLeftHanded);
 	assert(m_Animation[Name]);
 }
 
+//	===================ボーン作成（再帰呼び出し）======================
 void AnimationModel::CreateBone(aiNode* node)
 {
-
 	std::string boneName = node->mName.C_Str();
 
 	if (m_BoneIndexMap.find(boneName) == m_BoneIndexMap.end())
@@ -480,6 +494,9 @@ void AnimationModel::CreateBone(aiNode* node)
 	}
 }
 
+//	===================ボーンマトリクス更新======================
+//	node	:	aiNode*	assimpアニメーションノード
+//	matrix	:	aiMatrix4x4	assimpのマトリクス
 void AnimationModel::UpdateBoneMatrix(aiNode* node, aiMatrix4x4 matrix)
 {
 	std::string bName = node->mName.C_Str();
@@ -515,6 +532,8 @@ void AnimationModel::UpdateBoneMatrix(aiNode* node, aiMatrix4x4 matrix)
 
 }
 
+//	===================DirectXのMatrixに変更======================
+//	world	:	aiMatrix4x4	assimpのマトリクス
 XMMATRIX AnimationModel::TransformToXMMATRIX(aiMatrix4x4& world)
 {
 	return XMMATRIX(
@@ -524,7 +543,8 @@ XMMATRIX AnimationModel::TransformToXMMATRIX(aiMatrix4x4& world)
 		world.a4, world.b4, world.c4, world.d4
 	);
 }
-
+//	===================指定ボーンマトリクス取得======================
+//	BoneName	:	std::string	ボーンの名前
 XMMATRIX AnimationModel::GetBoneMatrix(const std::string& BoneName)
 {
 	auto it = m_BoneIndexMap.find(BoneName);
@@ -536,6 +556,8 @@ XMMATRIX AnimationModel::GetBoneMatrix(const std::string& BoneName)
 	return XMMATRIX{};
 }
 
+//	===================指定ボーンのインデックス取得======================
+//	BoneName	:	std::string	ボーンの名前
 int AnimationModel::GetBoneIndexByName(const std::string& BoneName)
 {
 	auto it = m_BoneIndexMap.find(BoneName);
@@ -546,6 +568,8 @@ int AnimationModel::GetBoneIndexByName(const std::string& BoneName)
 	return 0;
 }
 
+//	===================指定アニメーションの再生フレーム取得======================
+//	AnimationName	:	std::string	アニメーション名前
 double AnimationModel::GetAnimationDuration(const std::string& AnimationName)
 {
 	if (m_Animation.count(AnimationName) == 0)return 0;
@@ -553,6 +577,8 @@ double AnimationModel::GetAnimationDuration(const std::string& AnimationName)
 	return (m_Animation[AnimationName]->mAnimations[0]->mDuration);
 }
 
+//	===================指定ボーンの情報取得======================
+//	Index	:	int	ボーンインデックス
 const BONE AnimationModel::GetBone(int Index)
 {
 	if (Index <= m_Bones.size())
@@ -565,6 +591,9 @@ const BONE AnimationModel::GetBone(int Index)
 	}
 }
 
+//	===================指定ボーンの位置取得======================
+//	BoneIndex	:	int	ボーンインデックス
+//	PlayerMatrix	:	XMMATRIX	現在プレイヤーのMatrix
 XMFLOAT3 AnimationModel::GetBonePosition(const int BoneIndex, const XMMATRIX& PlayerMatrix)
 {
 	//	範囲外早期リターン
@@ -581,9 +610,9 @@ XMFLOAT3 AnimationModel::GetBonePosition(const int BoneIndex, const XMMATRIX& Pl
 
 }
 
+//	===================アニメーションブレンド======================
 void AnimationModel::UpdateAnimationBlend()
 {
-
 	//	遷移中だったら
 	if (m_IsTransitioning)
 	{
@@ -608,6 +637,9 @@ void AnimationModel::UpdateAnimationBlend()
 	Update();
 }
 
+//	===================カプセルの半径計算======================
+//	HeadName	:	std::string	始点ボーンの名前
+//	TailName	:	std::string	終点ボーンの名前
 const float AnimationModel::CalculateCapsuleRadius(const std::string& HeadName, const std::string& TailName)
 {
 	auto headit = m_BoneIndexMap.find(HeadName);
@@ -677,6 +709,10 @@ const float AnimationModel::CalculateCapsuleRadius(const std::string& HeadName, 
 
 }
 
+//	===================頂点からカプセルの線分までの最短距離======================
+//	Point	:	XMFLOAT3	頂点位置
+//	Start	:	XMFLOAT3	線分始点位置
+//	End		:	XMFLOAT3	線分終点位置
 const float AnimationModel::DistancePointLineSegment(const XMFLOAT3& Point, const XMFLOAT3& Start, const XMFLOAT3& End)
 {
 	XMVECTOR vP = XMLoadFloat3(&Point);
@@ -711,6 +747,7 @@ const float AnimationModel::DistancePointLineSegment(const XMFLOAT3& Point, cons
 	return dist;
 }
 
+//	===================GPUスキンニング======================
 void AnimationModel::UpdateBoneMatrixToGPU()
 {
 	CB_BONES* cbBones = new CB_BONES;
@@ -742,6 +779,8 @@ void AnimationModel::UpdateBoneMatrixToGPU()
 	if(cbBones)delete cbBones;
 }
 
+//	===================次のアニメーションに遷移======================
+//	AnimationName	:	std::string	アニメーションの名前
 void AnimationModel::SetNextAnimation(const std::string& AnimationName)
 {
 	m_NextAnimation = AnimationName;

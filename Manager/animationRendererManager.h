@@ -1,4 +1,9 @@
-﻿#pragma once
+﻿/*===================================================================================
+
+アニメーションモデルレンダラーマネージャー(animationRendererManager.h)
+
+====================================================================================*/
+#pragma once
 #include "System/Enum/modelEnum.h"
 #include "System/Renderer/renderer.h"
 #include <string>

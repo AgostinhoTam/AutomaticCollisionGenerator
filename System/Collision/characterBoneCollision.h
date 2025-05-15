@@ -1,4 +1,9 @@
-﻿#pragma once
+﻿/*===================================================================================
+
+キャラクター用コリジョン処理(characterBoneCollision.cpp)
+
+====================================================================================*/
+#pragma once
 #include "collision.h"
 class CapsuleCollision;
 class CharacterBoneCollision :public Collision
@@ -22,7 +27,7 @@ public:
 	float CheckDistanceSegmentToSegment(const XMVECTOR& Start1, const XMVECTOR& End1, const XMVECTOR& Start2, const XMVECTOR& End2);
 	float GetRadius()const { return m_Radius; }
 	void SetRadius(const float Radius) { m_Radius = Radius; }
-	virtual void UpdateCollision(const XMFLOAT3& Position)override;
+
 	void UpdateBonePosition(const int FirstIndex,const int SecondIndex, const XMFLOAT3& HeadPos, const XMFLOAT3& TailPos);
 	virtual void Init()override;
 	virtual void Draw()override;

@@ -1,4 +1,9 @@
-﻿#include"Manager/sceneManager.h"
+﻿/*===================================================================================
+
+	ビヘイビアーツリー(BehaviorTree.cpp)
+
+====================================================================================*/
+#include"Manager/sceneManager.h"
 #include "Manager/gameObjectManager.h"
 #include "Scene/scene.h"
 #include "Main/main.h"
@@ -11,7 +16,8 @@ constexpr float FOLLOW_DISTANCE = 25.0f;
 constexpr float ATTACK_DISTANCE = 5.0f;
 constexpr float ATTACK_COOLDOWN = 3.0f;
 
-//	===========================ノード更新==============================
+//	===========================Sequenceノード更新==============================
+//	DeltaTime	:	float	デルタタイム
 Behavior_Result BehaviorSequence::Update(const float DeltaTime)
 {
 	while (m_Index < m_Child.size())
@@ -41,43 +47,50 @@ Behavior_Result BehaviorSequence::Update(const float DeltaTime)
 	return Behavior_Result::Failure;
 }
 
+//	===========================Selectorノード更新==============================
+//	DeltaTime	:	float	デルタタイム
 Behavior_Result BehaviorSelector::Update(const float DeltaTime)
 {
+	//	子ノード全部走査
 	while (m_Index < m_Child.size())
 	{
+		//	ノード更新
 		Behavior_Result result = m_Child[m_Index]->Update(DeltaTime);
-		if (result == Behavior_Result::Success)
+		
+		if (result == Behavior_Result::Success)	//	成功だったらリセット
 		{
 			m_Index = 0;
 			return Behavior_Result::Success;
 			break;
 		}
-		else if(result == Behavior_Result::Continue)
+		else if(result == Behavior_Result::Continue)	//	継続
 		{
 			return Behavior_Result::Continue;
 		}
-		else
+		else if (result == Behavior_Result::Failure)	//	失敗なら次の子ノードへ
 		{
 			++m_Index;
 		}
 
 	}
+	//	子クラス全部失敗ならリセットとFailure返す
 	m_Index = 0;
 	return Behavior_Result::Failure;
 }
-//====================================================================
 
-
+//	===========================Idle状態==============================
+//	Enemy	:	Enemy*	保持者のポインタ
+//	Type	:	std::string	再生するアニメーションの名前
 BehaviorIdle::BehaviorIdle(Enemy* Enemy, const std::string& Type):BehaviorNode(Enemy)
 {
 	m_AnimationName = Type;
 }
 
-//=========================Idle状態=========================
+//=========================Idle初期化=========================
 void BehaviorIdle::Init()
 {
 	if (!m_AnimationModel)return;
-	//	蜀崎ｨｭ螳夐亟豁｢
+	//	現在のアニメーションはこのステートのアニメーションと同じじゃなければ
 	if (m_AnimationModel->GetCurrentAnimationName() != m_AnimationName)
 	{
 		m_AnimationModel->SetNextAnimation(m_AnimationName);
@@ -85,9 +98,13 @@ void BehaviorIdle::Init()
 
 }
 
+//	=========================Idle状態更新=========================
+//	DeltaTime	:	float	デルタタイム
 Behavior_Result BehaviorIdle::Update(const float DeltaTime)
 {
 	if (!m_AnimationModel)return Behavior_Result::Failure;
+
+	//	プレイヤーとの距離を計算
 	XMVECTOR playerPosition = XMLoadFloat3(&m_Player->GetPosition());
 	XMVECTOR enemyPosition = XMLoadFloat3(&m_Enemy->GetPosition());
 	XMVECTOR direction = XMVectorSubtract(playerPosition, enemyPosition);
@@ -105,10 +122,12 @@ Behavior_Result BehaviorIdle::Update(const float DeltaTime)
 	return Behavior_Result::Continue;
 }
 
+//	=========================ノードのベース=========================
+//	Enemy	:	Enemy*	ノードの保持者
 BehaviorNode::BehaviorNode(Enemy* Enemy)
 {
 	m_Enemy = Enemy;
-	m_AnimationModel = m_Enemy->GetAnimationModel();
+	m_AnimationModel = m_Enemy->GetAnimationModel();	//	アニメーションプールから取り出す
 	Scene* scene = SceneManager::GetCurrentScene();
 	if (!scene)return;
 	GameObjectManager* gameObjectManager = scene->GetGameObjectManager();
@@ -117,6 +136,8 @@ BehaviorNode::BehaviorNode(Enemy* Enemy)
 	if (player)m_Player = player;
 }
 
+//	=========================子ノード追加=========================
+//	Node	:	BehaviorNode	親ノードポインタ
 void BehaviorNode::AddChildNode(BehaviorNode* Node)
 {	
 	//	ノード追加
@@ -124,20 +145,27 @@ void BehaviorNode::AddChildNode(BehaviorNode* Node)
 	m_Child.emplace_back(Node);
 }
 
+//	=========================移動状態ノード=========================
+//	Enemy	:	Enemy*	保持者のポインタ
+//	Type	:	std::string	再生するアニメーションの名前
 BehaviorMove::BehaviorMove(Enemy* Enemy, const std::string& Type) :BehaviorNode(Enemy)
 {
+	
 	m_AnimationName = Type;
 }
 
+//=========================移動状態初期化=========================
 void BehaviorMove::Init()
 {
 	if (!m_AnimationModel)return;
+	//	現在のアニメーションはこのステートのアニメーションと同じじゃなければ
 	if (m_AnimationModel->GetCurrentAnimationName() != m_AnimationName)
 	{
 		m_AnimationModel->SetNextAnimation(m_AnimationName);
 	}
 }
-
+//	=========================移動状態更新=========================
+//	DeltaTime	:	float	デルタタイム
 Behavior_Result BehaviorMove::Update(const float DeltaTime)
 {
 	if (!m_AnimationModel)return Behavior_Result::Failure;
@@ -146,7 +174,7 @@ Behavior_Result BehaviorMove::Update(const float DeltaTime)
 	XMVECTOR vector = XMVectorSubtract(playerPosition, enemyPosition);
 	float length = XMVectorGetX(XMVector3Length(vector));
 	
-	//	攻撃範囲内
+	//	攻撃範囲内チェック
 	if (length < ATTACK_DISTANCE)
 	{
 		m_Enemy->SetMoveDirection(XMFLOAT3(0, 0, 0));
@@ -158,10 +186,13 @@ Behavior_Result BehaviorMove::Update(const float DeltaTime)
 		return Behavior_Result::Failure;
 	}
 
+	//	次遷移の状態が移動状態じゃなければ初期化する
 	if (m_AnimationModel->GetNextAnimationName() != m_AnimationName)
 	{
 		Init();
 	}
+
+	//	向き更新
 	XMVECTOR normalizeDirection = XMVector3Normalize(vector);
 	XMFLOAT3 direction;
 	XMStoreFloat3(&direction, normalizeDirection);
@@ -172,6 +203,7 @@ Behavior_Result BehaviorMove::Update(const float DeltaTime)
 	return Behavior_Result::Continue;
 }
 
+//	=========================攻撃状態初期化=========================
 void BehaviorAttack::Init()
 {
 	if (!m_AnimationModel)return;
@@ -261,32 +293,38 @@ Behavior_Result BehaviorAttack::Update(const float DeltaTime)
 
 
 }
-
+//	=========================クールダウン状態更新=========================
+//	DeltaTime	:	float	デルタタイム
 Behavior_Result BehaviorCoolDown::Update(const float DeltaTime)
 {
+	//	クールダウン状態じゃないならSuccess返す
 	if (!m_IsCoolDownActive)return Behavior_Result::Success;
 
 	m_ElapsedTime += DeltaTime;
+
+	//	クールダウン状態完了したかどうか
 	if (m_ElapsedTime >= ATTACK_COOLDOWN)
 	{
 		m_IsCoolDownActive = false;
 		return Behavior_Result::Success;	
 	}
+	//	クールダウン中
 	return Behavior_Result::Failure;		
 }
 
+//	=========================クールダウン状態開始=========================
 void BehaviorCoolDown::StartCoolDown()
 {
 	m_ElapsedTime = 0;
 	m_IsCoolDownActive = true;
 }
+//	=========================クールダウン状態更新リセット=========================
 void BehaviorCoolDown::ResetCoolDown()
 {
 	m_IsCoolDownActive = false;
-	
 }
-//===================================================================
 
+//	=========================攻撃待ち状態初期化=========================
 void BehaviorStandByAttack::Init()
 {
 	if (!m_AnimationModel)return;
@@ -297,21 +335,26 @@ void BehaviorStandByAttack::Init()
 	}
 }
 
+//	=========================攻撃待ち状態初期化=========================
+//	Enemy	:	Enemy*	保持者のポインタ
+//	Type	:	std::string	再生するアニメーションの名前
 BehaviorStandByAttack::BehaviorStandByAttack(Enemy* Enemy, const std::string& Type):BehaviorNode(Enemy)
 {
 	m_AnimationName = Type;
 }
 
+//	=========================攻撃待ち状態初期化=========================
 Behavior_Result BehaviorStandByAttack::Update(const float DeltaTime)
 {
 	if (!m_AnimationModel)return Behavior_Result::Failure;
 
-
+	//	次遷移の状態が移動状態じゃなければ初期化する
 	if (m_AnimationModel->GetCurrentAnimationName() != m_AnimationName)
 	{
 		Init();
 	}
 
+	//	向き更新
 	XMVECTOR playerPosition = XMLoadFloat3(&m_Player->GetPosition());
 	XMVECTOR enemyPosition = XMLoadFloat3(&m_Enemy->GetPosition());
 	XMVECTOR vector = XMVectorSubtract(playerPosition, enemyPosition);

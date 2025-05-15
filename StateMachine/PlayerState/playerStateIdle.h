@@ -1,4 +1,9 @@
-﻿#pragma once
+﻿/*===================================================================================
+
+プレイヤーIdle状態処理(playerStateIdle.h)
+
+====================================================================================*/
+#pragma once
 #include "StateMachine/PlayerState/playerState.h"
 class PlayerStateIdle :public PlayerState
 {

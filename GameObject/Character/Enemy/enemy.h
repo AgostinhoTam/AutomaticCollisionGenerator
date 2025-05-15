@@ -1,4 +1,9 @@
-﻿#pragma once
+﻿/*===================================================================================
+
+エネミー制御(enemy.cpp)
+
+====================================================================================*/
+#pragma once
 #include "GameObject/Character/character.h"
 #include "System/Enum/enemyTypeEnum.h"
 class BehaviorNode;

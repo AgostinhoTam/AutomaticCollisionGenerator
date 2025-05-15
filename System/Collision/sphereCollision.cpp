@@ -1,4 +1,9 @@
-﻿#include <vector>
+﻿/*===================================================================================
+
+球体コリジョン処理(SphereCollision.cpp)
+
+====================================================================================*/
+#include <vector>
 #include "GameObject/gameobject.h"
 #include "System/Renderer/renderer.h"
 #include "System/Collision/capsuleCollision.h"
@@ -7,17 +12,21 @@
 
 constexpr int DEBUG_LINE_SEGMENTS = 32;	//デバッグ用の線の分割数
 
-
-
+//	===================球体コリジョン初期化======================
+//	Position	:	XMFLOAT3	位置
+//	Offset		:	XMFLOAT3	オフセット値
+//	Radius		:	float		球体半径
 SphereCollision::SphereCollision(const XMFLOAT3& Position, const XMFLOAT3& Offset, float Radius) :Collision(Position, Offset), m_Radius(Radius) // 引数（Ownerポインタ、Offset値、半径）
 {
-
 	Init();
 }
 
+//	===================当たり判定処理======================
+//	Collision	:	Collision*	対象物のコリジョンポインタ
 bool SphereCollision::IsCollisionOverlapping(const Collision* Collision) 
 {
 	if (!Collision)return false;
+	//	相手のコリジョンに応じて当たり判定取る方法を選択
 	const SphereCollision* sphere = dynamic_cast<const SphereCollision*>(Collision);
 	if (sphere)
 	{
@@ -31,6 +40,8 @@ bool SphereCollision::IsCollisionOverlapping(const Collision* Collision)
 	return false;
 }
 
+//	===================球体と球体の場合======================
+//	Collision	:	SphereCollision*	相手の球体コリジョン
 bool SphereCollision::CheckSphereToSphere(const SphereCollision* Collision) 
 {
 	if (!Collision)return false;
@@ -45,23 +56,24 @@ bool SphereCollision::CheckSphereToSphere(const SphereCollision* Collision)
 
 }
 
+//	===================球体コリジョン更新======================
+//	Position	:	XMFLOAT3	位置
 void SphereCollision::UpdateCollision(const XMFLOAT3& Position)
 {
 	m_Position = { Position.x + m_Offset.x,Position.y + m_Offset.y, Position.z + m_Offset.z };
 }
 
+//	===================球体コリジョン初期化======================
 void SphereCollision::Init()
 {
 	UpdateCollision(m_Position);
-	if (SceneManager::GetInstance()->GetIsDebugMode())
-	{
-		CreateLineVertex(m_SphereLineVertices);
-	}
+	CreateLineVertex(m_SphereLineVertices);
 }
 
+//	===================球体コリジョン描画======================
 void SphereCollision::Draw()
 {
-	if (!SceneManager::GetInstance()->GetIsDebugMode())return;
+	//	マトリクス設定
 	XMMATRIX world, scale, rot, trans;
 
 	scale = XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z);
@@ -95,7 +107,7 @@ void SphereCollision::Draw()
 
 }
 
-//	デバッグの線の頂点情報保存
+//	===================デバッグの線の頂点情報保存======================
 void SphereCollision::CreateLineVertex(std::vector<XMFLOAT3>& SphereLineVertices)
 {
 	SphereLineVertices.clear();

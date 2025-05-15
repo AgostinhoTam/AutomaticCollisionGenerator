@@ -1,4 +1,8 @@
-﻿
+﻿/*===================================================================================
+
+Obj形式モデルマネージャー(modelRendererManager.cpp)
+
+====================================================================================*/
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <shlwapi.h>
@@ -7,11 +11,13 @@
 #include "Main/main.h"
 #include "Manager/modelRendererManager.h"
 
+//	モデルプール
 std::unordered_map<std::string, MODEL*> ModelRendererManager::m_ModelPool;
 
-
+//	===================モデル全部解放======================
 void ModelRendererManager::UnloadAll()
 {
+	//	プールにあるモデル全部解放
 	for (std::pair<const std::string, MODEL*> pair : m_ModelPool)
 	{
 		pair.second->VertexBuffer->Release();
@@ -32,11 +38,13 @@ void ModelRendererManager::UnloadAll()
 
 }
 
-
+//	===================プールからモデル読み込み======================
+//	FileName	:	char*	パスの名前
 MODEL* ModelRendererManager::Load(const char* FileName)
 {
 	MODEL* model = nullptr;
 	auto it = m_ModelPool.find(FileName);
+	//	モデル読み込まれたことがあるかどうか
 	if (it != m_ModelPool.end())
 	{
 		MODEL* model = it->second;
@@ -60,15 +68,15 @@ MODEL* ModelRendererManager::Load(const char* FileName)
 
 
 
-
+//	===================新しいモデル読み込み======================
+//	FileName	:	char*	パスの名前
+//	Model		:	Model*	モデル保存するポインタ
 void ModelRendererManager::LoadModel(const char* FileName, MODEL* Model)
 {
 
 	MODEL_OBJ modelObj;
 	LoadObj(FileName, &modelObj);
-
-
-
+	
 	// 頂点バッファ生成
 	{
 		D3D11_BUFFER_DESC bd;
@@ -144,7 +152,7 @@ void ModelRendererManager::LoadModel(const char* FileName, MODEL* Model)
 
 
 
-//モデル読込////////////////////////////////////////////
+//	===================モデル読み込み（Objファイル形式）======================
 void ModelRendererManager::LoadObj(const char* FileName, MODEL_OBJ* ModelObj)
 {
 
@@ -390,7 +398,7 @@ void ModelRendererManager::LoadObj(const char* FileName, MODEL_OBJ* ModelObj)
 
 
 
-//マテリアル読み込み///////////////////////////////////////////////////////////////////
+//	===================マテリアル読み込み======================
 void ModelRendererManager::LoadMaterial(const char* FileName, MODEL_MATERIAL** MaterialArray, unsigned int* MaterialNum)
 {
 
@@ -507,7 +515,9 @@ void ModelRendererManager::LoadMaterial(const char* FileName, MODEL_MATERIAL** M
 	*MaterialArray = materialArray;
 	*MaterialNum = materialNum;
 }
-
+//	===================モデル描画======================
+//	Model	:	MODEL*		モデルのポインタ
+//	Object	:	GameObject*	所有者のポインタ
 void ModelRendererManager::Draw(const MODEL* Model, const GameObject* Object)
 {
 	//	ワールドマトリクス設定
@@ -518,10 +528,12 @@ void ModelRendererManager::Draw(const MODEL* Model, const GameObject* Object)
 	const Shader* Shader = Object->GetShader();
 	scale = XMMatrixScaling(objScale.x, objScale.y, objScale.z);
 
+	//	回転計算
 	XMVECTOR quaternion = XMQuaternionRotationRollPitchYaw(objRotation.x, objRotation.y, objRotation.z);
 	quaternion = XMQuaternionNormalize(quaternion);
 	rot = XMMatrixRotationQuaternion(quaternion);
 
+	//	平行移動
 	trans = XMMatrixTranslation(objPosition.x, objPosition.y, objPosition.z);
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(world);

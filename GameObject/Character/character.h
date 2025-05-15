@@ -1,4 +1,9 @@
-﻿#pragma once
+﻿/*===================================================================================
+
+Character基底クラス(character.h)
+
+====================================================================================*/
+#pragma once
 #include "GameObject/gameobject.h"
 #include "System\Enum/moveDirection.h"
 #include "System\Renderer\animationModel.h"

@@ -1,4 +1,9 @@
-﻿#pragma once
+﻿/*===================================================================================
+
+Obj形式モデルマネージャー(modelRendererManager.h)
+
+====================================================================================*/
+#pragma once
 #include "System\enum\modelEnum.h"
 #include "System\Renderer/renderer.h"
 // マテリアル構造体

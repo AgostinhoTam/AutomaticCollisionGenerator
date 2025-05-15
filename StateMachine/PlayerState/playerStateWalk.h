@@ -1,4 +1,9 @@
-﻿#pragma once
+﻿/*===================================================================================
+
+プレイヤー移動状態処理(playerStateWalk.h)
+
+====================================================================================*/
+#pragma once
 #include "StateMachine/PlayerState/playerState.h"
 class PlayerStateWalk :public PlayerState
 {

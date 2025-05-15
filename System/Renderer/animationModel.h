@@ -1,6 +1,10 @@
-﻿#pragma once
+﻿/*===================================================================================
 
-//#include "Main\main.h"
+アニメーションモデル読み込み(animationModel.h)
+
+====================================================================================*/
+#pragma once
+
 #include <unordered_map>
 #include "assimp/cimport.h"
 #include "assimp/scene.h"

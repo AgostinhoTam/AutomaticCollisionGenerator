@@ -1,7 +1,11 @@
-﻿#pragma once
+﻿/*===================================================================================
+
+コリジョン基底クラス(collision.h)
+
+====================================================================================*/
+#pragma once
 #include "Main/main.h"
 #include "System/Structure/shaderStructure.h"
-
 
 struct LINE_VERTEX
 {
