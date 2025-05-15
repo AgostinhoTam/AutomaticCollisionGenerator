@@ -1,4 +1,4 @@
-#include "System\Renderer/renderer.h"
+ï»¿#include "System\Renderer/renderer.h"
 #include "GameObject/gameobject.h"
 #include "Manager/modelRendererManager.h"
 #include "System\Renderer/modelRenderer.h"
@@ -6,7 +6,7 @@
 
 void ModelRenderer::Draw(const MODEL* Model,const GameObject* Object)
 {
-	//	ƒ[ƒ‹ƒhƒ}ƒgƒŠƒNƒXÝ’è
+	//	ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒžãƒˆãƒªã‚¯ã‚¹è¨­å®š
 	XMMATRIX world, scale, rot, trans;
 	const XMFLOAT3& objPosition = Object->GetPosition();
 	const XMFLOAT3& objScale = Object->GetScale();
@@ -22,38 +22,38 @@ void ModelRenderer::Draw(const MODEL* Model,const GameObject* Object)
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(world);
 	
-	//“ü—ÍƒŒƒCƒAƒEƒgÝ’è
+	//å…¥åŠ›ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆè¨­å®š
 	Renderer::GetDeviceContext()->IASetInputLayout(Shader->m_VertexLayout);
 
-	//ƒVƒF[ƒ_[Ý’è
+	//ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼è¨­å®š
 	Renderer::GetDeviceContext()->VSSetShader(Shader->m_VertexShader, NULL, 0);
 	Renderer::GetDeviceContext()->PSSetShader(Shader->m_PixelShader, NULL, 0);
 
 
-	// ’¸“_ƒoƒbƒtƒ@Ý’è
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;
 	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &Model->VertexBuffer, &stride, &offset);
 
-	// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@Ý’è
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
 	Renderer::GetDeviceContext()->IASetIndexBuffer(Model->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
-	// ƒvƒŠƒ~ƒeƒBƒuƒgƒ|ƒƒWÝ’è
+	// ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ãƒˆãƒãƒ­ã‚¸è¨­å®š
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
 	for( unsigned int i = 0; i < Model->SubsetNum; i++ )
 	{
-		// ƒ}ƒeƒŠƒAƒ‹Ý’è
+		// ãƒžãƒ†ãƒªã‚¢ãƒ«è¨­å®š
 		Renderer::SetMaterial(Model->SubsetArray[i].Material.Material );
 
-		// ƒeƒNƒXƒ`ƒƒÝ’è
+		// ãƒ†ã‚¯ã‚¹ãƒãƒ£è¨­å®š
 		if(Model->SubsetArray[i].Material.Texture)
 		{
 		 	Renderer::GetDeviceContext()->PSSetShaderResources( 0, 1, &Model->SubsetArray[i].Material.Texture );
 		}
 
-		// ƒ|ƒŠƒSƒ“•`‰æ
+		// ãƒãƒªã‚´ãƒ³æç”»
 		Renderer::GetDeviceContext()->DrawIndexed(Model->SubsetArray[i].IndexNum, Model->SubsetArray[i].StartIndex, 0 );
 	}
 

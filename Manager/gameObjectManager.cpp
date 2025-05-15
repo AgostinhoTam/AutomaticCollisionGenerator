@@ -1,10 +1,17 @@
+﻿/*===================================================================================
+
+ゲームオブジェクトマネージャー(gameObjectManager.cpp)
+
+====================================================================================*/
 #include "GameObject/gameobject.h"
 #include "Manager/gameObjectManager.h"
-#include "Manager\debuggerImGuiManager.h"
+#include "Manager/debuggerImGuiManager.h"
 
+//	===================ゲームオブジェクトマネージャー初期化======================
 void GameObjectManager::Init()
 {
-	for (int type = 0; type < static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE); ++type)
+	//	ゲームオブジェクト全部初期化
+	for (int type = 0; type < static_cast<int>(GameObject_Type::Max_Type); ++type)
 	{
 		for (GameObject* object : m_GameObjectList[type])
 		{
@@ -15,10 +22,11 @@ void GameObjectManager::Init()
 
 }
 
-
+//	===================ゲームオブジェクトマネージャーUninit======================
 void GameObjectManager::Uninit()
 {
-	for (int type = 0; type < static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE); ++type)
+	//	ゲームオブジェクト全部Uninit
+	for (int type = 0; type < static_cast<int>(GameObject_Type::Max_Type); ++type)
 	{
 		for (GameObject* object : m_GameObjectList[type])
 		{
@@ -28,10 +36,12 @@ void GameObjectManager::Uninit()
 	}
 }
 
-
+//	===================ゲームオブジェクトマネージャー更新======================
+//	DeltaTime	:	float	デルタタイム
 void GameObjectManager::Update(const float& DeltaTime)
 {
-	for (int type = 0; type < static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE); ++type)
+	//	ゲームオブジェクト全部更新
+	for (int type = 0; type < static_cast<int>(GameObject_Type::Max_Type); ++type)
 	{
 		for (GameObject* object : m_GameObjectList[type])
 		{
@@ -42,10 +52,11 @@ void GameObjectManager::Update(const float& DeltaTime)
 
 }
 
-
+//	===================ゲームオブジェクトマネージャー描画======================
 void GameObjectManager::Draw()
 {
-	for (int type = 0; type < static_cast<int>(GAMEOBJECT_TYPE::MAX_TYPE); ++type)
+	//	ゲームオブジェクト全部描画
+	for (int type = 0; type < static_cast<int>(GameObject_Type::Max_Type); ++type)
 	{
 		for (GameObject* object : m_GameObjectList[type])
 		{
@@ -53,10 +64,7 @@ void GameObjectManager::Draw()
 			object->Draw();
 		}
 	}
+	//	ImGui描画
 	DebuggerImGuiManager::Render(m_GameObjectList);
-
-
-
-
 }
 

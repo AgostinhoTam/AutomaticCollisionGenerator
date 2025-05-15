@@ -1,11 +1,11 @@
-#pragma once
-enum class MOVE_RIGHT
+﻿#pragma once
+enum class Move_Right
 {
-	LEFT=-1,
-	RIGHT=1,
+	Left=-1,
+	Right=1,
 }; 
-enum class MOVE_FORWARD
+enum class Move_Forward
 {
-	BACKWARD = -1,
-	FORWARD = 1
+	Backward = -1,
+	Forward = 1
 };

@@ -1,22 +1,22 @@
-#pragma once
-/*===================================================================================
+ï»¿/*===================================================================================
 
-ƒJƒƒ‰§Œä(camera.h)
+ã‚«ãƒ¡ãƒ©åˆ¶å¾¡(camera.h)
 
 ====================================================================================*/
+#pragma once
 #include "GameObject/gameobject.h"
 class Player;
 class Camera:public GameObject 
 {
 private:
 
-	XMFLOAT3			m_Target = XMFLOAT3{0.0f,0.0f,0.0f};				// ƒJƒƒ‰‚Ì’‹“_
-	XMFLOAT3			m_Up = XMFLOAT3{ 0.0f,0.0f,0.0f };;				// ƒJƒƒ‰‚Ìã•ûŒüƒxƒNƒgƒ‹
-	float				m_Len = 0.0f;			// ƒJƒƒ‰‚Ì‹“_‚Æ’‹“_‚Ì‹——£
+	XMFLOAT3			m_Target = XMFLOAT3{0.0f,0.0f,0.0f};				// ã‚«ãƒ¡ãƒ©ã®æ³¨è¦–ç‚¹
+	XMFLOAT3			m_Up = XMFLOAT3{ 0.0f,0.0f,0.0f };;				// ã‚«ãƒ¡ãƒ©ã®ä¸Šæ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
+	float				m_Len = 0.0f;			// ã‚«ãƒ¡ãƒ©ã®è¦–ç‚¹ã¨æ³¨è¦–ç‚¹ã®è·é›¢
 
-	XMFLOAT4X4			m_MtxView{};		// ƒrƒ…[ƒ}ƒgƒŠƒbƒNƒX
-	XMMATRIX			m_MtxInvView{};		// ƒrƒ…[ƒ}ƒgƒŠƒbƒNƒX
-	XMMATRIX			m_MtxProjection{};	// ƒvƒƒWƒFƒNƒVƒ‡ƒ“ƒ}ƒgƒŠƒbƒNƒX
+	XMFLOAT4X4			m_MtxView{};		// ãƒ“ãƒ¥ãƒ¼ãƒãƒˆãƒªãƒƒã‚¯ã‚¹
+	XMMATRIX			m_MtxInvView{};		// ãƒ“ãƒ¥ãƒ¼ãƒãƒˆãƒªãƒƒã‚¯ã‚¹
+	XMMATRIX			m_MtxProjection{};	// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³ãƒãƒˆãƒªãƒƒã‚¯ã‚¹
 	Player*				m_Player{};
 	float				m_Sensitivity = 0.0f;
 public:
@@ -25,6 +25,5 @@ public:
 	void Uninit();
 	void Draw();
 	bool CheckView(const XMFLOAT3& Pos);
-	XMFLOAT2 WordToScreen(const XMFLOAT3 Pos);
 	const XMMATRIX& GetViewMatrix() const { return XMLoadFloat4x4(&m_MtxView); }
 };

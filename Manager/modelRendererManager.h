@@ -1,7 +1,12 @@
+ï»¿/*===================================================================================
+
+Objå½¢å¼ãƒ¢ãƒ‡ãƒ«ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼(modelRendererManager.h)
+
+====================================================================================*/
 #pragma once
 #include "System\enum\modelEnum.h"
 #include "System\Renderer/renderer.h"
-// ƒ}ƒeƒŠƒAƒ‹\‘¢‘Ì
+// ãƒãƒ†ãƒªã‚¢ãƒ«æ§‹é€ ä½“
 
 struct MODEL_MATERIAL
 {
@@ -13,7 +18,7 @@ struct MODEL_MATERIAL
 };
 
 
-// •`‰æƒTƒuƒZƒbƒg\‘¢‘Ì
+// æç”»ã‚µãƒ–ã‚»ãƒƒãƒˆæ§‹é€ ä½“
 struct SUBSET
 {
 	unsigned int	StartIndex;
@@ -22,7 +27,7 @@ struct SUBSET
 };
 
 
-// ƒ‚ƒfƒ‹\‘¢‘Ì
+// ãƒ¢ãƒ‡ãƒ«æ§‹é€ ä½“
 struct MODEL_OBJ
 {
 	VERTEX_3D* VertexArray;

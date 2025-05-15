@@ -1,6 +1,10 @@
+ï»¿/*===================================================================================
+
+ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿(animationModel.h)
+
+====================================================================================*/
 #pragma once
 
-//#include "Main\main.h"
 #include <unordered_map>
 #include "assimp/cimport.h"
 #include "assimp/scene.h"
@@ -10,22 +14,22 @@
 #pragma comment (lib, "assimp-vc143-mt.lib")
 
 constexpr int MAX_BONES = 256;
-//•ÏŒ`Œã’¸“_\‘¢‘Ì
+//å¤‰å½¢å¾Œé ‚ç‚¹æ§‹é€ ä½“
 struct DEFORM_VERTEX
 {
 	aiVector3D Position;
 	aiVector3D Normal;
 	int				BoneNum{};
-	std::string		BoneName[4];//–{—ˆ‚Íƒ{[ƒ“ƒCƒ“ƒfƒbƒNƒX‚ÅŠÇ—‚·‚é‚×‚«
+	std::string		BoneName[4];//æœ¬æ¥ã¯ãƒœãƒ¼ãƒ³ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã§ç®¡ç†ã™ã‚‹ã¹ã
 	float			BoneWeight[4]{};
 };
 
-//ƒ{[ƒ“\‘¢‘Ì
+//ãƒœãƒ¼ãƒ³æ§‹é€ ä½“
 struct BONE
 {
 	XMMATRIX	worldMatrix{};
 	XMMATRIX	localMatrix{};
-	aiMatrix4x4 Matrix;		//	assimp—pmatrix
+	aiMatrix4x4 Matrix;		//	assimpç”¨matrix
 	aiMatrix4x4 AnimationMatrix;
 	aiMatrix4x4 OffsetMatrix;
 	XMFLOAT3	HeadPosition{};
@@ -52,9 +56,9 @@ private:
 
 	std::unordered_map<std::string, ID3D11ShaderResourceView*> m_Texture;
 	std::vector<BONE> m_Bones;
-	std::unordered_map<std::string, int> m_BoneIndexMap;	//ƒ{[ƒ“ƒf[ƒ^
+	std::unordered_map<std::string, int> m_BoneIndexMap;	//ãƒœãƒ¼ãƒ³ãƒ‡ãƒ¼ã‚¿
 
-	std::vector<DEFORM_VERTEX>* m_DeformVertex{};//•ÏŒ`Œã’¸“_ƒf[ƒ^	todo
+	std::vector<DEFORM_VERTEX>* m_DeformVertex{};//å¤‰å½¢å¾Œé ‚ç‚¹ãƒ‡ãƒ¼ã‚¿	todo
 	int m_CurrentFrame = 0;
 	int m_NextFrame = 0;
 	float m_BlendRatio = 0.0f;
@@ -70,7 +74,7 @@ public:
 	void Update();
 	XMMATRIX TransformToXMMATRIX(aiMatrix4x4&);
 
-	//	ƒAƒjƒ[ƒVƒ‡ƒ“ŠÖ˜A
+	//	ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é–¢é€£
 	void LoadAnimation(const char* FileName, const char* Name);
 	void UpdateAnimationBlend();
 	void SetNextAnimation(const std::string& AnimationName);
@@ -92,7 +96,7 @@ public:
 	void AddCurrentAnimationFrame(const unsigned int frame = 1) { m_CurrentFrame += frame; }
 	void AddNextAnimationFrame(const unsigned int frame = 1) { m_NextFrame += frame; }
 	
-	//	ƒ{[ƒ“ŠÖ˜A
+	//	ãƒœãƒ¼ãƒ³é–¢é€£
 	const std::unordered_map<std::string, int>& GetBoneIndexMap() const{ return m_BoneIndexMap; }
 	const std::vector<BONE>& GetBones()const { return m_Bones; }
 	const BONE GetBone(int Index);

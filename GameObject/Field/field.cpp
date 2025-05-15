@@ -1,40 +1,51 @@
+ï»¿/*===================================================================================
 
+ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰(field.cpp)
+
+====================================================================================*/
 #include "Main/main.h"
 #include "System\Renderer/renderer.h"
 #include "Manager/shaderManager.h"
 #include "System\Enum/shaderEnum.h"
 #include "GameObject/Field/field.h"
 
-Field::Field(const XMFLOAT3& location, const XMFLOAT2& size)
+//	=========================ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿=========================
+//	Location	:	XMFLOAT3	ä½ç½®ï¼ˆå·¦ä¸ŠåŸºæº–ï¼‰
+//	Size		:	XMFLOAT3	å¤§ãã•
+Field::Field(const XMFLOAT3& Location, const XMFLOAT2& Size)
 {
-	m_Position = location;
-	vertex[0].Position = XMFLOAT3(-size.x, 0.0f, size.y);
+	//	ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®é ‚ç‚¹è¨­ç½®
+	m_Position = Location;
+	vertex[0].Position = XMFLOAT3(-Size.x, 0.0f, Size.y);
 	vertex[0].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[0].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[0].TexCoord = XMFLOAT2(0.0f, 0.0f);
 
-	vertex[1].Position = XMFLOAT3(size.x, 0.0f, size.y);
+	vertex[1].Position = XMFLOAT3(Size.x, 0.0f, Size.y);
 	vertex[1].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[1].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[1].TexCoord = XMFLOAT2(1.0f, 0.0f);
 
-	vertex[2].Position = XMFLOAT3(-size.x, 0.0f, -size.y);
+	vertex[2].Position = XMFLOAT3(-Size.x, 0.0f, -Size.y);
 	vertex[2].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[2].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[2].TexCoord = XMFLOAT2(0.0f, 1.0f);
 
-	vertex[3].Position = XMFLOAT3(size.x, 0.0f, -size.y);
+	vertex[3].Position = XMFLOAT3(Size.x, 0.0f, -Size.y);
 	vertex[3].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[3].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[3].TexCoord = XMFLOAT2(1.0f, 1.0f);
 }
 
+//	=========================ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰åˆæœŸåŒ–è¨­å®š=========================
 void Field::Init()
 {
-	m_Name = "Field";
+	//	ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿è¨­å®š
+	m_Name = "Field_"+ m_Name;
 	m_Scale = XMFLOAT3(1.0f, 1.0f, 1.0f);
 	m_Rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	//’¸“_ƒoƒbƒtƒ@
+	
+	//é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡
 	D3D11_BUFFER_DESC bd{};
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	bd.ByteWidth = sizeof(VERTEX_3D) * 4;
@@ -46,7 +57,7 @@ void Field::Init()
 
 	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &m_VertexBuffer);
 
-	//ƒeƒLƒXƒ`ƒƒ[“Ç‚Ýž‚Ý
+	//ãƒ†ã‚­ã‚¹ãƒãƒ£ãƒ¼èª­ã¿è¾¼ã¿
 	TexMetadata metadata;
 	ScratchImage image;
 	HRESULT hr =LoadFromWICFile(L"asset\\texture\\checker.png", WIC_FLAGS_NONE, &metadata, image);
@@ -55,33 +66,35 @@ void Field::Init()
 		assert(m_Texture);
 	}
 
-	m_Shader = ShaderManager::LoadShader(SHADER_NAME::UNLIT_TEXTURE);
-
-
+	//	ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼èª­ã¿è¾¼ã¿
+	m_Shader = ShaderManager::LoadShader(Shader_Type::Unlit_Texture);
 }
 
+//	=========================ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰Uninit=========================
 void Field::Uninit()
 {
 	if(m_VertexBuffer)m_VertexBuffer->Release();
 	if(m_Texture)m_Texture->Release();
 }
 
+//	=========================ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰æ›´æ–°å‡¦ç†=========================
+//	DeltaTime	:	float	ãƒ‡ãƒ«ã‚¿ã‚¿ã‚¤ãƒ 
 void Field::Update(const float& DeltaTime)
 {
-
 	
 }
 
+//	=========================ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰æç”»=========================
 void Field::Draw()
 {
-	//“ü—ÍƒŒƒCƒAƒEƒgÝ’è
+	//å…¥åŠ›ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆè¨­å®š
 	Renderer::GetDeviceContext()->IASetInputLayout(m_Shader->m_VertexLayout);
 
-	//ƒVƒF[ƒ_[Ý’è
+	//ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼è¨­å®š
 	Renderer::GetDeviceContext()->VSSetShader(m_Shader->m_VertexShader, NULL, 0);
 	Renderer::GetDeviceContext()->PSSetShader(m_Shader->m_PixelShader, NULL, 0);
 
-	//ƒ}ƒgƒŠƒNƒXÝ’è
+	//ãƒžãƒˆãƒªã‚¯ã‚¹è¨­å®š
 	XMMATRIX world, scale, rot, trans;
 	scale = XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z);
 	rot = XMMatrixRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z);
@@ -89,25 +102,25 @@ void Field::Draw()
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(world);
 
-	//’¸“_ƒoƒbƒtƒ@Ý’è
+	//é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;
 	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
 
-	//ƒ}ƒeƒŠƒAƒ‹
+	//ãƒžãƒ†ãƒªã‚¢ãƒ«
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
 	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	material.TextureEnable = true;
 	Renderer::SetMaterial(material);
 
-	//ƒeƒLƒXƒ`ƒƒ[Ý’è
+	//ãƒ†ã‚­ã‚¹ãƒãƒ£ãƒ¼è¨­å®š
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &m_Texture);
 
-	//ƒvƒŠƒ~ƒeƒBƒuƒgƒ|ƒƒWÝ’è
+	//ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ãƒˆãƒãƒ­ã‚¸è¨­å®š
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	//ƒ|ƒŠƒRƒ“•`‰æ
+	//ãƒãƒªã‚³ãƒ³æç”»
 	Renderer::GetDeviceContext()->Draw(4, 0);
 
 }

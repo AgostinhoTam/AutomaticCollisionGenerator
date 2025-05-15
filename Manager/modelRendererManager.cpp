@@ -1,4 +1,8 @@
+ï»¿/*===================================================================================
 
+Objå½¢å¼ãƒ¢ãƒ‡ãƒ«ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼(modelRendererManager.cpp)
+
+====================================================================================*/
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <shlwapi.h>
@@ -7,11 +11,13 @@
 #include "Main/main.h"
 #include "Manager/modelRendererManager.h"
 
+//	ãƒ¢ãƒ‡ãƒ«ãƒ—ãƒ¼ãƒ«
 std::unordered_map<std::string, MODEL*> ModelRendererManager::m_ModelPool;
 
-
+//	===================ãƒ¢ãƒ‡ãƒ«å…¨éƒ¨è§£æ”¾======================
 void ModelRendererManager::UnloadAll()
 {
+	//	ãƒ—ãƒ¼ãƒ«ã«ã‚ã‚‹ãƒ¢ãƒ‡ãƒ«å…¨éƒ¨è§£æ”¾
 	for (std::pair<const std::string, MODEL*> pair : m_ModelPool)
 	{
 		pair.second->VertexBuffer->Release();
@@ -32,11 +38,13 @@ void ModelRendererManager::UnloadAll()
 
 }
 
-
+//	===================ãƒ—ãƒ¼ãƒ«ã‹ã‚‰ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿======================
+//	FileName	:	char*	ãƒ‘ã‚¹ã®åå‰
 MODEL* ModelRendererManager::Load(const char* FileName)
 {
 	MODEL* model = nullptr;
 	auto it = m_ModelPool.find(FileName);
+	//	ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¾ã‚ŒãŸã“ã¨ãŒã‚ã‚‹ã‹ã©ã†ã‹
 	if (it != m_ModelPool.end())
 	{
 		MODEL* model = it->second;
@@ -51,7 +59,7 @@ MODEL* ModelRendererManager::Load(const char* FileName)
 	}
 	model = new MODEL;
 	LoadModel(FileName, model);
-	//	C++17 w’è‚³‚ê‚½ƒL[‚ª‘¶İ‚µ‚È‚¢ê‡‚Ì‚İ—v‘f‚ğ’¼Ú\’z‚Å‘}“ü‚·‚é
+	//	C++17 æŒ‡å®šã•ã‚ŒãŸã‚­ãƒ¼ãŒå­˜åœ¨ã—ãªã„å ´åˆã®ã¿è¦ç´ ã‚’ç›´æ¥æ§‹ç¯‰ã§æŒ¿å…¥ã™ã‚‹
 	m_ModelPool.try_emplace(FileName, model);
 
 	return m_ModelPool[FileName];
@@ -60,16 +68,16 @@ MODEL* ModelRendererManager::Load(const char* FileName)
 
 
 
-
+//	===================æ–°ã—ã„ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿======================
+//	FileName	:	char*	ãƒ‘ã‚¹ã®åå‰
+//	Model		:	Model*	ãƒ¢ãƒ‡ãƒ«ä¿å­˜ã™ã‚‹ãƒã‚¤ãƒ³ã‚¿
 void ModelRendererManager::LoadModel(const char* FileName, MODEL* Model)
 {
 
 	MODEL_OBJ modelObj;
 	LoadObj(FileName, &modelObj);
-
-
-
-	// ’¸“_ƒoƒbƒtƒ@¶¬
+	
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
 	{
 		D3D11_BUFFER_DESC bd;
 		ZeroMemory(&bd, sizeof(bd));
@@ -86,7 +94,7 @@ void ModelRendererManager::LoadModel(const char* FileName, MODEL* Model)
 	}
 
 
-	// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@¶¬
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
 	{
 		D3D11_BUFFER_DESC bd;
 		ZeroMemory(&bd, sizeof(bd));
@@ -102,7 +110,7 @@ void ModelRendererManager::LoadModel(const char* FileName, MODEL* Model)
 		Renderer::GetDevice()->CreateBuffer(&bd, &sd, &Model->IndexBuffer);
 	}
 
-	// ƒTƒuƒZƒbƒgİ’è
+	// ã‚µãƒ–ã‚»ãƒƒãƒˆè¨­å®š
 	{
 		Model->SubsetArray = new SUBSET[modelObj.SubsetNum];
 		Model->SubsetNum = modelObj.SubsetNum;
@@ -116,7 +124,7 @@ void ModelRendererManager::LoadModel(const char* FileName, MODEL* Model)
 
 			Model->SubsetArray[i].Material.Texture = nullptr;
 
-			// ƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ
+			// ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
 			TexMetadata metadata;
 
 			ScratchImage image;
@@ -144,7 +152,7 @@ void ModelRendererManager::LoadModel(const char* FileName, MODEL* Model)
 
 
 
-//ƒ‚ƒfƒ‹“Ç////////////////////////////////////////////
+//	===================ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿ï¼ˆObjãƒ•ã‚¡ã‚¤ãƒ«å½¢å¼ï¼‰======================
 void ModelRendererManager::LoadObj(const char* FileName, MODEL_OBJ* ModelObj)
 {
 
@@ -182,7 +190,7 @@ void ModelRendererManager::LoadObj(const char* FileName, MODEL_OBJ* ModelObj)
 
 
 
-	//—v‘f”ƒJƒEƒ“ƒg
+	//è¦ç´ æ•°ã‚«ã‚¦ãƒ³ãƒˆ
 	while (true)
 	{
 		fscanf(file, "%s", str);
@@ -218,7 +226,7 @@ void ModelRendererManager::LoadObj(const char* FileName, MODEL_OBJ* ModelObj)
 				c = fgetc(file);
 			} while (c != '\n' && c != '\r');
 
-			//lŠp‚ÍOŠp‚É•ªŠ„
+			//å››è§’ã¯ä¸‰è§’ã«åˆ†å‰²
 			if (in == 4)
 				in = 6;
 
@@ -227,7 +235,7 @@ void ModelRendererManager::LoadObj(const char* FileName, MODEL_OBJ* ModelObj)
 	}
 
 
-	//ƒƒ‚ƒŠŠm•Û
+	//ãƒ¡ãƒ¢ãƒªç¢ºä¿
 	positionArray = new XMFLOAT3[positionNum];
 	normalArray = new XMFLOAT3[normalNum];
 	texcoordArray = new XMFLOAT2[texcoordNum];
@@ -245,7 +253,7 @@ void ModelRendererManager::LoadObj(const char* FileName, MODEL_OBJ* ModelObj)
 
 
 
-	//—v‘f“Ç
+	//è¦ç´ èª­è¾¼
 	XMFLOAT3* position = positionArray;
 	XMFLOAT3* normal = normalArray;
 	XMFLOAT2* texcoord = texcoordArray;
@@ -266,7 +274,7 @@ void ModelRendererManager::LoadObj(const char* FileName, MODEL_OBJ* ModelObj)
 
 		if (strcmp(str, "mtllib") == 0)
 		{
-			//ƒ}ƒeƒŠƒAƒ‹ƒtƒ@ƒCƒ‹
+			//ãƒãƒ†ãƒªã‚¢ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«
 			fscanf(file, "%s", str);
 
 			char path[256];
@@ -278,12 +286,12 @@ void ModelRendererManager::LoadObj(const char* FileName, MODEL_OBJ* ModelObj)
 		}
 		else if (strcmp(str, "o") == 0)
 		{
-			//ƒIƒuƒWƒFƒNƒg–¼
+			//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå
 			fscanf(file, "%s", str);
 		}
 		else if (strcmp(str, "v") == 0)
 		{
-			//’¸“_À•W
+			//é ‚ç‚¹åº§æ¨™
 			fscanf(file, "%f", &position->x);
 			fscanf(file, "%f", &position->y);
 			fscanf(file, "%f", &position->z);
@@ -291,7 +299,7 @@ void ModelRendererManager::LoadObj(const char* FileName, MODEL_OBJ* ModelObj)
 		}
 		else if (strcmp(str, "vn") == 0)
 		{
-			//–@ü
+			//æ³•ç·š
 			fscanf(file, "%f", &normal->x);
 			fscanf(file, "%f", &normal->y);
 			fscanf(file, "%f", &normal->z);
@@ -299,7 +307,7 @@ void ModelRendererManager::LoadObj(const char* FileName, MODEL_OBJ* ModelObj)
 		}
 		else if (strcmp(str, "vt") == 0)
 		{
-			//ƒeƒNƒXƒ`ƒƒÀ•W
+			//ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™
 			fscanf(file, "%f", &texcoord->x);
 			fscanf(file, "%f", &texcoord->y);
 			//texcoord->x = 1.0f - texcoord->x;
@@ -308,7 +316,7 @@ void ModelRendererManager::LoadObj(const char* FileName, MODEL_OBJ* ModelObj)
 		}
 		else if (strcmp(str, "usemtl") == 0)
 		{
-			//ƒ}ƒeƒŠƒAƒ‹
+			//ãƒãƒ†ãƒªã‚¢ãƒ«
 			fscanf(file, "%s", str);
 
 			if (sc != 0)
@@ -334,7 +342,7 @@ void ModelRendererManager::LoadObj(const char* FileName, MODEL_OBJ* ModelObj)
 		}
 		else if (strcmp(str, "f") == 0)
 		{
-			//–Ê
+			//é¢
 			in = 0;
 
 			do
@@ -345,7 +353,7 @@ void ModelRendererManager::LoadObj(const char* FileName, MODEL_OBJ* ModelObj)
 				ModelObj->VertexArray[vc].Position = positionArray[atoi(s) - 1];
 				if (s[strlen(s) + 1] != '/')
 				{
-					//ƒeƒNƒXƒ`ƒƒÀ•W‚ª‘¶İ‚µ‚È‚¢ê‡‚à‚ ‚é
+					//ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ãŒå­˜åœ¨ã—ãªã„å ´åˆã‚‚ã‚ã‚‹
 					s = strtok(nullptr, "/");
 					ModelObj->VertexArray[vc].TexCoord = texcoordArray[atoi(s) - 1];
 				}
@@ -362,7 +370,7 @@ void ModelRendererManager::LoadObj(const char* FileName, MODEL_OBJ* ModelObj)
 				c = fgetc(file);
 			} while (c != '\n' && c != '\r');
 
-			//lŠp‚ÍOŠp‚É•ªŠ„
+			//å››è§’ã¯ä¸‰è§’ã«åˆ†å‰²
 			if (in == 4)
 			{
 				ModelObj->IndexArray[ic] = vc - 4;
@@ -390,7 +398,7 @@ void ModelRendererManager::LoadObj(const char* FileName, MODEL_OBJ* ModelObj)
 
 
 
-//ƒ}ƒeƒŠƒAƒ‹“Ç‚İ‚İ///////////////////////////////////////////////////////////////////
+//	===================ãƒãƒ†ãƒªã‚¢ãƒ«èª­ã¿è¾¼ã¿======================
 void ModelRendererManager::LoadMaterial(const char* FileName, MODEL_MATERIAL** MaterialArray, unsigned int* MaterialNum)
 {
 
@@ -409,7 +417,7 @@ void ModelRendererManager::LoadMaterial(const char* FileName, MODEL_MATERIAL** M
 	MODEL_MATERIAL* materialArray;
 	unsigned int materialNum = 0;
 
-	//—v‘f”ƒJƒEƒ“ƒg
+	//è¦ç´ æ•°ã‚«ã‚¦ãƒ³ãƒˆ
 	while (true)
 	{
 		fscanf(file, "%s", str);
@@ -425,11 +433,11 @@ void ModelRendererManager::LoadMaterial(const char* FileName, MODEL_MATERIAL** M
 	}
 
 
-	//ƒƒ‚ƒŠŠm•Û
+	//ãƒ¡ãƒ¢ãƒªç¢ºä¿
 	materialArray = new MODEL_MATERIAL[materialNum];
 
 
-	//—v‘f“Ç
+	//è¦ç´ èª­è¾¼
 	int mc = -1;
 
 	fseek(file, 0, SEEK_SET);
@@ -444,7 +452,7 @@ void ModelRendererManager::LoadMaterial(const char* FileName, MODEL_MATERIAL** M
 
 		if (strcmp(str, "newmtl") == 0)
 		{
-			//ƒ}ƒeƒŠƒAƒ‹–¼
+			//ãƒãƒ†ãƒªã‚¢ãƒ«å
 			mc++;
 			fscanf(file, "%s", materialArray[mc].Name);
 			strcpy(materialArray[mc].TextureName, "");
@@ -456,7 +464,7 @@ void ModelRendererManager::LoadMaterial(const char* FileName, MODEL_MATERIAL** M
 		}
 		else if (strcmp(str, "Ka") == 0)
 		{
-			//ƒAƒ“ƒrƒGƒ“ƒg
+			//ã‚¢ãƒ³ãƒ“ã‚¨ãƒ³ãƒˆ
 			fscanf(file, "%f", &materialArray[mc].Material.Ambient.x);
 			fscanf(file, "%f", &materialArray[mc].Material.Ambient.y);
 			fscanf(file, "%f", &materialArray[mc].Material.Ambient.z);
@@ -464,7 +472,7 @@ void ModelRendererManager::LoadMaterial(const char* FileName, MODEL_MATERIAL** M
 		}
 		else if (strcmp(str, "Kd") == 0)
 		{
-			//ƒfƒBƒtƒ…[ƒY
+			//ãƒ‡ã‚£ãƒ•ãƒ¥ãƒ¼ã‚º
 			fscanf(file, "%f", &materialArray[mc].Material.Diffuse.x);
 			fscanf(file, "%f", &materialArray[mc].Material.Diffuse.y);
 			fscanf(file, "%f", &materialArray[mc].Material.Diffuse.z);
@@ -472,7 +480,7 @@ void ModelRendererManager::LoadMaterial(const char* FileName, MODEL_MATERIAL** M
 		}
 		else if (strcmp(str, "Ks") == 0)
 		{
-			//ƒXƒyƒLƒ…ƒ‰
+			//ã‚¹ãƒšã‚­ãƒ¥ãƒ©
 			fscanf(file, "%f", &materialArray[mc].Material.Specular.x);
 			fscanf(file, "%f", &materialArray[mc].Material.Specular.y);
 			fscanf(file, "%f", &materialArray[mc].Material.Specular.z);
@@ -480,17 +488,17 @@ void ModelRendererManager::LoadMaterial(const char* FileName, MODEL_MATERIAL** M
 		}
 		else if (strcmp(str, "Ns") == 0)
 		{
-			//ƒXƒyƒLƒ…ƒ‰‹­“x
+			//ã‚¹ãƒšã‚­ãƒ¥ãƒ©å¼·åº¦
 			fscanf(file, "%f", &materialArray[mc].Material.Shininess);
 		}
 		else if (strcmp(str, "d") == 0)
 		{
-			//ƒAƒ‹ƒtƒ@
+			//ã‚¢ãƒ«ãƒ•ã‚¡
 			fscanf(file, "%f", &materialArray[mc].Material.Diffuse.w);
 		}
 		else if (strcmp(str, "map_Kd") == 0)
 		{
-			//ƒeƒNƒXƒ`ƒƒ
+			//ãƒ†ã‚¯ã‚¹ãƒãƒ£
 			fscanf(file, "%s", str);
 
 			char path[256];
@@ -507,10 +515,12 @@ void ModelRendererManager::LoadMaterial(const char* FileName, MODEL_MATERIAL** M
 	*MaterialArray = materialArray;
 	*MaterialNum = materialNum;
 }
-
+//	===================ãƒ¢ãƒ‡ãƒ«æç”»======================
+//	Model	:	MODEL*		ãƒ¢ãƒ‡ãƒ«ã®ãƒã‚¤ãƒ³ã‚¿
+//	Object	:	GameObject*	æ‰€æœ‰è€…ã®ãƒã‚¤ãƒ³ã‚¿
 void ModelRendererManager::Draw(const MODEL* Model, const GameObject* Object)
 {
-	//	ƒ[ƒ‹ƒhƒ}ƒgƒŠƒNƒXİ’è
+	//	ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒãƒˆãƒªã‚¯ã‚¹è¨­å®š
 	XMMATRIX world, scale, rot, trans;
 	const XMFLOAT3& objPosition = Object->GetPosition();
 	const XMFLOAT3& objScale = Object->GetScale();
@@ -518,46 +528,48 @@ void ModelRendererManager::Draw(const MODEL* Model, const GameObject* Object)
 	const Shader* Shader = Object->GetShader();
 	scale = XMMatrixScaling(objScale.x, objScale.y, objScale.z);
 
+	//	å›è»¢è¨ˆç®—
 	XMVECTOR quaternion = XMQuaternionRotationRollPitchYaw(objRotation.x, objRotation.y, objRotation.z);
 	quaternion = XMQuaternionNormalize(quaternion);
 	rot = XMMatrixRotationQuaternion(quaternion);
 
+	//	å¹³è¡Œç§»å‹•
 	trans = XMMatrixTranslation(objPosition.x, objPosition.y, objPosition.z);
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(world);
 
-	//“ü—ÍƒŒƒCƒAƒEƒgİ’è
+	//å…¥åŠ›ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆè¨­å®š
 	Renderer::GetDeviceContext()->IASetInputLayout(Shader->m_VertexLayout);
 
-	//ƒVƒF[ƒ_[İ’è
+	//ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼è¨­å®š
 	Renderer::GetDeviceContext()->VSSetShader(Shader->m_VertexShader, NULL, 0);
 	Renderer::GetDeviceContext()->PSSetShader(Shader->m_PixelShader, NULL, 0);
 
 
-	// ’¸“_ƒoƒbƒtƒ@İ’è
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;
 	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &Model->VertexBuffer, &stride, &offset);
 
-	// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@İ’è
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
 	Renderer::GetDeviceContext()->IASetIndexBuffer(Model->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
-	// ƒvƒŠƒ~ƒeƒBƒuƒgƒ|ƒƒWİ’è
+	// ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ãƒˆãƒãƒ­ã‚¸è¨­å®š
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
 	for (unsigned int i = 0; i < Model->SubsetNum; i++)
 	{
-		// ƒ}ƒeƒŠƒAƒ‹İ’è
+		// ãƒãƒ†ãƒªã‚¢ãƒ«è¨­å®š
 		Renderer::SetMaterial(Model->SubsetArray[i].Material.Material);
 
-		// ƒeƒNƒXƒ`ƒƒİ’è
+		// ãƒ†ã‚¯ã‚¹ãƒãƒ£è¨­å®š
 		if (Model->SubsetArray[i].Material.Texture)
 		{
 			Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &Model->SubsetArray[i].Material.Texture);
 		}
 
-		// ƒ|ƒŠƒSƒ“•`‰æ
+		// ãƒãƒªã‚´ãƒ³æç”»
 		Renderer::GetDeviceContext()->DrawIndexed(Model->SubsetArray[i].IndexNum, Model->SubsetArray[i].StartIndex, 0);
 	}
 

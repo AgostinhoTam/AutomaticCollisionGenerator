@@ -1,23 +1,32 @@
+﻿/*===================================================================================
+
+球体コリジョン処理(SphereCollision.cpp)
+
+====================================================================================*/
 #include <vector>
-#include "GameObject\gameobject.h"
-#include "System\Renderer\renderer.h"
-#include "System\Collision\capsuleCollision.h"
-#include "Manager\sceneManager.h"
+#include "GameObject/gameobject.h"
+#include "System/Renderer/renderer.h"
+#include "System/Collision/capsuleCollision.h"
+#include "Manager/sceneManager.h"
 #include "sphereCollision.h"
 
-constexpr int DEBUG_LINE_SEGMENTS = 32;	//�f�o�b�O�p�̐��̕�����
+constexpr int DEBUG_LINE_SEGMENTS = 32;	//デバッグ用の線の分割数
 
-
-
-SphereCollision::SphereCollision(const XMFLOAT3& Position, const XMFLOAT3& Offset, float Radius) :Collision(Position, Offset), m_Radius(Radius) // �����iOwner�|�C���^�AOffset�l�A���a�j
+//	===================球体コリジョン初期化======================
+//	Position	:	XMFLOAT3	位置
+//	Offset		:	XMFLOAT3	オフセット値
+//	Radius		:	float		球体半径
+SphereCollision::SphereCollision(const XMFLOAT3& Position, const XMFLOAT3& Offset, float Radius) :Collision(Position, Offset), m_Radius(Radius) // 引数（Ownerポインタ、Offset値、半径）
 {
-
 	Init();
 }
 
+//	===================当たり判定処理======================
+//	Collision	:	Collision*	対象物のコリジョンポインタ
 bool SphereCollision::IsCollisionOverlapping(const Collision* Collision) 
 {
 	if (!Collision)return false;
+	//	相手のコリジョンに応じて当たり判定取る方法を選択
 	const SphereCollision* sphere = dynamic_cast<const SphereCollision*>(Collision);
 	if (sphere)
 	{
@@ -31,6 +40,8 @@ bool SphereCollision::IsCollisionOverlapping(const Collision* Collision)
 	return false;
 }
 
+//	===================球体と球体の場合======================
+//	Collision	:	SphereCollision*	相手の球体コリジョン
 bool SphereCollision::CheckSphereToSphere(const SphereCollision* Collision) 
 {
 	if (!Collision)return false;
@@ -45,23 +56,24 @@ bool SphereCollision::CheckSphereToSphere(const SphereCollision* Collision)
 
 }
 
+//	===================球体コリジョン更新======================
+//	Position	:	XMFLOAT3	位置
 void SphereCollision::UpdateCollision(const XMFLOAT3& Position)
 {
 	m_Position = { Position.x + m_Offset.x,Position.y + m_Offset.y, Position.z + m_Offset.z };
 }
 
+//	===================球体コリジョン初期化======================
 void SphereCollision::Init()
 {
 	UpdateCollision(m_Position);
-	if (SceneManager::GetInstance()->GetIsDebugMode())
-	{
-		CreateLineVertex(m_SphereLineVertices);
-	}
+	CreateLineVertex(m_SphereLineVertices);
 }
 
+//	===================球体コリジョン描画======================
 void SphereCollision::Draw()
 {
-	if (!SceneManager::GetInstance()->GetIsDebugMode())return;
+	//	マトリクス設定
 	XMMATRIX world, scale, rot, trans;
 
 	scale = XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z);
@@ -81,12 +93,12 @@ void SphereCollision::Draw()
 	Renderer::GetDeviceContext()->VSSetShader(m_Shader->m_VertexShader, NULL, 0);
 	Renderer::GetDeviceContext()->PSSetShader(m_Shader->m_PixelShader, NULL, 0);
 
-	// ���_�o�b�t�@�ݒ�
+	// 頂点バッファ設定
 	UINT stride = sizeof(XMFLOAT3);
 	UINT offset = 0;
 	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
 
-	// �v���~�e�B�u�g�|���W�ݒ�
+	// プリミティブトポロジ設定
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 
@@ -95,13 +107,13 @@ void SphereCollision::Draw()
 
 }
 
-//	�f�o�b�O�̐��̒��_���ۑ�
+//	===================デバッグの線の頂点情報保存======================
 void SphereCollision::CreateLineVertex(std::vector<XMFLOAT3>& SphereLineVertices)
 {
 	SphereLineVertices.clear();
 
 	SphereLineVertices.emplace_back(XMFLOAT3(0, 0, 0));
-	//	XZ����
+	//	XZ平面
 	for (int i = 0; i < DEBUG_LINE_SEGMENTS; ++i)
 	{
 		float angle = XM_2PI * i / DEBUG_LINE_SEGMENTS;
@@ -115,7 +127,7 @@ void SphereCollision::CreateLineVertex(std::vector<XMFLOAT3>& SphereLineVertices
 	}
 
 	SphereLineVertices.emplace_back(XMFLOAT3(0, 0, 0));
-	//	YZ����
+	//	YZ平面
 	for (int i = 0; i < DEBUG_LINE_SEGMENTS; ++i)
 	{
 		float angle = XM_2PI * i / DEBUG_LINE_SEGMENTS;
@@ -129,7 +141,7 @@ void SphereCollision::CreateLineVertex(std::vector<XMFLOAT3>& SphereLineVertices
 
 	}
 	SphereLineVertices.emplace_back(XMFLOAT3(0, 0, 0));
-	//	XY����
+	//	XY平面
 	for (int i = 0; i < DEBUG_LINE_SEGMENTS; ++i)
 	{
 		float angle = XM_2PI * i / DEBUG_LINE_SEGMENTS;

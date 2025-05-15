@@ -1,9 +1,9 @@
-#pragma once
-enum class MODEL_NAME
+﻿#pragma once
+enum class Model_Name
 {
-	FIELD,
-	PLAYER,
-	ENEMY,
-	MONSTER,
-	MAX_MODEL
+	Field,
+	Player,
+	Enemy_Humanoid,
+	Enemy_Monster,
+	Max_Models
 };

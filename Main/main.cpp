@@ -1,10 +1,15 @@
+﻿/*===================================================================================
+
+メイン関数(main.cpp)
+
+====================================================================================*/
 #include "Main/main.h"
 
 #include <thread>
 #include "Manager/sceneManager.h"
 #include "Manager\debuggerImGuiManager.h"
 const char* CLASS_NAME = "AppClass";
-const char* WINDOW_NAME = "�R���W���������ݒu�c�[��";
+const char* WINDOW_NAME = "AutoCollision";
 
 constexpr float FPS = 60.0f;
 constexpr float FRAME_PER_SEC = 1 / FPS;
@@ -14,16 +19,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 HWND g_Window;
 
+//	=========================ウインドウズ取得=========================
 HWND GetWindow()
 {
 	return g_Window;
 }
 
-
+//	=========================メイン処理=========================
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 
-
+	//	ウインドウズ初期設定
 	WNDCLASSEX wcex;
 	{
 		wcex.cbSize = sizeof(WNDCLASSEX);
@@ -44,37 +50,40 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 		RECT rc = { 0, 0, (LONG)SCREEN_WIDTH, (LONG)SCREEN_HEIGHT };
 		AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
-
-		g_Window = CreateWindowEx(0, CLASS_NAME, WINDOW_NAME, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
+	
+		g_Window = CreateWindowEx(0, CLASS_NAME,WINDOW_NAME, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
 			rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance, nullptr);
 	}
 
 	(void)CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);
-
-
+	
 	ShowWindow(g_Window, nCmdShow);
 	UpdateWindow(g_Window);
-
-
-
-
+	
 	DWORD dwExecLastTime;
 	DWORD dwCurrentTime;
 	timeBeginPeriod(1);
 	dwExecLastTime = timeGetTime();
 	dwCurrentTime = 0;
 
-	SceneManager* SceneManager = SceneManager::GetInstance();
+	//	シーン作成
+	SceneManager* sceneManager = SceneManager::GetInstance();
 	MSG msg;
 
-	if (!SceneManager)return 0;
-	SceneManager->Init();
+	//	作成失敗したら処理
+	if (!sceneManager)
+	{
+		assert("Scene Manager Failed");
+		return 0;
+	}
+	//	シーンマネージャー初期化
+	sceneManager->Init();
 
-	SceneManager->SetIsDebugMode(true);
+	//	デバッグモードオン
+	sceneManager->SetIsDebugMode(true);
 
-
-
-	while(1)
+	//	ゲームループ開始
+	while(true)
 	{
         if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
@@ -95,14 +104,17 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 			if((deltaTime) >= FRAME_PER_SEC)
 			{
 				dwExecLastTime = dwCurrentTime;
-				if (!SceneManager)return (int)msg.wParam;
-				SceneManager->Update(deltaTime);
-				SceneManager->Draw();
+				if (!sceneManager)return (int)msg.wParam;
+				//	シーン更新
+				sceneManager->Update(deltaTime);
+				//	シーン描画
+				sceneManager->Draw();
 
 			}
 		}
 	}
-	SceneManager->Uninit();
+	//	シーンUninit
+	sceneManager->Uninit();
 	timeEndPeriod(1);
 
 	UnregisterClass(CLASS_NAME, wcex.hInstance);
@@ -116,10 +128,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM IParam);
 
-
+//	=========================ウインドウズコールバック関数==========================
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
-{	//	����ImGui��UI�ɃN���b�N������A������ImGui�Ɍ���
+{	//	もしImGuiのUIにクリックしたら、処理はImGuiに向く
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))return true;
 
 	switch(uMsg)

@@ -1,38 +1,42 @@
+ï»¿/*===================================================================================
 
+	2Dæ¿ãƒãƒªã‚´ãƒ³_UIç”¨(polygon2D.cpp)
+
+====================================================================================*/
 #include "Manager/shaderManager.h"
 #include "GameObject/2DPolygon/polygon2D.h"
 
-
-Polygon2D::Polygon2D(XMFLOAT2 location, XMFLOAT2 size)
+//	=========================ï¼’Dæ¿ãƒãƒªã‚´ãƒ³=========================
+//	Location	:	XMFLOAT2	ä½ç½®ï¼ˆå·¦ä¸ŠåŸºæº–ï¼‰
+//	Size	:	XMFLOAT2	å¤§ãã•
+Polygon2D::Polygon2D(XMFLOAT2 Location, XMFLOAT2 Size)
 {
-	vertex[0].Position = XMFLOAT3(location.x, location.y + 0.0f, 0.0f);
+	vertex[0].Position = XMFLOAT3(Location.x, Location.y + 0.0f, 0.0f);
 	vertex[0].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[0].Diffuse = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 	vertex[0].TexCoord = XMFLOAT2(0.0f, 0.0f);
 
-	vertex[1].Position = XMFLOAT3(location.x + size.x, location.y + 0.0f, 0.0f);
+	vertex[1].Position = XMFLOAT3(Location.x + Size.x, Location.y + 0.0f, 0.0f);
 	vertex[1].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[1].Diffuse = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
 	vertex[1].TexCoord = XMFLOAT2(1.0f, 0.0f);
 
-	vertex[2].Position = XMFLOAT3(location.x, location.y + size.y, 0.0f);
+	vertex[2].Position = XMFLOAT3(Location.x, Location.y + Size.y, 0.0f);
 	vertex[2].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[2].Diffuse = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
 	vertex[2].TexCoord = XMFLOAT2(0.0f, 1.0f);
 
-	vertex[3].Position = XMFLOAT3(location.x + size.x, location.y + size.y, 0.0f);
+	vertex[3].Position = XMFLOAT3(Location.x + Size.x, Location.y + Size.y, 0.0f);
 	vertex[3].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[3].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[3].TexCoord = XMFLOAT2(1.0f, 1.0f);
 
 	Init();
 }
-
+//	=========================ï¼’Dæ¿ãƒãƒªã‚´ãƒ³åˆæœŸåŒ–=========================
 void Polygon2D::Init()
 {
-	
-
-	//’¸“_ƒoƒbƒtƒ@
+	//é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡
 	D3D11_BUFFER_DESC bd{};
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	bd.ByteWidth = sizeof(VERTEX_3D) * 4;
@@ -44,7 +48,7 @@ void Polygon2D::Init()
 
 	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &m_VertexBuffer);
 
-	//ƒeƒLƒXƒ`ƒƒ[“Ç‚Ýž‚Ý
+	//ãƒ†ã‚­ã‚¹ãƒãƒ£ãƒ¼èª­ã¿è¾¼ã¿
 	TexMetadata metadata;
 	ScratchImage image;
 	HRESULT hr =LoadFromWICFile(L"asset\\texture\\Brick.png", WIC_FLAGS_NONE, &metadata, image);
@@ -53,10 +57,10 @@ void Polygon2D::Init()
 		assert(m_Texture);
 	}
 
-	ShaderManager::LoadShader(SHADER_NAME::UNLIT_TEXTURE);
-
+	ShaderManager::LoadShader(Shader_Type::Unlit_Texture);
 }
 
+//	=========================ï¼’Dæ¿ãƒãƒªã‚´ãƒ³Uninit=========================
 void Polygon2D::Uninit()
 {
 	if(m_VertexBuffer)m_VertexBuffer->Release();
@@ -64,36 +68,38 @@ void Polygon2D::Uninit()
 
 }
 
+//	=========================ï¼’Dæ¿ãƒãƒªã‚´ãƒ³æ›´æ–°=========================
+//	DeltaTime	:	float	ãƒ‡ãƒ«ã‚¿ã‚¿ã‚¤ãƒ 
 void Polygon2D::Update(const float& DeltaTime)
 {
-
 	
 }
 
+//	=========================ï¼’Dæ¿ãƒãƒªã‚´ãƒ³æç”»=========================
 void Polygon2D::Draw()
 {
-	//“ü—ÍƒŒƒCƒAƒEƒgÝ’è
+	//å…¥åŠ›ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆè¨­å®š
 	Renderer::GetDeviceContext()->IASetInputLayout(m_Shader->m_VertexLayout);
 
-	//ƒVƒF[ƒ_[Ý’è
+	//ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼è¨­å®š
 	Renderer::GetDeviceContext()->VSSetShader(m_Shader->m_VertexShader, NULL, 0);
 	Renderer::GetDeviceContext()->PSSetShader(m_Shader->m_PixelShader, NULL, 0);
 
-	//ƒ}ƒgƒŠƒNƒXÝ’è		//2D—p‚Ìƒ}ƒgƒŠƒNƒX‚ÉÝ’è
+	//ãƒžãƒˆãƒªã‚¯ã‚¹è¨­å®š		//2Dç”¨ã®ãƒžãƒˆãƒªã‚¯ã‚¹ã«è¨­å®š
 	Renderer::SetWorldViewProjection2D();
 
-	//’¸“_ƒoƒbƒtƒ@Ý’è
+	//é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;
 	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
 	
-	//ƒeƒLƒXƒ`ƒƒ[Ý’è
+	//ãƒ†ã‚­ã‚¹ãƒãƒ£ãƒ¼è¨­å®š
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &m_Texture);
 
-	//ƒvƒŠƒ~ƒeƒBƒuƒgƒ|ƒƒWÝ’è
+	//ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ãƒˆãƒãƒ­ã‚¸è¨­å®š
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	//ƒ|ƒŠƒRƒ“•`‰æ
+	//ãƒãƒªã‚³ãƒ³æç”»
 	Renderer::GetDeviceContext()->Draw(4, 0);
 
 }

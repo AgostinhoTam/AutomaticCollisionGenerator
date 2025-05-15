@@ -1,12 +1,19 @@
+Ôªø/*===================================================================================
+
+„Ç≥„É™„Ç∏„Éß„É≥Âü∫Â∫ï„ÇØ„É©„Çπ(collision.h)
+
+====================================================================================*/
 #pragma once
-#include "Main\main.h"
-#include "System\Structure\shaderStructure.h"
+#include "Main/main.h"
+#include "System/Structure/shaderStructure.h"
+
 struct LINE_VERTEX
 {
 	XMFLOAT3 Position;
 	XMFLOAT4 Color;
 };
 class GameObject;
+class CharacterBoneCollision;
 
 class Collision
 {
@@ -21,18 +28,20 @@ protected:
 	bool m_IsEnable = true;
 	bool m_IsHit = false;
 	bool m_IsSelected = false;
+	
 public:
-	Collision(const XMFLOAT3& Position, const XMFLOAT3& Offset);	// à¯êîÅiOwnerÉ|ÉCÉìÉ^ÅAOffsetílÅj
+	Collision(const XMFLOAT3& Position, const XMFLOAT3& Offset);	// ÂºïÊï∞ÔºàOwner„Éù„Ç§„É≥„Çø„ÄÅOffsetÂÄ§Ôºâ
 	virtual ~Collision() {}
 	virtual bool IsCollisionOverlapping(const Collision* Collision) = 0;
+	virtual bool IsOverlappingToCapsule(const CharacterBoneCollision* Collision)=0;
 	virtual void UpdateCollision(const XMFLOAT3& Position) {}
 	virtual void Init() {}
 	virtual void Draw() {}
 	virtual void Uninit() {}
-	const XMFLOAT3& GetOffset() { return m_Offset; }
-	const XMFLOAT3& GetScale() { return m_Scale; }
-	const XMFLOAT3& GetRotation() { return m_Rotation; }
-	const XMFLOAT3& GetPosition() { return m_Position; }
+ 	const XMFLOAT3& GetOffset() { return m_Offset; }
+ 	const XMFLOAT3& GetScale() { return m_Scale; }
+ 	const XMFLOAT3& GetRotation() { return m_Rotation; }
+ 	const XMFLOAT3& GetPosition() { return m_Position; }
 	bool GetEnable() const { return m_IsEnable; }
 	bool GetIsHit()const { return m_IsHit; }
 	bool GetIsSelected()const { return m_IsSelected; }
