@@ -230,9 +230,6 @@
     <ClInclude Include="System\Enum\shaderEnum.h">
       <Filter>System\Enum</Filter>
     </ClInclude>
-    <ClInclude Include="System\Enum\projectionTypeEnum.h">
-      <Filter>System\Enum</Filter>
-    </ClInclude>
     <ClInclude Include="System\Collision\capsuleCollision.h">
       <Filter>System\Collision</Filter>
     </ClInclude>
@@ -248,6 +245,7 @@
     <ClInclude Include="GameObject\Character\character.h">
       <Filter>GameObject\Character</Filter>
     </ClInclude>
+    <ClInclude Include="System\Enum\collisionTypeEnum.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Main">
