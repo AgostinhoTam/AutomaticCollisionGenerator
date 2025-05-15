@@ -11,9 +11,9 @@ Character基底クラス(character.cpp)
 #include <sstream>
 #include "character.h"
 //	=========================物理パラメータ=========================
-constexpr float FRICTION = 0.8f;	//	摩擦力
+constexpr float FRICTION = 0.8f;			//	摩擦力
 constexpr float MAX_DROP_SPEED = -50.0f;	//	落ちるスピード上限
-constexpr float GRAVITY = -9.8f;	//	重力
+constexpr float GRAVITY = -9.8f;			//	重力
 //	==============================================================
 
 //	=========================キャラクター共通部分更新=========================
@@ -323,12 +323,19 @@ void Character::CreateSingleBoneCollision(const std::string& Head, const std::st
 //	=========================ボーンコリジョンマップ取り出す=========================
 std::vector<std::string> Character::GetBoneMap()
 {
+	// モデルが持つ「ボーン名→インデックス」のマップを取得
+	const auto& boneIndexMap = m_AnimationModel->GetBoneIndexMap();
+
 	std::vector<std::string> boneMap;
-	for (const auto& pair : m_Collisions)
+	boneMap.reserve(boneIndexMap.size());
+
+	// キー（ボーン名）を全部集める
+	for (const auto& [boneName, index] : boneIndexMap)
 	{
-		if (!pair.second)continue;
-		boneMap.emplace_back(pair.first);
+		boneMap.emplace_back(boneName);
 	}
+
 	return boneMap;
 }
+
 
