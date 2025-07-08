@@ -4,6 +4,7 @@
 
 ====================================================================================*/
 #include <vector>
+#include <string>
 #include "Manager/shaderManager.h"
 #include "System/Renderer/renderer.h"
 #include "System/Collision/characterBoneCollision.h"
@@ -16,13 +17,14 @@ constexpr XMFLOAT4 DEBUG_HITTED_LINE_COLOR = XMFLOAT4(1.0f, 0.1f, 0.1f, 1.0f);
 constexpr XMFLOAT4 DEBUG_SELECTED_LINE_COLOR = XMFLOAT4(0.5f, 0.5f, 0.1f, 1.0f);
 
 //	==========コリジョン設置=============
+//	CollisionName : std::string	コリジョンの名前
 //	HeadBoneIndex : int		始点インデックス
 //	TailBoneIndex : int		終点インデックス
 //	Start	: XMFLOAT3		始点座標
 //	End		: XMFLOAT3			終点座標
 //	Offset	: XMFLOAT3		オフセット値
 //	Radius	: float			カプセル半径
-CharacterBoneCollision::CharacterBoneCollision(const int HeadBoneIndex, const int TailBoneIndex, const XMFLOAT3& Start, const XMFLOAT3& End, const XMFLOAT3& Offset, float Radius) :Collision(Start, Offset), m_Radius(Radius),m_StartPosition(Start),m_EndPosition(End),m_HeadBoneIndex(HeadBoneIndex),m_TailBoneIndex(TailBoneIndex)
+CharacterBoneCollision::CharacterBoneCollision(const std::string& CollisionName,const int HeadBoneIndex, const int TailBoneIndex, const XMFLOAT3& Start, const XMFLOAT3& End, const XMFLOAT3& Offset, float Radius) :Collision(CollisionName,Start, Offset), m_Radius(Radius),m_StartPosition(Start),m_EndPosition(End),m_HeadBoneIndex(HeadBoneIndex),m_TailBoneIndex(TailBoneIndex)
 {
 	Init();
 }

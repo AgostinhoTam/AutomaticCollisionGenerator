@@ -17,11 +17,12 @@ private:
 	std::vector<LINE_VERTEX> m_CylinderLineVertices;
 	std::vector<LINE_VERTEX> m_StartSphereVertices;
 	std::vector<LINE_VERTEX> m_EndSphereVertices;
+
 	ID3D11Buffer* m_CylinderBuffer;
 	ID3D11Buffer* m_StartSphereBuffer;
 	ID3D11Buffer* m_EndSphereBuffer;
 public:
-	CharacterBoneCollision(const int HeadBoneIndex, const int TailBoneIndex,const XMFLOAT3& Start,const XMFLOAT3& End, const XMFLOAT3& Offset, float Radius);
+	CharacterBoneCollision(const std::string& CollisionName,const int HeadBoneIndex, const int TailBoneIndex,const XMFLOAT3& Start,const XMFLOAT3& End, const XMFLOAT3& Offset, float Radius);
 	virtual bool IsCollisionOverlapping(const Collision* Collision) override;
 	virtual bool IsOverlappingToCapsule(const CharacterBoneCollision* Collision) override;
 	float CheckDistanceSegmentToSegment(const XMVECTOR& Start1, const XMVECTOR& End1, const XMVECTOR& Start2, const XMVECTOR& End2);

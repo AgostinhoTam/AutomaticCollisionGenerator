@@ -7,7 +7,7 @@
 #include <stdio.h>
 
 
-#include "Main/main.h"
+#include "main.h"
 #include "System/Renderer/animationModel.h"
 #include "Manager/animationRendererManager.h"
 

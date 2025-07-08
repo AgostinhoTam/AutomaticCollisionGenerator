@@ -10,7 +10,7 @@
 
 constexpr int DEBUG_LINE_SEGMENTS = 32;	//デバッグ用の線の分割数
 
-CapsuleCollision::CapsuleCollision(const XMFLOAT3& StartPosition, const XMFLOAT3& Offset, float Radius) :Collision(StartPosition, Offset)
+CapsuleCollision::CapsuleCollision(const std::string& CollisionName,const XMFLOAT3& StartPosition, const XMFLOAT3& Offset, float Radius) :Collision(CollisionName,StartPosition, Offset)
 {
 	Init();
 }

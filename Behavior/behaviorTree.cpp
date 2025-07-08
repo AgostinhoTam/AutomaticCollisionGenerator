@@ -6,7 +6,7 @@
 #include"Manager/sceneManager.h"
 #include "Manager/gameObjectManager.h"
 #include "Scene/scene.h"
-#include "Main/main.h"
+#include "main.h"
 #include "GameObject/Character/Player/playerh.h"
 #include "GameObject/Character/Enemy/enemy.h"
 #include "behaviorTree.h"

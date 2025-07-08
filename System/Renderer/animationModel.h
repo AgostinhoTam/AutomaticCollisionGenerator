@@ -58,7 +58,7 @@ private:
 	std::vector<BONE> m_Bones;
 	std::unordered_map<std::string, int> m_BoneIndexMap;	//ボーンデータ
 
-	std::vector<DEFORM_VERTEX>* m_DeformVertex{};//変形後頂点データ	todo
+	std::vector<DEFORM_VERTEX>* m_DeformVertex{};//変形後頂点データ	
 	int m_CurrentFrame = 0;
 	int m_NextFrame = 0;
 	float m_BlendRatio = 0.0f;

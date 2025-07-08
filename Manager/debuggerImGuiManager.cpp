@@ -3,9 +3,8 @@
 デバッグImGuiマネージャー(debuggerImGuiManager.cpp)
 
 ====================================================================================*/
+#include "main.h"
 #include <filesystem>
-#include "Manager/debuggerImGuiManager.h"
-#include "Main/main.h"
 #include "System/Renderer/renderer.h"
 #include "System/Collision/collision.h"
 #include "System/Renderer/animationModel.h"
@@ -15,6 +14,7 @@
 #include "Manager/gameObjectManager.h"
 #include "GameObject/gameobject.h"
 #include "GameObject/Character/character.h"
+#include "Manager/debuggerImGuiManager.h"
 
 GameObject* DebuggerImGuiManager::m_TargetObject;
 std::vector<GameObject*> DebuggerImGuiManager::m_GameObjectList;
@@ -136,6 +136,7 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 					{
 						if (!pair.second)continue;
 						collisionKeys.emplace_back(pair.first);
+						collisionKeys.emplace_back(pair.second->GetCollisionName());
 					}
 					//	const char*配列作成　Imgui display
 					for (const auto& key : collisionKeys)
@@ -239,6 +240,7 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 				//==================作成可能ボーンリスト===================
 				{
 					ImGui::Text("Create Bone Collision");
+					static char partName[128] = "";
 					static int head_bone = 0;
 					static int tail_bone = 1;
 
@@ -249,6 +251,7 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 					}
 					if (!allBoneKeyPointers.empty())
 					{
+						ImGui::InputText("Collision Name", partName,IM_ARRAYSIZE(partName));
 						ImGui::Combo("HeadBone", &head_bone, allBoneKeyPointers.data(),  static_cast<int>(allBoneKeyPointers.size()), 4);
 						ImGui::Combo("TailBone", &tail_bone, allBoneKeyPointers.data(),  static_cast<int>(allBoneKeyPointers.size()), 4);
 					}
@@ -258,7 +261,7 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 					ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(1 / 7.0f, 0.8f, 0.8f));
 					if (ImGui::Button("Create New Bone Collision"))
 					{
-						characterObject->CreateSingleBoneCollision(allBoneKeys[head_bone], allBoneKeys[tail_bone], XMFLOAT3(0, 0, 0));
+						characterObject->CreateSingleBoneCollision(partName,allBoneKeys[head_bone], allBoneKeys[tail_bone], XMFLOAT3(0, 0, 0));
 					}
 					ImGui::PopStyleColor(3);
 				}
