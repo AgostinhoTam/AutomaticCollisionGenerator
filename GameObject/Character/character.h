@@ -47,7 +47,7 @@ public:
 	AnimationModel* GetAnimationModel() const{ return m_AnimationModel; }
 	void CreateCharacterBoneCollision(const Character_Bone_Type& BoneType);
 	void CreateCharacterBoneCollision(const std::string& FilePath);
-	void CreateSingleBoneCollision(const std::string& Head,const std::string& Tail,const XMFLOAT3& Offset={0.0f,0.0f,0.0f}, const float Radius = 0.0f);
+	void CreateSingleBoneCollision(const std::string& PartName,const std::string& Head,const std::string& Tail,const XMFLOAT3& Offset={0.0f,0.0f,0.0f}, const float Radius = 0.0f);
 	std::unordered_map<std::string, Collision*>& GetCollisionList() { return m_Collisions; }
 	Collision* GetSelectedCollision(const std::string& KeyName) { return m_Collisions[KeyName]; }
 	std::vector<std::string> GetBoneMap();

@@ -78,9 +78,6 @@
     <ClCompile Include="Manager\debuggerImGuiManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Main\main.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\Character\Player\player.cpp">
       <Filter>GameObject\Character\Player</Filter>
     </ClCompile>
@@ -117,6 +114,9 @@
     <ClCompile Include="Behavior\behaviorTree.cpp">
       <Filter>BehaviorTree</Filter>
     </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject\Field\field.h">
@@ -133,9 +133,6 @@
     </ClInclude>
     <ClInclude Include="Manager\sceneManager.h">
       <Filter>Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="Main\main.h">
-      <Filter>Main</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\Camera\camera.h">
       <Filter>GameObject\Camera</Filter>
@@ -246,6 +243,9 @@
       <Filter>GameObject\Character</Filter>
     </ClInclude>
     <ClInclude Include="System\Enum\collisionTypeEnum.h" />
+    <ClInclude Include="main.h">
+      <Filter>Main</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Main">

@@ -4,7 +4,7 @@
 
 ====================================================================================*/
 #include <numeric> 
-#include "Main/main.h"
+#include "main.h"
 #include "Manager/inputManager.h"
 #include "GameObject/gameobject.h"
 #include "assimp/Importer.hpp"

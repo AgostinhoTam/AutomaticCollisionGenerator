@@ -3,11 +3,10 @@
 メイン関数(main.cpp)
 
 ====================================================================================*/
-#include "Main/main.h"
-
+#include "main.h"
 #include <thread>
 #include "Manager/sceneManager.h"
-#include "Manager\debuggerImGuiManager.h"
+#include "Manager/debuggerImGuiManager.h"
 const char* CLASS_NAME = "AppClass";
 const char* WINDOW_NAME = "AutoCollision";
 

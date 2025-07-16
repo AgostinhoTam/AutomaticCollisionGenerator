@@ -3,7 +3,7 @@
 インプットマネージャー(inputManager.cpp)
 
 ====================================================================================*/
-#include "Main/main.h"
+#include "main.h"
 #include "Manager/inputManager.h"
 
 BYTE InputManager::m_OldKeyState[256];

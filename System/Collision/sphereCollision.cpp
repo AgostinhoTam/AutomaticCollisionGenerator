@@ -16,7 +16,7 @@ constexpr int DEBUG_LINE_SEGMENTS = 32;	//デバッグ用の線の分割数
 //	Position	:	XMFLOAT3	位置
 //	Offset		:	XMFLOAT3	オフセット値
 //	Radius		:	float		球体半径
-SphereCollision::SphereCollision(const XMFLOAT3& Position, const XMFLOAT3& Offset, float Radius) :Collision(Position, Offset), m_Radius(Radius) // 引数（Ownerポインタ、Offset値、半径）
+SphereCollision::SphereCollision(const std::string& CollisionName,const XMFLOAT3& Position, const XMFLOAT3& Offset, float Radius) :Collision(CollisionName,Position, Offset), m_Radius(Radius)
 {
 	Init();
 }

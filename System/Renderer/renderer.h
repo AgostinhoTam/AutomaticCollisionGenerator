@@ -4,7 +4,7 @@ DirectXレンダラー(renderer.h)
 
 ====================================================================================*/
 #pragma once
-#include "Main/main.h"
+#include "main.h"
 
 struct VERTEX_3D
 {

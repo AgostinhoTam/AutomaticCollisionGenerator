@@ -3,7 +3,7 @@
 フィールド(field.cpp)
 
 ====================================================================================*/
-#include "Main/main.h"
+#include "main.h"
 #include "System\Renderer/renderer.h"
 #include "Manager/shaderManager.h"
 #include "System\Enum/shaderEnum.h"

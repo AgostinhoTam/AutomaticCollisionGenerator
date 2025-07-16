@@ -3,7 +3,7 @@
 カメラ制御(camera.cpp)
 
 ====================================================================================*/
-#include "Main/main.h"
+#include "main.h"
 #include "Manager/sceneManager.h"
 #include "Manager/gameObjectManager.h"
 #include "Manager/inputManager.h"

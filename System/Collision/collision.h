@@ -4,7 +4,8 @@
 
 ====================================================================================*/
 #pragma once
-#include "Main/main.h"
+#include <string>
+#include "main.h"
 #include "System/Structure/shaderStructure.h"
 
 struct LINE_VERTEX
@@ -28,9 +29,9 @@ protected:
 	bool m_IsEnable = true;
 	bool m_IsHit = false;
 	bool m_IsSelected = false;
-	
+	std::string m_CollisionName="";
 public:
-	Collision(const XMFLOAT3& Position, const XMFLOAT3& Offset);	// 引数（Ownerポインタ、Offset値）
+	Collision(const std::string& CollisionName,const XMFLOAT3& Position, const XMFLOAT3& Offset);	// 引数（コリジョンの名前, Ownerポインタ、Offset値）
 	virtual ~Collision() {}
 	virtual bool IsCollisionOverlapping(const Collision* Collision) = 0;
 	virtual bool IsOverlappingToCapsule(const CharacterBoneCollision* Collision)=0;
@@ -42,6 +43,7 @@ public:
  	const XMFLOAT3& GetScale() { return m_Scale; }
  	const XMFLOAT3& GetRotation() { return m_Rotation; }
  	const XMFLOAT3& GetPosition() { return m_Position; }
+	const std::string& GetCollisionName() { return m_CollisionName; }
 	bool GetEnable() const { return m_IsEnable; }
 	bool GetIsHit()const { return m_IsHit; }
 	bool GetIsSelected()const { return m_IsSelected; }

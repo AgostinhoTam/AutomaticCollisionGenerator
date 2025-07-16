@@ -3,7 +3,7 @@
 DirectXレンダラー(renderer.cpp)
 
 ====================================================================================*/
-#include "Main/main.h"
+#include "main.h"
 #include "System/Renderer/renderer.h"
 #include <io.h>
 

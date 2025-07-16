@@ -3,7 +3,7 @@
 Character基底クラス(character.cpp)
 
 ====================================================================================*/
-#include "Main\main.h"
+#include "main.h"
 #include "System\Renderer\animationModel.h"
 #include "System\Collision\sphereCollision.h"
 #include "System\Collision\characterBoneCollision.h"
@@ -216,7 +216,7 @@ void Character::CreateCharacterBoneCollision(const Character_Bone_Type& BoneType
 		//	取り出した名前でコリジョン作成
 		if (headit != BoneIndexMap.end() && tailit != BoneIndexMap.end())
 		{
-			CreateSingleBoneCollision(headit->first, tailit->first);
+			CreateSingleBoneCollision(partName,headit->first, tailit->first);
 		}
 		else
 		{
@@ -276,7 +276,7 @@ void Character::CreateCharacterBoneCollision(const std::string& FilePath)
 		std::getline(ss, tailBone, ',');	//	,で分割しているデータを分ける
 
 		//	取り出した名前でコリジョン作成
-		CreateSingleBoneCollision(headBone, tailBone);
+		CreateSingleBoneCollision(partName,headBone, tailBone);
 	}
 }
 
@@ -285,8 +285,11 @@ void Character::CreateCharacterBoneCollision(const std::string& FilePath)
 //	Tail	:	std::string	終点のボーンの名前
 //	Offset	:	XMFLOAT3	オフセット値	（デフォルトは0）
 //	Radius	:	float		カプセルの半径	（デフォルトは0）
-void Character::CreateSingleBoneCollision(const std::string& Head, const std::string& Tail, const XMFLOAT3& Offset, const float Radius)
+void Character::CreateSingleBoneCollision(const std::string& PartName,const std::string& Head, const std::string& Tail, const XMFLOAT3& Offset, const float Radius)
 {
+	//	ボーンの名前が空なら何もしない
+	if (PartName == "")return;
+
 	//	ボーンのインデックス取得
 	const std::unordered_map<std::string, int>& boneIndexMap = m_AnimationModel->GetBoneIndexMap();
 
@@ -300,9 +303,11 @@ void Character::CreateSingleBoneCollision(const std::string& Head, const std::st
 	//	モデルにボーンそのボーンがあるなら
 	if (headit != boneIndexMap.end() && tailit != boneIndexMap.end())
 	{
+		
 		//	カプセルの名前をボーンの始点と終点にする
-		std::string keyName = Head + " -> " + Tail;
-
+		//std::string keyName = Head + " -> " + Tail;
+		std::string keyName = PartName;
+		
 		//	半径が０の時、もしくは何も入力されていない時に、自動でカプセルの半径を計算する
 		if (Radius == 0)	//　メッシュ計算する時
 		{
@@ -311,11 +316,11 @@ void Character::CreateSingleBoneCollision(const std::string& Head, const std::st
 			//	スケール適用（モデルは1:1:1で拡大縮小処理するので1つの要素だけ取り出して計算）
 			radius *= m_Scale.x;
 			//	コリジョンリストに入れる
-			m_Collisions.emplace(keyName, new CharacterBoneCollision(headit->second, tailit->second, bones[headit->second].HeadPosition, bones[tailit->second].HeadPosition, Offset, radius));
+			m_Collisions.emplace(keyName, new CharacterBoneCollision(PartName,headit->second, tailit->second, bones[headit->second].HeadPosition, bones[tailit->second].HeadPosition, Offset, radius));
 		}
 		else //　指定の半径を入れる
 		{
-			m_Collisions.emplace(keyName, new CharacterBoneCollision(headit->second, tailit->second, bones[headit->second].HeadPosition, bones[tailit->second].HeadPosition, Offset, Radius));
+			m_Collisions.emplace(keyName, new CharacterBoneCollision(PartName,headit->second, tailit->second, bones[headit->second].HeadPosition, bones[tailit->second].HeadPosition, Offset, Radius));
 		}
 	}
 }

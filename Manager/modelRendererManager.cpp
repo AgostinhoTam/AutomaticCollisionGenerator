@@ -8,7 +8,7 @@ Obj形式モデルマネージャー(modelRendererManager.cpp)
 #include <shlwapi.h>
 #pragma comment(lib, "shlwapi.lib")
 #include "GameObject\gameobject.h"
-#include "Main/main.h"
+#include "main.h"
 #include "Manager/modelRendererManager.h"
 
 //	モデルプール

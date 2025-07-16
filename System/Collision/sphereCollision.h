@@ -11,7 +11,7 @@ private:
 	float m_Radius{};
 	std::vector<XMFLOAT3> m_SphereLineVertices;
 public:
-	SphereCollision(const XMFLOAT3& Position, const XMFLOAT3& Offset, float Radius);
+	SphereCollision(const std::string& CollisionName, const XMFLOAT3& Position, const XMFLOAT3& Offset, float Radius);
 	virtual bool IsCollisionOverlapping(const Collision* Collision) override;
 	bool CheckSphereToSphere(const SphereCollision* Collision);
 	float GetRadius()const { return m_Radius; }
