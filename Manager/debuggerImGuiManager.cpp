@@ -136,7 +136,6 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 					{
 						if (!pair.second)continue;
 						collisionKeys.emplace_back(pair.first);
-						collisionKeys.emplace_back(pair.second->GetCollisionName());
 					}
 					//	const char*配列作成　Imgui display
 					for (const auto& key : collisionKeys)

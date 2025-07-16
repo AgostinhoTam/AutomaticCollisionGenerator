@@ -287,6 +287,9 @@ void Character::CreateCharacterBoneCollision(const std::string& FilePath)
 //	Radius	:	float		カプセルの半径	（デフォルトは0）
 void Character::CreateSingleBoneCollision(const std::string& PartName,const std::string& Head, const std::string& Tail, const XMFLOAT3& Offset, const float Radius)
 {
+	//	ボーンの名前が空なら何もしない
+	if (PartName == "")return;
+
 	//	ボーンのインデックス取得
 	const std::unordered_map<std::string, int>& boneIndexMap = m_AnimationModel->GetBoneIndexMap();
 
@@ -302,8 +305,9 @@ void Character::CreateSingleBoneCollision(const std::string& PartName,const std:
 	{
 		
 		//	カプセルの名前をボーンの始点と終点にする
-		std::string keyName = Head + " -> " + Tail;
-
+		//std::string keyName = Head + " -> " + Tail;
+		std::string keyName = PartName;
+		
 		//	半径が０の時、もしくは何も入力されていない時に、自動でカプセルの半径を計算する
 		if (Radius == 0)	//　メッシュ計算する時
 		{
