@@ -13,7 +13,7 @@
 #include "System/Renderer/animationModel.h"
 #include "StateMachine/PlayerState/playerStateIdle.h"
 #include "StateMachine/PlayerState/playerStateWalk.h"
-#include "GameObject/Character/Player/playerh.h"
+#include "GameObject/Character/Player/player.h"
 #include "GameObject/Camera/camera.h"
 #include "GameObject/Character/Enemy/enemy.h"
 #include "System/Collision/characterBoneCollision.h"

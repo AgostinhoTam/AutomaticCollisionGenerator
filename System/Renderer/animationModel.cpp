@@ -3,13 +3,17 @@
 アニメーションモデル読み込み(animationModel.cpp)
 
 ====================================================================================*/
-#include <numeric> 
-#include "main.h"
+#include "System/Renderer/animationModel.h"
+#pragma comment (lib, "assimp-vc143-mt.lib")
+#include <numeric>
 #include "Manager/inputManager.h"
 #include "GameObject/gameobject.h"
-#include "assimp/Importer.hpp"
 #include "System/Renderer/renderer.h"
-#include "System/Renderer/animationModel.h"
+#include <Assimp/Importer.hpp>
+#include <Assimp/cimport.h>
+#include <Assimp/scene.h>
+#include <Assimp/postprocess.h>
+
 
 constexpr float RADIUS_ADJUSTMENT = 0.7f;
 

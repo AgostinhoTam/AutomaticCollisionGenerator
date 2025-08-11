@@ -9,7 +9,7 @@
 #include "Manager/inputManager.h"
 #include "Scene/scene.h"
 #include "System/Renderer/renderer.h"
-#include "GameObject/Character/Player/playerh.h"
+#include "GameObject/Character/Player/player.h"
 #include "GameObject/Camera/camera.h"
 /*===================================================================================
 定数

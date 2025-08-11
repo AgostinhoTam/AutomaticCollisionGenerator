@@ -5,7 +5,6 @@ Character基底クラス(character.cpp)
 ====================================================================================*/
 #include "main.h"
 #include "System\Renderer\animationModel.h"
-#include "System\Collision\sphereCollision.h"
 #include "System\Collision\characterBoneCollision.h"
 #include <fstream>
 #include <sstream>

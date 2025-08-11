@@ -207,7 +207,12 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Behavior\behaviorTree.cpp" />
+    <ClCompile Include="Behavior\behaviorAttack.cpp" />
+    <ClCompile Include="Behavior\behaviorCoolDown.cpp" />
+    <ClCompile Include="Behavior\behaviorIdle.cpp" />
+    <ClCompile Include="Behavior\behaviorMove.cpp" />
+    <ClCompile Include="Behavior\behaviorNode.cpp" />
+    <ClCompile Include="Behavior\behaviorStandByAttack.cpp" />
     <ClCompile Include="GameObject\2DPolygon\polygon2D.cpp" />
     <ClCompile Include="GameObject\Camera\camera.cpp" />
     <ClCompile Include="GameObject\Character\character.cpp" />
@@ -240,12 +245,17 @@
     <ClCompile Include="System\Renderer\renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Behavior\behaviorTree.h" />
+    <ClInclude Include="Behavior\behaviorAttack.h" />
+    <ClInclude Include="Behavior\behaviorCoolDown.h" />
+    <ClInclude Include="Behavior\behaviorIdle.h" />
+    <ClInclude Include="Behavior\behaviorMove.h" />
+    <ClInclude Include="Behavior\behaviorNode.h" />
+    <ClInclude Include="Behavior\behaviorStandByAttack.h" />
     <ClInclude Include="GameObject\2DPolygon\polygon2D.h" />
     <ClInclude Include="GameObject\Camera\camera.h" />
     <ClInclude Include="GameObject\Character\character.h" />
     <ClInclude Include="GameObject\Character\Enemy\enemy.h" />
-    <ClInclude Include="GameObject\Character\Player\playerh.h" />
+    <ClInclude Include="GameObject\Character\Player\player.h" />
     <ClInclude Include="GameObject\Field\field.h" />
     <ClInclude Include="GameObject\gameobject.h" />
     <ClInclude Include="ImGui\imconfig.h" />

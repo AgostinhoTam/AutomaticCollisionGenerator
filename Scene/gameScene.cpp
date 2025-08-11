@@ -4,12 +4,12 @@
 
 ====================================================================================*/
 #include "Manager/gameObjectManager.h"
-#include "GameObject/Character/Player/playerh.h"
+#include "GameObject/Character/Player/player.h"
 #include "GameObject/Field/field.h"
 #include "GameObject/Camera/camera.h"
-#include "GameObject\Character\Enemy\enemy.h"
-#include "System\Enum\enemyTypeEnum.h"
-#include "System\Enum/gameObjectEnum.h"
+#include "GameObject/Character/Enemy/enemy.h"
+#include "System/Enum/enemyTypeEnum.h"
+#include "System/Enum/gameObjectEnum.h"
 #include "gameScene.h"
 
 //	===================ゲームシーン初期化======================

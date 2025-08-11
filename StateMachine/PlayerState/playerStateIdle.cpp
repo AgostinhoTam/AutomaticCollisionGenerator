@@ -3,7 +3,7 @@
 プレイヤーIdle状態処理(playerStateIdle.cpp)
 
 ====================================================================================*/
-#include "GameObject/Character/Player/playerh.h"
+#include "GameObject/Character/Player/player.h"
 #include "Manager/inputManager.h"
 #include "System/Renderer/animationModel.h"
 #include "System/Enum/playerStateEnum.h"

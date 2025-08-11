@@ -4,14 +4,13 @@
 
 ====================================================================================*/
 #pragma once
+#include "main.h"
+#include "Assimp/scene.h"
 
-#include <unordered_map>
-#include "assimp/cimport.h"
-#include "assimp/scene.h"
-#include "assimp/postprocess.h"
-#include "assimp/matrix4x4.h"
-#include "assimp/Importer.hpp"
-#pragma comment (lib, "assimp-vc143-mt.lib")
+namespace Assimp
+{
+	class Importer;
+}
 
 constexpr int MAX_BONES = 256;
 //変形後頂点構造体
