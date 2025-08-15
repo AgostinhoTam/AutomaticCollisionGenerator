@@ -19,7 +19,7 @@ public:
 	virtual void Draw()override;
 	void CollisionCheck();
 	float GetSenseDistance()const{return m_SenseDistance;}
-	float GetAttackDistance()const{return m_SenseDistance;}
+	float GetAttackDistance()const{return m_AttackDistance;}
 	float GetAttackCoolDownTime()const{return m_AttackCoolDownTime;}
 	float GetChaseDistance()const{return m_ChaseDistance;}
 private:

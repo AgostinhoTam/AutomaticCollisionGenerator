@@ -23,7 +23,7 @@ BehaviorAttack::BehaviorAttack(Enemy* Enemy, const std::string& Type, const floa
     m_AttackDistance(AttackDistance)
 {
     m_AnimationName = Type;
-    m_BehaviorCoolDown = new BehaviorCoolDown(m_Enemy); // CoolDown螳溯｣・
+    m_BehaviorCoolDown = new BehaviorCoolDown(m_Enemy); // CoolDown
 }
 
 BehaviorAttack::~BehaviorAttack()

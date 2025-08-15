@@ -26,7 +26,7 @@ namespace EnemyTypeHuman
     constexpr float MAX_JUMP_SPEED = 100.0f;
     constexpr float SCALE = 0.01f;
     constexpr float SENSE_DISTANCE = 10.0f;
-    constexpr float ATTACK_DISTANCE = 10.0f;
+    constexpr float ATTACK_DISTANCE = 2.0f;
     constexpr float ATTACK_COOLDOWN = 2.0f;
     constexpr float CHASE_DISTANCE = 25.0f;
 }
@@ -38,7 +38,7 @@ namespace EnemyTypeMonster
     constexpr float MAX_JUMP_SPEED = 100.0f;
     constexpr float SCALE = 0.01f;
     constexpr float SENSE_DISTANCE = 10.0f;
-    constexpr float ATTACK_DISTANCE = 10.0f;
+    constexpr float ATTACK_DISTANCE = 2.0f;
     constexpr float ATTACK_COOLDOWN = 2.0f;
     constexpr float CHASE_DISTANCE = 25.0f;
     
