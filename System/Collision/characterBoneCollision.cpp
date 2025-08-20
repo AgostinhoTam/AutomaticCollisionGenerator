@@ -395,7 +395,7 @@ void CharacterBoneCollision::MakeCapsuleMatrix(const XMFLOAT3& StartPos, const X
 
 	XMMATRIX rot = XMMatrixIdentity();
 	// 軸が完全に平行/逆向き でなければ回転
-	if (fabsf(sinTheta) > 1e-4f)
+	if (fabsf(sinTheta) > FLT_MIN)
 	{
 		cross = XMVector3Normalize(cross);
 		rot = XMMatrixRotationAxis(cross, angle);
