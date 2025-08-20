@@ -105,4 +105,5 @@ public:
 	void UpdateBoneMatrixToGPU();
 	void CreateBone(aiNode* node);
 	void UpdateBoneMatrix(aiNode* node, aiMatrix4x4 matrix);
+	float CalculateMAD(std::vector<float>& radiusList);
 };
