@@ -761,7 +761,7 @@ const float AnimationModel::CalculateCapsuleRadius(const std::string& HeadName, 
 
     if (radiusList.empty()) return 0.0f;
     // 中央絶対誤差を半径として使用
-    return CalculateMAD(radiusList);
+    return CalculateMAD(radiusList)*0.7f;
 }
 
 //	===================頂点からカプセルの線分までの最短距離======================
