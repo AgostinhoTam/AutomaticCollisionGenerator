@@ -56,7 +56,7 @@ void DebuggerImGuiManager::Render(std::vector<GameObject*>(&ObjectList)[static_c
 	}
 	value[179] = ImGui::GetIO().DeltaTime * 1000.0f;
 	ImGui::PlotLines("FPS Average", value, sizeof(value) / sizeof(float), 0, NULL, 0,100.0f, ImVec2(0, 50));
-	ImGui::Text("Press K to Editing Mode");
+	ImGui::Text("Press K to Enter/Exit Editing Mode");
 	ImGui::Text("Press J to Highlight Collision");
 	ImGui::End();
 

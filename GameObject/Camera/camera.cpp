@@ -33,6 +33,7 @@ void Camera::Init()
 			m_Player = gameObjectManager->GetGameObject<Player>(GameObject_Type::Player);
 		}
 	}
+	InputManager::SetIsInputEnable(true);
 	m_Sensitivity = CAMERA_SENSITIVE;
 	m_Len = CAMERA_LEN;
 }

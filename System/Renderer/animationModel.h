@@ -64,7 +64,6 @@ private:
 	std::string m_CurrentAnimation = "Idle";
 	std::string m_NextAnimation = "Idle";
 	bool m_IsTransitioning = false;
-	bool m_IsDebugMode = false;
 	GameObject* m_Owner{};
 public:
 	void Load( const char *FileName,GameObject* Owner);

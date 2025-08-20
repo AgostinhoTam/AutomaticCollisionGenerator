@@ -14,6 +14,8 @@
 #include <Assimp/scene.h>
 #include <Assimp/postprocess.h>
 
+#include "Manager/sceneManager.h"
+
 
 constexpr float RADIUS_ADJUSTMENT = 0.7f;
 
@@ -27,7 +29,7 @@ void AnimationModel::Update()
 
     if (InputManager::GetKeyTrigger('J'))
     {
-        m_IsDebugMode = !m_IsDebugMode;
+        SceneManager::SetIsDebugMode(!SceneManager::GetIsDebugMode());
     }
     //	アニメーションデータから
     aiAnimation* animation1 = m_Animation[m_CurrentAnimation]->mAnimations[0];
@@ -160,7 +162,7 @@ void AnimationModel::Draw()
             Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &m_Texture[texture.data]);
             material.TextureEnable = true;
         }
-        if (!m_IsDebugMode)
+        if (!SceneManager::GetIsDebugMode())
         {
             material.Diffuse = XMFLOAT4(diffuse.r, diffuse.g, diffuse.b, opacity);
             material.Ambient = material.Diffuse;
